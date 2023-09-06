@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Ultrasound report Assistant</title>
+  <link rel="stylesheet" href="static/css/style2_ultrabot.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<section class="msger">
+  <header class="msger-header">
+    <div class="msger-header-title">
+      Ultrasound report Assistant
+    </div>
+    <div class="msger-header-options">
+      <button class="clear-chat" id="clearChatButton"><span class="tooltip-chat"><i class="fa fa-refresh" ></i></span></button>
+    </div>
+  </header>
+
+  <main class="msger-chat">
+    <div class="msg left-msg">
+      <div
+       class="msg-img"
+       style="background-image: url(static/images/bot.ico)"
+      ></div>
+
+      <div class="msg-bubble">
+        <div class="msg-info">
+          <div class="msg-info-name">ALEX</div>
+          <div class="msg-info-time"></div>
+        </div>
+
+      <div class="msg-text">
+          Hi, I Am Your Ultrasound report Assistant! Please Upload Your Report.
+      </div>   
+        
+      </div>
+      </div>
+    </div>
+
+    </div>
+  </main>
+
+  <form class="msger-inputarea">
+    <input type="text" class="msger-input" placeholder="Enter your message...">
+    <button type="submit" class="msger-send-btn" id="SendBtnID"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+    <!-- The pop-up -->
+    
+    <button class="pop-up-button" onclick="openPopup()"><span class="tooltip"><i class="fa fa-lightbulb-o"></i></span></button>
+    <div id="myPopup" class="popup">
+      <div class="popup-content">
+        <p class="example-title">Examples</p>
+        <p class="example">1. Upload your report, To get sample report use below link</p>
+        <a href="https://docs.google.com/document/d/1tfFxfZqrYhWrjTg25j9BzD5al2AgxV-0QXoYEmEhAzY/edit?usp=sharing" target="_blank">Sample Report</a>
+        <p class="example">2. What is Expected Birth date?</p>
+        <p class="example">3. Is fetal position shoulder presentation normal ? </p>
+        <p class="example">4. Detailed guidelines for known previa with CPT reports</p>
+        <!--<p class="example">I want to book personal trainer</p>
+        <p class="example">I want to schedule an appointment</p> --> 
+
+        <span class="popup-close" onclick="closePopup()"><i class="fa fa-times"></i></span>
+      </div>
+    </div>
+  </form>
+
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="pdf" accept="application/pdf" />
+    <input type="submit" value="Upload PDF" />
+  </form>
+  <!-- <div id="response"></div> -->
+
+</section>
+<section>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'Tab1')">US_Imaging_Guidelines</button>
+  <button class="tablinks" onclick="openTab(event, 'Tab2')">Report</button>
+</div>
+
+<div id="Tab1" class="tabcontent">
+  <div class="pdf-container">
+    <!-- <embed id="pdfFrame1" src="static/pdf/US_Imaging_Guidelines.pdf" type="application/pdf" class="pdf" style="width: 800px; height: 700px;"/>  -->
+    <iframe id="pdfFrame1" class="pdf" style="width: 800px; height: 700px;"></iframe>
+  </div>
+</div>
+
+  <div id="Tab2" class="tabcontent">
+    <div class="pdf-container">      
+      <p id="pdfMessage" class="message" style="font-size: 10px;" > * Your Uploaded pdf will be here</p>
+      <iframe id="pdfFrame2" class="pdf" style="width: 800px; height: 600px;"></iframe>
+    </div>
+  </div> 
+</section>
+
+<!-- partial -->
+  <script  src="static/js/script.js"></script>
+  <script>
+    
+    </script>
+</body>
+</html>
