@@ -8,6 +8,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from pdf_utils import PDFUtils
 from dotenv import load_dotenv
 load_dotenv()
+from insights import insightsAll
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
@@ -15,8 +16,12 @@ embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
 
-prompt = "Your task is to check each parameter of provided ultrasound report json and determine whether there are any parameters that deviate from the standard or normal range of values, as such deviations may suggest potential issues.keep US imaging guidelines in mind. think step by step..."
+# prompt = "Your task is to check each parameter of provided ultrasound report json and determine whether there are any parameters that deviate from the standard or normal range of values, as such deviations may suggest potential issues.keep US imaging guidelines in mind. think step by step..."
+prompt = """
+Your Task is to create JSON file of abnormalities.
 
+<INSIGHTS_DATA>
+"""
 prompt2 = """
 [identity]
 You are UltrasoundBot, the go-to expert on ultrasound reports with comprehensive knowledge.
@@ -59,6 +64,16 @@ def ask_function_calling(messages,function_descriptions):
     return response
 
 def json_parser(string_data):
+    '''
+    Use:
+        used to extract only json from the text.
+
+    Parameter:
+        string_data : String
+    
+    Output:
+        json_string : String
+    '''
     start_index = string_data.find("{")
     end_index = string_data.rfind("}") + 1
 
@@ -66,8 +81,8 @@ def json_parser(string_data):
     json_string = string_data[start_index:end_index]
 
     # Parse the JSON string into a Python dictionary
-    data = json.loads(json_string)
-    return data
+    # data = json.loads(json_string)
+    return json_string
 
 def flatten_json(json_data, parent_key='', flattened_data={}):
     for key, value in json_data.items():
@@ -94,16 +109,13 @@ def remove_AC(abno):
     print(abno)
     return abno
 
-def get_reports(abnormalities,final_ans):
+def get_reports(abnormalities):
 
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
-        
-        # abnormalities = flatten_json(abnormalities)
-        # print(abnormalities)
-        if 'Fetal Biometry' in abnormalities:
-            del abnormalities['Fetal Biometry']
         for key, value in abnormalities.items():
+            if str.lower(value) == "not seen":
+                continue
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
             query = "I would like comprehensive guidelines for the "+str(key)+ " "+str(value) + " along with CPT reports.\n"
@@ -113,9 +125,9 @@ def get_reports(abnormalities,final_ans):
             reports += result
             print("============\n")
             print(result)
-        final_ans += reports
+        final_ans = reports
     else:
-        pass
+        final_ans = "No Abnormalities Found." # create fail mechanism
     return final_ans
 
 function_descriptions = [
@@ -162,7 +174,7 @@ def get_guidelines(Question_string):
     result = pdf_utils.chat_with_pdf_q(Question_string)
     return str(result)
 
-def get_abno_biometry(Report_string):
+# def get_abno_biometry(Report_string):
     # history = [{"role": "system", "content": "You have comprehensive knowledge regarding ultrasound reports. If any of the measurements provided (AC, BPD, FL, HC) in the report and if they are below the 10th percentile, consider them as abnormal.check for each parameter and think step by step..."}]
     history = [{"role": "system", "content": "You possess extensive expertise in analyzing ultrasound reports. According to US imaging guidelines, any value for AC, BPD, FL, or HC that falls below the 10th percentile is considered an abnormality."}]
     history += [{"role": "user", "content":"I require assistance with my ultrasound report."}]
@@ -206,55 +218,99 @@ def merge_abno(data1,data2):
     data1["abnormalities"].update(data2["abnormalities"])
     return data1
 
+def get_ratios(insights,reportString):
+    ratios_list = ["FL/AC in %","FL/BPD in %","FL/HC in %","HC/AC in %"]
+    ratios_range_list = ["FL/AC normal range","FL/BPD normal range","FL/HC normal range","HC/AC normal range"]
+    for index in range(len(ratios_list)):
+        if ratios_list[index] in reportString.keys():
+            if ratios_range_list[index] in reportString.keys():
+                insights += "["+str(ratios_list[index])+"]"+":\n" 
+                insights += ratios_range_list[index]+":"+reportString[ratios_range_list[index]] + "\n\n"
+    return insights
+def get_insights(reportString,insightsAll):
+    insights = "Strictly Remember the following Knowledge when determining whether a specific parameter is Normal OR Abnormal.\n"
+    # flag = 0
+    for key,value in reportString.items():        
+        if key in insightsAll.keys():
+            insights += "<"+str(key)+">"+":\n" 
+            insights += insightsAll[key]["normal_values"] + "\n" + insightsAll[key]["abnormal_values"] +"\n\n"
+            # flag += 1
+            # if flag == 3:
+            #     break
+    insights = get_ratios(insights,reportString)
+    print(insights)
+    return insights
+
+import json
+
+def get_abnormal_keys(json_data):
+
+  abnormal_keys = []
+
+  for key, value in json_data["abnormalities"].items():
+    if value == "Abnormal":
+      abnormal_keys.append(key)
+
+  return abnormal_keys
+
+
+def get_final_abnormalities(abnormal_keys,json_data):
+    abnormalities = {}
+    for key in abnormal_keys:
+        if key in json_data.keys():
+            abnormalities[key] = json_data[key]
+
+    new_json = {
+    "abnormalities": abnormalities
+    }
+
+    return new_json
+
+def get_not_seen(reportString):
+    final_ans = "The following were not seen in the utlrasound:\n\n"
+    # if 'Not seen' in reportString.values():
+    for k, v in reportString.items():
+        if str.lower(v) == "not seen":
+            final_ans += str(k)+"\n"
+    final_ans += "\nPlease conduct ultrasound again as soon as possible.^_^"
+    # else:
+    #     final_ans = ""
+    if len(final_ans)<110:
+        final_ans = ""
+    return final_ans
+
 def parse_report(Report_string):
     print("------------------- \nParsing Report \n------------------")
-    history = [{"role": "system", "content": prompt}]
-    history += [{"role": "user", "content":"I require assistance with my ultrasound report."}]
-    history += [{"role": "assistant", "content": "Please Upload your ultrasound report."}]
-    history += [{"role": "user", "content": str(Report_string)}]
+    history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>",get_insights(json.loads(Report_string),insightsAll))+"\n"+Report_string}]
     print(history)
-    try:
-        response = get_completion(history) # it will get me a json of report
-    except Exception as e:  
-        print("Function calling Error : ",e)
-        response = "Oops! An issue with the OpenAI API. Please try again in a few minutes after clearing the chat.. \n "
-        return jsonify({"response": response})
-    history += [{"role": "assistant", "content": str(response)}]
-    print(history)
-    response += "^_^"
     step2 = """
     create list of abnormalities
     [compulsory json output formate]
             {
-                "abnormalities": { } //list of abnormalities Ex. "parameter" : "value","parameter" : "value",...
+                "abnormalities": { } //list of abnormalities Ex. "<parameter>" : "<Normal OR Abnormal>","<parameter>" : "<Normal OR Abnormal>",...
             }
     [thought_chain]
-        populate "abnormalities" if any abnormalities in the report and return only json.    
+        populate "<parameter>" : "<Normal OR Abnormal>" if any abnormalities in the report and return only json.    
     """
     history += [{"role": "user", "content": str(step2)}]
     try:
-        temp_history = history[:]
         response3 = get_completion(history) # it will get me a json which contains possible abnormalities
-        print(response3)
-        print("here is the list of abnormalities........................")
     except Exception as e:
         print("Function calling Error : ",e)
         response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
         history.append({"role": "assistant", "content": response3})
-        return jsonify({"response": response3})   
-    final_ans = response
-    # print(response3)
-    abnormalities2 = get_abno_biometry(Report_string) # to check if there is any of static abnormalities found or not.
-    # response3 = remove_AC(json.loads(response3))
-    # response3 = str(response3).replace("'", '"')
-    print(response3)
-    print("final response 3 is above....................")
-
-    abnormalities = merge_abno(json_parser(response3),json_parser(abnormalities2))
-    # data = json_parser(response3)
-    abnormalities = abnormalities["abnormalities"]
+        return jsonify({"response": response3})
+    
+    abnormalities = response3
     print(abnormalities)
-    final_ans = get_reports(abnormalities,final_ans)    
+    print("above are intermediate things............")
+    abnormal_keys = get_abnormal_keys(json.loads(json_parser(abnormalities)))
+    print(abnormal_keys)
+    abnormalities = str(get_final_abnormalities(abnormal_keys,json.loads(json_parser(Report_string)))["abnormalities"]).replace("'","\"")    
+    print(abnormalities)
+    print("Above are final Abnormalities....................")
+    final_ans = get_not_seen(json.loads(json_parser(Report_string)))
+    final_ans += get_reports(json.loads(abnormalities))    
     final_ans += "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
     final_response = final_ans.split("^_^")
     return final_response
@@ -293,8 +349,8 @@ class UltraBot():
         self.first_time = True
         self.function_descriptions = function_descriptions
 
-    def clear_cache(self,data):
-        user = data['email']
+    def clear_cache(self):
+        # user = data['email']
         self.chat_history = [
             {"role": "system", "content": prompt2},
             {"role": "user", "content": "hey"},
