@@ -30,7 +30,7 @@ const urlParts = currentURL.split('/'); // Split the URL by '/'
 const lastWord = urlParts[urlParts.length - 1]; // Get the last element
 // var url = ""
 // var cache_value = ""
-const base_url = "http://127.0.0.1:8001/"
+const base_url = "http://127.0.0.1:5001/"
 const url_dictionary = {
   "get_response": {"FitnessBot":"Fitness_get_response",
   "MembershipBot":"Membership_get_response",
