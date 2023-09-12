@@ -128,12 +128,12 @@ function convertPdf() {
     pdfstatus = true;
     if (pdfstatus)
     {
-      document.getElementById("pdfMessage").style.display = "none";
-
       const pdfFrame = document.getElementById("pdfFrame2");
       pdfFrame.src = "static/pdf/uploaded.pdf"; // Replace with the actual path
+      document.getElementById("pdfMessage").style.display = "none";
+
       // Hide Tab 1 PDF
-      document.getElementById("pdfFrame1").src = ""; // Clear the source to ensure reload
+      // document.getElementById("pdfFrame1").src = ""; // Clear the source to ensure reload
     }
     fetch(base_url+"convert", {
       method: "POST",

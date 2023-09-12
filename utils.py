@@ -4,7 +4,7 @@ import os
 from pdf2text import *
 import requests
 
-API_KEY = "pankti@dxfactor.com_7f13ff0f1f43129c3f34f3bcb45da0e7e373e57b9ab75562b5341d04b7b0b7444a3730d7"
+API_KEY = "pankti.fadia.dxfactor@gmail.com_46d8850f32dcc4f07eb2ced82bc9af5e67f94b2b1f1b0804fd097dc7c150f184a895f862"
 
 # Base URL for PDF.co Web API requests
 BASE_URL = "https://api.pdf.co/v1"
@@ -37,7 +37,7 @@ def convert2text(args = None):
 
     # The authentication key (API Key).
     # Get your own by registering at https://app.pdf.co
-    API_KEY = "pankti@dxfactor.com_7f13ff0f1f43129c3f34f3bcb45da0e7e373e57b9ab75562b5341d04b7b0b7444a3730d7"
+    API_KEY = "pankti.fadia.dxfactor@gmail.com_46d8850f32dcc4f07eb2ced82bc9af5e67f94b2b1f1b0804fd097dc7c150f184a895f862"
 
 
     # Source PDF file

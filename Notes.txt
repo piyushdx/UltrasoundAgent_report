@@ -1,0 +1,9 @@
+need to find what's the normal range for below parameter:
+
+CRL value in cm
+CRL value in pctl
+CEREB avg value in cm
+CEREB value in pctl
+CM avg value in cm
+CM value in pctl
+Lat Vent avg value in cm

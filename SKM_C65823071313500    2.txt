@@ -1,101 +1,106 @@
-                                                       ULTRASOUND REPORT
+                                                  ULTRASOUND REPORT
 
-                                     AZ WOMEN'S SPECIALISTS
-             Name        GED
-                                     FN Exam. Date     08-02-2023
-          Gender        Female            BirthDate                                  43yr10m
-                                 ~                                                                  Age
-                 Institute           AZ WOMEN'S SPECI...  Ref. Physician   DR.HETAL SHAH    Sonographer        AM RDMS
-              Description       NT AMA
-        [OB]
-                   LMP(EDD) 05-11-2023                         EDD 02-15-2024                     GA(EDD) 11wéd
-                    AUA 12w4d                    EDD(AUA) 02-10-2024              Pctl. Criteria EstabDD
-               Fetal Biometry        Avg.       1        2        3                      GA                    Pctl.
-            CRL                6.07    6.06    6.07           cm         12wad+7d    Hadlock   97.72*   Rempen
-             YS               |  0.49     0.49                   cm
+                                            Ultrasound Report
 
-               Fetal Cranium         Avg.       1        2        3                      GA                   Pctl.
-             NT               |  1.61     1.79     1.43           mm                              23.01    Yagel
-              General                                       Avq.         1          2          3
-               Fetal HR                                          155         155                               bpm
+        Name                           ID                         Exam. Date       08-04-2023
+         Gender        Female                                            Age              24yr 8m
+                                               .
+            Institute           AZ WOMEN'S SPECI.    Diag. Physician SHAH                Ref. Physician       HETAL SHAH,...
+         Sonographer    KS.RDMS
+          Description       ANATOMY
+           .
+    [OB]
+        LMP(EDD) 03-05-2023            EstabDD 12-10-2023                EDD 12-10-2023
+         GA(EDD) 21w5d                  AUA 22w1d             EDD(AUA) 12-07-2023
+              EFW 1ib 30z (531g)       EFW Aut... Hadlock2(BPD,...    GA(EFW) 22w2d
+         Pctl. Crit... EstabDD
+         Fetal Biometry    Avg.     1       2       3                  GA                Pctl.
+      BPD          5.27   5.27             cm     22w0d+12d  Hadl   59.81  Hadl...
+      HC           19.87  19.87            cm     22w0d+10d  Hadl   53.40  Hadl...
+      AC           18.43  18.43            cm     23w2d+14d  Hadl   86.41  Hadl...
+       FL             3.83   3.83               cm      22w2d+13d  Hadl    59.29  Hadl...
 
-            Comment
-            NT AMA
+        Fetal Cranium     Avg. 1     2      3
+                                                                                             |  |   GA |          ERI       Petl,    Ig    !
+      CEREB        225   2.25             cm     21w1d+13d   Hill   60.90 Nicol...
+      CM          0.53  0.53            cm                   46.70 Nicol...
+           Vent         0.64   0.64                cm
+           | Lat
+        General
+                                                                    Ave '         A,            2            3
+        Fetal HR                                1         140                         bpm
+         Ratio           Value               yNormal Range
+      FLAC       20.78    %     (20.0~24.0%, >21w)
+       FL/BPD       72.63     %     (71.0~87.0%, >23w)
+       FL/HC         19.27     %    (16.41~21.50%, 21w...
+       HC/AC        1.08            (1.06~1.25, 21w5d)
+        Fetal Description                                             Value
+       Gender                                              Male
+         Fetal Position                                                   Breech
+        Fetal Head                                                   Seen
+         Fetal Spine                                                     Seen
+        Placenta Location                                           Anterior
+        Placenta Grade                                               2
+         Placenta Previa                                                Yes
+       3V Cord                                            Seen
+         Cord Insertion                                                 Seen
+         Amniotic Fluid                                                Normal
+          Facial Profile                                                        Seen
+       Diaphragm                                            Seen
+        Upper Extremity                                            Seen
+        Lower Extremity                                            Seen
+       Hands                                              Seen
+        Feet                                                       Seen
 
-             SLIUP @  12w4d (60.7MM) EDD 02/10/24 BY ULTRASOUND, SIZE C/W  DATES. YS SEEN. NT=1.4MM. NB SEEN.
-              FHR= 155BPM.
-             LT OV APPEARS WNL-SMALL FOLLICLE SEEN. RT OV NOT SEEN DUE TO GAS/BOWEL.
-             ADNEXAE APPEARS WNL.
-              POSSIBLE POST MYOMA MEASURING 3.1 X 2.7 X 2.7CM. POSSIBLE ANT SUBSEROSLAMYOMA MEASURNG 2.5 X 1.7
-                X 2.0CM.
+                                                                                                                   08-04-2023 03:24 pm
 
-             TA SCAN PERFORMED.
+                                                  ULTRASOUND REPORT
 
-           AM RDMS
+                                            Ultrasound Report
 
-           [ Gynecology ]
-                       LMP 05-11-2023
+        Fetal Heart                         -                       Value
+       4 Chamber                                            Seen
+         Lt. Outflow Tract                                               Seen
+         Rt. Outflow Tract                                              Seen
+         3 Vessel                                                      Seen
+         Aortic Arch                                                   Seen
+         Ductal Arch                                                  Seen
+        Cardiac Rhythm                                         Regular
+         Fetal Brain                                                       Value
+         Lateral Ventricles                                                Seen
+        Cerebellum                                                 Seen
+        Cist Magna                                                Seen
+       Cranium                                              Seen
+        Fetal Abdomen                                           Value
+        Abdominal Wall                                            Seen
+        Spine                                                    Seen
+       Stomach                                            Seen
+        Bladder                                                    Seen
+         Lt. Kidney                                                      Seen
+         Rt. Kidney                                                    Seen
 
-                Lt. Ovary                                            Avg.          1            2           3
-               Lt Ovary L                                       3.98        3.98                               cm
-                Lt. Ovary H                                          2.40        2.40                                 cm
-               Lt. Ovary W                                       3.68        3.68                                cm
-                 Lt. Ovary Vol.                                        18.47        18.47                                  ml
-          Images
+        Maternal Others                        Avg.       1         2        3
+         Cervix L                              |   s.09      6.09                          cm
 
-                            Ana                  EhaTANRE EE                                        AZ WOMENS SPECIALISTS AF 12 08-02-2023
-                            LATE  ET    i 1]      AT      aaa BA                                                 FN    aTISERIE
+       Comment
+      ANATOMY
 
+         Single male fetus seen with positive fetal movement.
+        FHR=140bpm with normal cardiac rhythm.
+       EFW=1#30z
+         Amniotic fluid appears wnl.
+         Anatomy well visualized, no obvious abnormalities seen with the exception of an EIF seen
+         in the left ventricle. Suboptimal views of nasal bone and cisterna magna.
+          Anterior placenta grade 2, partial previa seen. Covering the 10S by 1.5cm.
+         The cervix was seen transabdominally measuring 6.1cm.
 
-
-
-
-
-
-
-
-
-                                                                                                                       08-02-2023 02:32 pm
-
-                                                       ULTRASOUND REPORT
-
-                                     AZ WOMEN'S SPECIALISTS
-
-                                                                                                                 WOMANS SPECALSTS MF 11 0002.2023
-                                                                                                                             LLL ERTS TET
-
-
-
-
+       KS.RDMS
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                       08-02-2023 02:32 pm
+                                                                                                                  08-04-2023 03:24 pm
 
 
