@@ -6,8 +6,8 @@ import openai
 import json
 from langchain.embeddings import OpenAIEmbeddings
 from pdf_utils import PDFUtils
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 from insights import insightsAll
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
