@@ -60,7 +60,7 @@ class PDFUtils:
 
     def chat_with_pdf_q(self, query):
 
-        prompt_template = """ Please adhere closely to the provided <output sample> and ensure that your response should be concise with Structured bullet point .
+        prompt_template = """ Please adhere closely to the provided <output sample> and ensure that your response should be concise with Structured bullet point.
         [Output sample]
             Key Analysis: 
             Recommendation: 
@@ -79,8 +79,8 @@ class PDFUtils:
                 weekly
                  Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
                 performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
-    
-        {context}
+
+        Context : {context}
         Question: {question}
         Answer:"""
         PROMPT = PromptTemplate(

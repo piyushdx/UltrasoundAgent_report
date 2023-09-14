@@ -377,69 +377,67 @@ def upload_file():
 # """
 
 #         report_text_86198 = """
-#                                                   ULTRASOUND REPORT
+# #                                                   ULTRASOUND REPORT
 
-#                                            Ultrasound Report
-#  GEDme  02 GD Exam. Date
-#         Gender        Female              BirthDate      10-27-1994        Age             28yr 8m
-#            Institute           AZ WOMEN'S SPECI ...  Diag. Physician SHAH                Ref. Physician       HETAL SHAH,...
-#          Sonographer    KS.RDMS
-#          Description       GROWTH
-#           Al
-#     [OB]
-#               LMP 12-24-2022            EstabDD 09-30-2023           EDD(LMP) 09-30-2023
-#          GA(LMP) 27wéd                  AUA 29w0d             EDD(AUA) 09-22-2023
-#               EFW 3ib 0oz (13499)      EFW Aut... Hadlock2(BPD,...     GA(EFW) 29w2d
-#         Pctl.(EFW) 71.72                Pctl. Crit... EstabDD
-#          Fetal Biometry    Avg.             2       3
-#                      1 1 —               aR GA Pi  it il  Pet,  1 it
-#       BPD          6.98   6.98             cm     28w0d+15d  Hadl...  43.79  Hadl...
-#        HC            26.62  26.62             cm      29w0d+t14d  Hadl...  56.08  Hadl...
-#       AC           24.90  24.90            cm     29w1d+15d  Hadi...  79.36  Hadl...
-#        FL              5.62   5.62               cm      29w4d+15d  Hadl...  81.95  Hadl...
-#          General                                  Avg.       1         2         3
-#         Fetal HR                            |   148      148                         bpm
-#         AFI                           Last       1         2        3                          Pctl.
-#        Q1                       4.77     4.77                     cm     Avg.
-#       Q2                      3.41     3.41                    cm     Avg.
-#       Q3                     6.08    6.08                    cm     Avg.
-#       Q4                     2.72    2.72                   cm     Avg.
-#         AFI                          16.98    16.98                        cm               68.38
-#          Ratio           Value       |}        | 0 Normal Range  1
-#         L/AC         22.57     %     (20.0~24.0%, >21w)
-#        FL/BPD       80.58     %     (71.0~87.0%, >23w)
-#        FL/HC         21.11      %    (17.87~21.47%, 27w...
-#        HC/AC        1.07            ( 1.05~1.22, 27w6d)
-#           Fetal  Description                                                       Value
-#        Gender                                              Female
-#          Fetal Position                                                   Breech
-#         Placenta Location                                          Posterior
-#         Placenta Grade                                               2
-#         Amniotic Fluid                                                Normal
+# #                                            Ultrasound Report
+# #  GEDme  02 GD Exam. Date
+# #         Gender        Female              BirthDate      10-27-1994        Age             28yr 8m
+# #            Institute           AZ WOMEN'S SPECI ...  Diag. Physician SHAH                Ref. Physician       HETAL SHAH,...
+# #          Sonographer    KS.RDMS
+# #          Description       GROWTH
+# #           Al
+# #     [OB]
+# #               LMP 12-24-2022            EstabDD 09-30-2023           EDD(LMP) 09-30-2023
+# #          GA(LMP) 27wéd                  AUA 29w0d             EDD(AUA) 09-22-2023
+# #               EFW 3ib 0oz (13499)      EFW Aut... Hadlock2(BPD,...     GA(EFW) 29w2d
+# #         Pctl.(EFW) 71.72                Pctl. Crit... EstabDD
+# #          Fetal Biometry    Avg.             2       3
+# #                      1 1 —               aR GA Pi  it il  Pet,  1 it
+# #       BPD          6.98   6.98             cm     28w0d+15d  Hadl...  43.79  Hadl...
+# #        HC            26.62  26.62             cm      29w0d+t14d  Hadl...  56.08  Hadl...
+# #       AC           24.90  24.90            cm     29w1d+15d  Hadi...  79.36  Hadl...
+# #        FL              5.62   5.62               cm      29w4d+15d  Hadl...  81.95  Hadl...
+# #          General                                  Avg.       1         2         3
+# #         Fetal HR                            |   148      148                         bpm
+# #         AFI                           Last       1         2        3                          Pctl.
+# #        Q1                       4.77     4.77                     cm     Avg.
+# #       Q2                      3.41     3.41                    cm     Avg.
+# #       Q3                     6.08    6.08                    cm     Avg.
+# #       Q4                     2.72    2.72                   cm     Avg.
+# #         AFI                          16.98    16.98                        cm               68.38
+# #          Ratio           Value       |}        | 0 Normal Range  1
+# #         L/AC         22.57     %     (20.0~24.0%, >21w)
+# #        FL/BPD       80.58     %     (71.0~87.0%, >23w)
+# #        FL/HC         21.11      %    (17.87~21.47%, 27w...
+# #        HC/AC        1.07            ( 1.05~1.22, 27w6d)
+# #           Fetal  Description                                                       Value
+# #        Gender                                              Female
+# #          Fetal Position                                                   Breech
+# #         Placenta Location                                          Posterior
+# #         Placenta Grade                                               2
+# #         Amniotic Fluid                                                Normal
 
-#       Comment
-
-
+# #       Comment
 
 
 
-#                                                                                                                  07-07-2023 09:50 am
-
-#                                                   ULTRASOUND REPORT
-
-#                                             Ultrasound Report
-
-#       GROWTH
-
-#          Single breech female fetus with positive fetal movement.
-#          FHR=154bpm with normal cardiac rhythm.
-#         EFW=3#00z / 72nd%
-#         AFI=17cm
-#           Posterior placenta grade 2, previa seen.
-
-#        KS.RDMS
 
 
+# #                                                                                                                  07-07-2023 09:50 am
+
+# #                                                   ULTRASOUND REPORT
+
+# #                                             Ultrasound Report
+
+# #       GROWTH
+
+# #          Single breech female fetus with positive fetal movement.
+# #          FHR=154bpm with normal cardiac rhythm.
+# #         EFW=3#00z / 72nd%
+# #         AFI=17cm
+# #           Posterior placenta grade 2, previa seen.
+
+# #        KS.RDMS
 
 
 
@@ -458,10 +456,12 @@ def upload_file():
 
 
 
-#                                                                                                                  07-07-2023 09:50 am
 
-# 
-# """
+
+# #                                                                                                                  07-07-2023 09:50 am
+
+# # 
+# # """
 
 #         report_text_86989 = """
 #                                                   ULTRASOUND REPORT
@@ -690,7 +690,7 @@ def upload_file():
 
 #                                                                                                                    08-04-2023 03:24 pm
 
-#                                                   ULTRASOUND REPORT
+#                                                   ULTRASOUND REPORT
 
 #                                             Ultrasound Report
 

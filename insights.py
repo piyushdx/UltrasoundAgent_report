@@ -5,8 +5,8 @@ insightsAll = {
       "check": "yes"
     },
     "AFI cm value": {
-      "normal_values": "AFI cm value Normal range : 5 to 25 cm",
-      "abnormal_values": "AFI cm value Abnormal range :   <5 cm OR >25 cm",
+      "normal_values": "if <AFI cm value> between 5 to 25 cm then Cosider it Normal",
+      "abnormal_values": "if <AFI cm value> <5 cm OR <AFI cm value> >25 cm then Cosider it Abnormal",
       "check": "yes"
     },
     "AFI pctl value": {

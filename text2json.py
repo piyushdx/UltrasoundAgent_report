@@ -65,6 +65,11 @@ Fetal Breathing Move
 Amniotic Fluid Volume
 BPP Total out of 8
 
+Q1 avg value in cm
+Q2 avg value in cm
+Q3 avg value in cm
+Q4 avg value in cm
+
 BPD value in cm
 BPD value in pctl
 HC value in cm
@@ -84,6 +89,7 @@ CEREB avg value in cm
 CEREB value in pctl
 CM avg value in cm
 CM value in pctl
+NF avg value in cm
 Lat Vent avg value in cm
 
 FL/AC in %
