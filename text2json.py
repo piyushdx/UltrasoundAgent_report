@@ -25,6 +25,8 @@ def text_to_json(report_text):
     post_prompt_json = """
 Generate a flat JSON from the provided text that encompasses variables that are present in the below list. Include parameters that have a respective value in the above ultrasound report text. If a parameter doesn't have a value in the above ultrasound report text, it should compulsory appear in the json with a "Not Found" value.
 
+Exam Date
+Age
 LMP(EDD)
 LMP
 EstabDD
@@ -133,7 +135,9 @@ Lt. Overy L avg value in cm
 Lt. Overy H avg value in cm
 Lt. Overy W avg value in cm
 
-Lt. Overy Vol. avg value in ml 
+Lt. Overy Vol. avg value in ml  
+
+Comment - consider all the data till the word RDMS as a comment
 """
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
     history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic

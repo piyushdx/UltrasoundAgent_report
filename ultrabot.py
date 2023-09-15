@@ -9,6 +9,7 @@ from pdf_utils import PDFUtils
 # from dotenv import load_dotenv
 # load_dotenv()
 from insights import insightsAll
+from datetime import datetime
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
@@ -270,23 +271,42 @@ def get_abnormal_keys(json_data):
     return abnormal_keys
 
 
-def get_final_abnormalities(abnormal_keys, json_data,mvp_flag):
+def get_final_abnormalities(abnormal_keys, json_data,mvp_flag,ageFlag):
     abnormalities = {}
     for key in abnormal_keys:
         if key in json_data.keys():
             abnormalities[key] = json_data[key]
     if mvp_flag:
         abnormalities["confirmed diagnosis of polyhydramnios"] = "maximum vertical pocket(MVP) ≥8cm."
+    if ageFlag:
+        abnormalities["Socio-Demographic Risk Factors (maternal age)"] = "Age ≥ 35"
     new_json = {
         "abnormalities": abnormalities
     }
 
     return new_json
 
+def get_age_edd(EstabDD,ExamDate,Age,ageFlag):
 
-def get_not_seen_and_mvp(reportString):
+    estab_date = datetime.strptime(EstabDD, "%m-%d-%Y")
+    exam_date = datetime.strptime(ExamDate, "%m-%d-%Y")
+    final_age = (estab_date - exam_date).days/365 + int(Age.split('yr')[0]) + int(Age.split('yr')[1].split('m')[0])/12
+    
+    if final_age > 35:
+        ageFlag = True
+
+    return ageFlag
+
+def get_not_seen_mvp_edc(reportString):
     final_ans = "The following were not seen in the utlrasound:\n\n"
     # if 'Not seen' in reportString.values():
+
+    EstabDD = None
+    EDD = None
+    ExamDate = None
+    Age = None
+    ageFlag = False
+
     q_list = []
     for k, v in reportString.items():
         if str.lower(v) == "not seen":
@@ -295,15 +315,31 @@ def get_not_seen_and_mvp(reportString):
             value = float(v.split(' ')[0])
             if value > 4.0:
                 q_list.append(float(v.split(' ')[0]))
+        if str(k) == "EstabDD":
+            EstabDD = str(v) 
+        if str(k) == "EDD":
+            EDD = str(v)
+        if str(k) == "Exam Date":
+            ExamDate = str(v)
+        if str(k) == "Age":
+            Age = str(v)
+
+    if EstabDD is not None:
+        ageFlag = get_age_edd(EstabDD,ExamDate,Age,ageFlag)
+    elif EDD is not None:
+        ageFlag = get_age_edd(EDD,ExamDate,Age,ageFlag)
+    else:
+        pass
 
     final_ans += "\nPlease conduct ultrasound again as soon as possible.^_^"
 
     sum_mvp = sum(q_list)
+    flag = False
     if sum_mvp > 8.0:
         flag = True
     if len(final_ans) < 110:
         final_ans = ""
-    return final_ans, flag
+    return final_ans,flag,ageFlag
 
 
 def parse_report(Report_string):
@@ -334,8 +370,8 @@ def parse_report(Report_string):
     print(abnormalities)
     print("above are intermediate things............")
     abnormal_keys = get_abnormal_keys(json.loads(json_parser(abnormalities)))
-    final_ans, mvp_flag = get_not_seen_and_mvp(json.loads(json_parser(Report_string)))
-    abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag)["abnormalities"]).replace("'", "\"")
+    final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
+    abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
     print(abnormalities)
     print("Above are final Abnormalities....................")
     final_ans += get_reports(json.loads(abnormalities))

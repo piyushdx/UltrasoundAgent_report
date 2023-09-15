@@ -1,19 +1,19 @@
 insightsAll = {
-    "Fetal HR avg value": {
-      "normal_values": "Normal Fetal HR avg value : 120 bpm to 160 bpm ",
-      "abnormal_values": "Abnormal Fetal HR avg value : < 120 bpm OR >160 bpm",
+"Fetal HR avg value": {
+      "normal_values": "Normal Fetal HR avg value : 120 bpm to 160 bpm",
+      "abnormal_values": "Abnormal Fetal HR avg value :  Less than 120 bpm or greater than 160 bpm",
       "check": "yes"
     },
     "AFI cm value": {
-      "normal_values": "if <AFI cm value> between 5 to 25 cm then Cosider it Normal",
-      "abnormal_values": "if <AFI cm value> <5 cm OR <AFI cm value> >25 cm then Cosider it Abnormal",
+      "normal_values": "If the AFI cm value is between 4.99 cm and 24.99 cm, consider it as normal.",
+      "abnormal_values": " If the AFI cm value is less than 4.99 cm or greater than 24.99 cm, classify it as abnormal.",
       "check": "yes"
     },
     "AFI pctl value": {
-      "normal_values": "AFI pctl value Normal range : 5th to 95th ptcl",
-      "abnormal_values": "AFI pctl value Abnormal range : <5th ptcl OR >95th percentile",
+      "normal_values": "AFI pctl value Normal range : 4.99 pctl to 94.99 pctl",
+      "abnormal_values": f"AFI pctl value Abnormal range : Less than the 4.99 ptcl or greater than the 94.99 ptcl",
       "check": "yes"
-    },
+    },    
     "Fetal Position": {
       "normal_values": "Normal Fetal positions are Head down (vertex), Anterior and Posterior",
       "abnormal_values": "Abnormal Fetal positions are  Transverse, Shoulder Presentation and Head up (breech)",
@@ -71,8 +71,8 @@ insightsAll = {
 
     },
     "NT value in mm":{
-      "normal_values": "Normal NT value in mm: <3mm",
-      "abnormal_values": "Abnormal NT value in mm: >=3mm",
+      "normal_values": "if <NT value in mm> less then 2.99 mm then it's Considered as Normal",
+      "abnormal_values": "if <NT value in mm> greater then 3.01 mm then it's Considered as Abnormal ",
       "check": "yes"
 
     },

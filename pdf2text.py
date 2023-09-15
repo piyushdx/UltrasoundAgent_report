@@ -2,7 +2,7 @@ import os
 import requests # pip install requests
 
 # API_KEY = "piyush@dxfactor.com_abaab3291ab8029766bc5eb6a3655270594ec2883bdfaf7184f01b25c1224a910c000f7c"
-API_KEY = "jimifo3764@sesxe.com_a10c3cde2af4121daabd1c4fc64ddb23d28e166189dd5b001e52e0102953e778415ea1d1"
+API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
 
 # Base URL for PDF.co Web API requests
 BASE_URL = "https://api.pdf.co/v1"
@@ -27,7 +27,7 @@ def convert2text(args = None):
 
     # The authentication key (API Key).
     # Get your own by registering at https://app.pdf.co
-    API_KEY = "jimifo3764@sesxe.com_a10c3cde2af4121daabd1c4fc64ddb23d28e166189dd5b001e52e0102953e778415ea1d1"
+    API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
 
 
     # Source PDF file
@@ -43,7 +43,7 @@ def convert2text(args = None):
 def convertPdfToText(uploadedFileUrl, destinationFile):
     """Converts PDF To Text using PDF.co Web API"""
     
-    API_KEY = "jimifo3764@sesxe.com_a10c3cde2af4121daabd1c4fc64ddb23d28e166189dd5b001e52e0102953e778415ea1d1"
+    API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
 
     # PDF document password. Leave empty for unprotected documents.
     Password = ""
@@ -96,7 +96,7 @@ def uploadFile(fileName):
     """Uploads file to the cloud"""
     # Base URL for PDF.co Web API requests
     BASE_URL = "https://api.pdf.co/v1"
-    API_KEY = "jimifo3764@sesxe.com_a10c3cde2af4121daabd1c4fc64ddb23d28e166189dd5b001e52e0102953e778415ea1d1"
+    API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
     
     # 1. RETRIEVE PRESIGNED URL TO UPLOAD FILE.
 
