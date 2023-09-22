@@ -1,4 +1,4 @@
-environment = "local"  # local / server
+environment = "server"  # local / server
 
 ip_config = {'server': "18.144.92.141", # this is server URL
              'local': "127.0.0.1"}

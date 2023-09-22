@@ -5,6 +5,7 @@ import os
 import openai
 import json
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
 from pdf_utils import PDFUtils
 # from dotenv import load_dotenv
 # load_dotenv()
@@ -116,8 +117,11 @@ def remove_AC(abno):
     return abno
 
 
-def get_reports(abnormalities):
-
+def get_reports(abnormalities,negative_finding_keys):
+    for key in negative_finding_keys:
+        abnormalities[key] = ""
+    print(abnormalities)
+    print("above are all the possible abnormalities........................................................")
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
@@ -129,8 +133,6 @@ def get_reports(abnormalities):
             result = pdf_utils.chat_with_pdf_q(query)
             result += '^_^'
             reports += result
-            print("============\n")
-            print(result)
         final_ans = reports
     else:
         final_ans = "No Abnormalities Found."  # create fail mechanism
@@ -168,6 +170,60 @@ function_descriptions = [
     }
 ]
 
+# def get_relevant_docs_from_pdf(query):
+#     """
+#     imput : query
+#     purpose : to ger relavant chunks from the pdf
+#     output : relevant_chunks_from_pdf
+#     """
+#     db = Chroma(persist_directory="./db", embedding_function=OpenAIEmbeddings())
+#     relevant_chunks_from_pdf = db.similarity_search(query)
+#     return relevant_chunks_from_pdf
+# def get_answer_from_pdf(query):
+#     # print(docs[0].page_content)
+#     relevant_chunks_from_pdf = get_relevant_docs_from_pdf(query)
+#     prompt_template = """
+#     [Output sample]
+#         Key Analysis: // just explain what is the problem.
+#         Recommendation: // contain cpt reports.
+
+#     [Example] 
+#         Question: I would like comprehensive guidelines for the AC value 8% along with CPT reports.\n"
+#         Output : 
+#             Key Analysis: AC &lt; 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or
+#                 actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal
+#                 Circumference ≤10th percentile.
+            
+#             Recommendation:
+#                  Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
+#                  Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
+#                 can be performed once or twice weekly
+#                  Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
+#                 weekly
+#                  Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
+#                 performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
+
+
+#     [RULES]
+#         1. Strictly Adhere closely to the provided <output sample>.use <example> for your refrence.
+#         2. Ensure that your response should be concise with Structured bullet point.
+#         3. remove suspected results if know results are given. 
+#         4. if no known results found then suspected results.
+
+#     [init]
+#         Strictly follow the <RULES>.
+#         think step by step..."""
+    
+#     query_with_context = f"""
+#     [Context]
+#     {str(relevant_chunks_from_pdf)}
+    
+#     [Question]
+#     {query}"""
+    
+#     final_answer = get_completion([{"role": "system", "content": prompt_template}, {"role": "user", "content": query_with_context}])
+#     print("below is the final answer............")
+#     print(final_answer)
 
 def get_guidelines(Question_string):
     # que_prompt = """ related to obstetrical Replace abbreviations with full forms, except cpt/CPT """
@@ -181,6 +237,7 @@ def get_guidelines(Question_string):
         return "Not found please try again."
     print("Question : ", Question_string)
     result = pdf_utils.chat_with_pdf_q(Question_string)
+    # result = get_answer_from_pdf(Question_string)
     return str(result)
 
 # def get_abno_biometry(Report_string):
@@ -268,6 +325,16 @@ def get_abnormal_keys(json_data):
     for key, value in json_data["abnormalities"].items():
         if value == "Abnormal":
             abnormal_keys.append(key)
+        if "AFI cm value" in abnormal_keys and "AFI pctl value" in abnormal_keys:
+            abnormal_keys.remove("AFI pctl value")
+    return abnormal_keys
+
+def get_abnormal_keys_comment(json_data):
+
+    abnormal_keys = []
+
+    for key, value in json_data["obstetric_complications"].items():
+        abnormal_keys.append(value)
     return abnormal_keys
 
 
@@ -275,7 +342,10 @@ def get_final_abnormalities(abnormal_keys, json_data,mvp_flag,ageFlag):
     abnormalities = {}
     for key in abnormal_keys:
         if key in json_data.keys():
-            abnormalities[key] = json_data[key]
+            if key == "AFI cm value":
+                abnormalities["Amniotic Fluid Abnormalities AFI ≥24cm"] = json_data[key]
+            else:    
+                abnormalities[key] = json_data[key]
     if mvp_flag:
         abnormalities["confirmed diagnosis of polyhydramnios"] = "maximum vertical pocket(MVP) ≥8cm."
     if ageFlag:
@@ -287,14 +357,21 @@ def get_final_abnormalities(abnormal_keys, json_data,mvp_flag,ageFlag):
     return new_json
 
 def get_age_edd(EstabDD,ExamDate,Age,ageFlag):
+    ageFlag = False
+    try:
+        estab_date = datetime.strptime(EstabDD, "%m-%d-%Y")
+        exam_date = datetime.strptime(ExamDate, "%m-%d-%Y")
+        final_age = (estab_date - exam_date).days/365 + int(Age.split('yr')[0]) + int(Age.split('yr')[1].split('m')[0])/12
 
-    estab_date = datetime.strptime(EstabDD, "%m-%d-%Y")
-    exam_date = datetime.strptime(ExamDate, "%m-%d-%Y")
-    final_age = (estab_date - exam_date).days/365 + int(Age.split('yr')[0]) + int(Age.split('yr')[1].split('m')[0])/12
-    
-    if final_age > 35:
-        ageFlag = True
-
+        if final_age > 35:
+            ageFlag = True
+    except Exception as E:
+        print(str(estab_date)+str(exam_date)+str(final_age)+"\n"+"may be any of the above missing....")
+        try:
+            if Age>34:
+                ageFlag = True
+        except Exception as e:
+            pass
     return ageFlag
 
 def get_not_seen_mvp_edc(reportString):
@@ -341,12 +418,52 @@ def get_not_seen_mvp_edc(reportString):
         final_ans = ""
     return final_ans,flag,ageFlag
 
+prompt_comment = """You are expert in understanding ultrasound Reports."""
+
+def get_negative_findings(reportString):
+    try:
+        history = [{"role": "system", "content": prompt_comment}]
+        history += [{"role": "user", "content": "give me names of obstetric complications from below text\n"+str(reportString["Comment"])}] # 
+        try:
+            # it will get me a json which contains possible abnormalities
+            response3 = get_completion(history)
+        except Exception as e:
+            print("Function calling Error : ", e)
+            response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
+            history.append({"role": "assistant", "content": response3})
+            return jsonify({"response": response3})
+        print(response3)
+        print("above must be a list..")
+        history += [{"role": "assistant", "content": str(response3)}]
+        step2 = """
+        create JSON of obstetric complications
+        [compulsory JSON output formate]
+                obstetric_complications = {1:"",2:""} // //list of abnormalities Ex. 1 : "<obstetric_complications> name",2 : "<obstetric_complications> name",...
+        [thought_chain]
+            populate <obstetric_complications> if report has any obstetric complications and return only JSON.    
+        """
+        history += [{"role": "user", "content": str(step2)}]
+        print(history)
+        try:
+            # it will get me a json which contains possible abnormalities
+            response3 = get_completion(history)
+        except Exception as e:
+            print("Function calling Error : ", e)
+            response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
+            history.append({"role": "assistant", "content": response3})
+            return jsonify({"response": response3})
+        print(response3)
+        abnormal_keys = get_abnormal_keys_comment(json.loads(json_parser(response3)))
+        print(abnormal_keys)
+        return abnormal_keys
+    except Exception as E:
+        print("No negative connotation is fond in the Comment")
+        return []
 
 def parse_report(Report_string):
     print("------------------- \nParsing Report \n------------------")
     history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>", get_insights(
         json.loads(Report_string), insightsAll))+"\n"+Report_string}]
-    print(history)
     step2 = """
     create list of abnormalities
     [compulsory json output formate]
@@ -365,7 +482,7 @@ def parse_report(Report_string):
         response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
         history.append({"role": "assistant", "content": response3})
         return jsonify({"response": response3})
-
+    negative_finding_keys = get_negative_findings(json.loads(json_parser(Report_string)))
     abnormalities = response3
     print(abnormalities)
     print("above are intermediate things............")
@@ -374,7 +491,7 @@ def parse_report(Report_string):
     abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
     print(abnormalities)
     print("Above are final Abnormalities....................")
-    final_ans += get_reports(json.loads(abnormalities))
+    final_ans += get_reports(json.loads(abnormalities),negative_finding_keys)
     final_ans += "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
     final_response = final_ans.split("^_^")
     return final_response
@@ -490,3 +607,109 @@ class UltraBot():
         self.chat_history += [{"role": "user", "content": str(query)}]
         print(query)
         # return jsonify({"response": query})
+
+
+# reportString = {
+#   "Exam Date": "02 GD",
+#   "Age": "28yr 8m",
+#   "LMP(EDD)": "09-30-2023",
+#   "LMP": "12-24-2022",
+#   "EstabDD": "09-30-2023",
+#   "EDD": "09-30-2023",
+#   "GA(EDD)": "27wéd",
+#   "GA(LMP)": "27wéd",
+#   "GA(EFW)": "29w2d",
+#   "EDD(LMP)": "09-30-2023",
+#   "AUA": "29w0d",
+#   "EDD(AUA)": "09-22-2023",
+#   "EFW in oz": "3ib 0oz (13499)",
+#   "EFW in pctl": "71.72",
+#   "Fetal HR avg value": "148 bpm",
+#   "AFI cm value": "16.98 cm",
+#   "AFI pctl value": "68.38",
+#   "Gender": "Female",
+#   "Fetal Position": "Breech",
+#   "Fetal Head": "Not Found",
+#   "Fetal Spine": "Not Found",
+#   "Placenta Location": "Posterior",
+#   "Placenta Grade": "2",
+#   "3 V Cord": "Not Found",
+#   "Cord Insertion": "Not Found",
+#   "Amniotic Fluid": "Normal",
+#   "Facial Profile": "Not Found",
+#   "Diaphragm": "Not Found",
+#   "Upper Extremity": "Not Found",
+#   "Lower Extremity": "Not Found",
+#   "Hands": "Not Found",
+#   "Feet": "Not Found",
+#   "Placenta Previa": "Not Found",
+#   "Fetal Movements": "Positive",
+#   "Fetal Tone": "Not Found",
+#   "Fetal Breathing Move": "Not Found",
+#   "Amniotic Fluid Volume": "Not Found",
+#   "BPP Total out of 8": "Not Found",
+#   "Q1 avg value in cm": "4.77 cm",
+#   "Q2 avg value in cm": "3.41 cm",
+#   "Q3 avg value in cm": "6.08 cm",
+#   "Q4 avg value in cm": "2.72 cm",
+#   "BPD value in cm": "6.98 cm",
+#   "BPD value in pctl": "Not Found",
+#   "HC value in cm": "26.62 cm",
+#   "HC value in pctl": "Not Found",
+#   "AC value in cm": "24.90 cm",
+#   "AC value in pctl": "Not Found",
+#   "FL value in cm": "5.62 cm",
+#   "FL value in pctl": "Not Found",
+#   "CRL value in cm": "Not Found",
+#   "CRL value in pctl": "Not Found",
+#   "YS value in cm": "Not Found",
+#   "YS value in pctl": "Not Found",
+#   "NT value in mm": "Not Found",
+#   "NT value in pctl": "Not Found",
+#   "CEREB avg value in cm": "Not Found",
+#   "CEREB value in pctl": "Not Found",
+#   "CM avg value in cm": "Not Found",
+#   "CM value in pctl": "Not Found",
+#   "NF avg value in cm": "Not Found",
+#   "Lat Vent avg value in cm": "Not Found",
+#   "FL/AC in %": "22.57%",
+#   "FL/AC normal range": "(20.0~24.0%, >21w)",
+#   "FL/BPD in %": "80.58%",
+#   "FL/BPD normal range": "(71.0~87.0%, >23w)",
+#   "FL/HC in %": "21.11%",
+#   "FL/HC normal range": "(17.87~21.47%, 27w...)",
+#   "HC/AC in %": "1.07",
+#   "HC/AC normal range": "(1.05~1.22, 27w6d)",
+#   "4 Chamber": "Not Found",
+#   "Lt. Outflow Tract": "Not Found",
+#   "Rt. Qutflow Tract": "Not Found",
+#   "3 Vessel": "Not Found",
+#   "Aortic Arch": "Not Found",
+#   "Ductal Arch": "Not Found",
+#   "Cardiac Rhythm": "Not Found",
+#   "Lateral Ventricles": "Not Found",
+#   "Cerebellum": "Not Found",
+#   "Cist Magna": "Not Found",
+#   "Cranium": "Not Found",
+#   "Abdominal Wall": "Not Found",
+#   "Spine": "Not Found",
+#   "Stomach": "Not Found",
+#   "Bladder": "Not Found",
+#   "Lt. Kidney": "Not Found",
+#   "Rt. Kidney": "Not Found",
+#   "Cervix L avg value in cm": "Not Found",
+#   "Rt. Overy L avg value in cm": "Not Found",
+#   "Rt. Overy H avg value in cm": "Not Found",
+#   "Rt. Overy W avg value in cm": "Not Found",
+#   "Rt. Overy Vol. avg value in ml": "Not Found",
+#   "Lt. Overy L avg value in cm": "Not Found",
+#   "Lt. Overy H avg value in cm": "Not Found",
+#   "Lt. Overy W avg value in cm": "Not Found",
+#   "Lt. Overy Vol. avg value in ml": "Not Found",
+#   "Comment": "NT AMA SLIUP @  12w4d (60.7MM) EDD 02/10/24 BY ULTRASOUND, SIZE C/W  DATES. YS SEEN. NT=1.4MM. NB SEEN. FHR= 155BPM. LT OV APPEARS WNL-SMALL FOLLICLE SEEN. RT OV NOT SEEN DUE TO GAS/BOWEL. ADNEXAE APPEARS WNL. POSSIBLE POST MYOMA MEASURING 3.1 X 2.7 X 2.7CM. POSSIBLE ANT SUBSEROSLAMYOMA MEASURNG 2.5 X 1.7 X 2.0CM. TA SCAN PERFORMED. AM RDMS"
+# }
+
+# negative_findings = get_negative_findings(reportString)
+# print("------------final_______answer--------------")
+# print(json_parser(negative_findings))
+# print(get_guidelines("detailed guidelines for placenta previa with cpt reports"))

@@ -137,8 +137,9 @@ Lt. Overy W avg value in cm
 
 Lt. Overy Vol. avg value in ml  
 
-Comment - consider all the data till the word RDMS as a comment
+Comment //Please consider all the data in the report above as a comment until the word "KS RDMS" or "AM RDMS" is encountered.
 """
+# consider all the data till the word KS RDMS OR AM RDMS foundas a comment 
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
     history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
     # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
