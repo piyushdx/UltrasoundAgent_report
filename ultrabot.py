@@ -13,6 +13,7 @@ from insights import insightsAll
 from datetime import datetime
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 # prompt = "Identify"
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
