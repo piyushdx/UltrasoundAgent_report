@@ -118,7 +118,7 @@ def remove_AC(abno):
     return abno
 
 
-def get_reports(abnormalities,negative_finding_keys):
+def get_reports(abnormalities,negative_finding_keys,AUA):
     for key in negative_finding_keys:
         abnormalities[key] = ""
     print(abnormalities)
@@ -131,7 +131,7 @@ def get_reports(abnormalities,negative_finding_keys):
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
             query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.\n"
-            result = pdf_utils.chat_with_pdf_q(query)
+            result = pdf_utils.chat_with_pdf_q(query,AUA)
             result += '^_^'
             reports += result
         final_ans = reports
@@ -237,7 +237,7 @@ def get_guidelines(Question_string):
         print("Error: "+str(e))
         return "Not found please try again."
     print("Question : ", Question_string)
-    result = pdf_utils.chat_with_pdf_q(Question_string)
+    result = pdf_utils.chat_with_pdf_single_query(Question_string)
     # result = get_answer_from_pdf(Question_string)
     return str(result)
 
@@ -460,11 +460,20 @@ def get_negative_findings(reportString):
     except Exception as E:
         print("No negative connotation is fond in the Comment")
         return []
+def get_AUA(Report_string):
+    try:
+        AUA_data = Report_string["AUA"]
+        AUA = int(AUA_data.split("w")[0])
+    except Exception as e:
+        print("AUA Not Found")
+        AUA = 10
+    return AUA
 
 def parse_report(Report_string):
     print("------------------- \nParsing Report \n------------------")
     history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>", get_insights(
         json.loads(Report_string), insightsAll))+"\n"+Report_string}]
+    AUA = get_AUA(json.loads(json_parser(Report_string)))
     step2 = """
     create list of abnormalities
     [compulsory json output formate]
@@ -492,7 +501,7 @@ def parse_report(Report_string):
     abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
     print(abnormalities)
     print("Above are final Abnormalities....................")
-    final_ans += get_reports(json.loads(abnormalities),negative_finding_keys)
+    final_ans += get_reports(json.loads(abnormalities),negative_finding_keys,AUA)
     final_ans += "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
     final_response = final_ans.split("^_^")
     return final_response

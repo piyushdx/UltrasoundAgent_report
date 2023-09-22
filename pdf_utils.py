@@ -112,19 +112,20 @@ class PDFUtils:
             chat_history += [(query, result["answer"])]
             self.process_llm_response(result)
 
-    # def chat_with_pdf_q(self, query):
-    #     reply = ""
-    #     qa_chain_result = self.qa_chain({"question": query, 'chat_history': []}, return_only_outputs=False)
-    #     print("------------------------")
-    #     print(qa_chain_result)
-    #     print("------------------------")
-    #     reply += qa_chain_result["answer"]
-    #     reply += '\nSource Pages : '
-    #     page_set = set()
-    #     for source in qa_chain_result["source_documents"]:
-    #         page_set.add(source.metadata['page']+1) # GPT given pages are always currunt page - 1
-    #     return reply+str(list(page_set))
-    def chat_with_pdf_q(self, query):
+    def chat_with_pdf_single_query(self, query):
+        reply = ""
+        qa_chain_result = self.qa_chain({"question": query, 'chat_history': []}, return_only_outputs=False)
+        print("------------------------")
+        print(qa_chain_result)
+        print("------------------------")
+        reply += qa_chain_result["answer"]
+        reply += '\nSource Pages : '
+        page_set = set()
+        for source in qa_chain_result["source_documents"]:
+            page_set.add(source.metadata['page']+1) # GPT given pages are always currunt page - 1
+        return reply+str(list(page_set))
+    
+    def chat_with_pdf_q(self, query,AUA):
 
         prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
         [Sample Output]
@@ -160,7 +161,7 @@ class PDFUtils:
         print(final_ans)
 
         prompt_filter_fetus_age = [{"role": "system", "content": """You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations related to age. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."""},
-                {"role":"user", "content": """The fetal age is 45. The ultrasound report is as follows:""" + "\n" + final_ans}]
+                {"role":"user", "content": f"""The fetal age is {AUA}. The ultrasound report is as follows:""" + "\n" + final_ans}]
 
         final_ans = get_completion(prompt_filter_fetus_age)
         
