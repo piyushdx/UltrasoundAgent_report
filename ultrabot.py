@@ -367,7 +367,7 @@ def get_age_edd(EstabDD,ExamDate,Age,ageFlag):
         if final_age > 35:
             ageFlag = True
     except Exception as E:
-        print(str(estab_date)+str(exam_date)+str(final_age)+"\n"+"may be any of the above missing....")
+        print(str(estab_date)+str(exam_date)+"\n"+"may be any of the above missing....")
         try:
             if Age>34:
                 ageFlag = True
