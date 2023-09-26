@@ -60,7 +60,7 @@ def upload_file():
         # Do something with the uploaded file (e.g., save it)
         uploaded_file.save("ChatBotUI/static/pdf/uploaded.pdf")
         print("file is saved")
-        report_text = convert2text(request.files['pdf'])
+        # report_text = convert2text(request.files['pdf'])
         
 #         report_text = """
 #                                                   ULTRASOUND REPORT
@@ -272,80 +272,78 @@ def upload_file():
         
         # report_text = """ULTRASOUND REPORT\r\n\r\n                                 AZ WOMEN'S SPECIALISTS\r\n       Name        GED         ID                          Exam. Date       08-02-2023\r\n        Gender         Female              BirthDate                      Age              16yr Om\r\n           institute            AZ WOMEN'S SPECI...  Ref. Physician DR.HETAL SHAH    Sonographer        AM RDMS\r\n          Description       FETAL ANATOMY\r\n    [OB]\r\n             LMP(EDD) 03-19-2023                         EDD 12-24-2023                     GA(EDD) 19w3d\r\n               AUA 18w5d                    EDD(AUA) 12-29-2023                     EFW 0lb 90z (259g)\r\n          EFW Author Hadlock4(BPD,HC,A...       Pctl.(EFW) 16.32                    Pctl. Criteria EstabDD\r\n        Fetal Biometry        Avg.      1        2        3                     GA                   Pctl.\r\n       BPD              4.35    4.35                 cm        19w1dt12d   Hadlock   38.49   Hadlock\r\n        HC                15.16    15.16                  cm        18w1d+10d    Hadlock   3.63   Hadlock\r\n       AC               13.51    13.51                 cm        19w0dt14d   Hadlock   29.97   Hadlock\r\n         FL                    2.86     2.56     2.86             cm   Last    18w5d+13d    Hadlock    21.00   Hadlock\r\n         Fetal Cranium         Avg.       1        2        3                      GA                   Pctl.\r\n       CEREB             1.92    1.92                 cm        18w5d+13d     Hill     33.21   Nicolai...\r\n       cm               0.46    0.46                cm                          39.72  Nicolai...\r\n        NF                  0.38     0.38                    cm  Max\r\n         Lat Vent               0.67      0.67                       cm\r\n         General                                       Avg.         1                     3\r\n         Fetal HR                                          150         150                               bpm\r\n          Ratio                Value                        Normal Range\r\n         FL/AC              21.18        %          (20.0~24.0%, >21w)\r\n        FL/BPD            65.77       %         {71.0~87.0%, >23w)\r\n        FL/HC             18.87        %        (15.13~20.21%, 19w3d)\r\n        HC/AC             1.12                  (1.09~1.26, 19w3d)\r\n\r\n          Fetal Description                                                               Value\r\n        Gender                                                         Seen\r\n          Fetal Position                                                                   Breech\r\n          Fetal Spine                                                                 Anterior\r\n         Placenta Location                                                        Posterior\r\n         Placenta Grade                                                            1\r\n         Placenta Previa                                                              No\r\n        3V Cord                                                            Yes\r\n         Amniotic Fluid                                                             Normal\r\n          Facial Profile                                                                    Not seen\r\n        Diaphragm                                                         Seen\r\n         Upper Extremity                                                           Seen\r\n         Lower Extremity                                                         Seen\r\n        Hands                                                           Seen\r\n         Feet                                                                  Not seen\r\n\r\n          Fetal Heart                                                                   Value\r\n        4 Chamber                                                      Not seen\r\n          Lt. Outflow Tract                                                              Not seen\r\n          Rt. Outflow Tract                                                             Not seen\r\n\r\n          Fetal Brain                                                                    Value\r\n          Lateral Ventricles                                                              Seen\r\n        Cerebellum                                                          Seen\r\n         Cist Magna                                                               Seen\r\n        Cranium                                                           Seen\r\n\r\n        Fetal Abdomen                                                       Value\r\n        Abdominal Wall                                                       Seen\r\n         Spine                                                                Not seen\r\n        Stomach                                                        Seen\r\n\r\n\r\n                                                                                                                  08-02-2023 11:04 am\r\n\r\n\x0c                                                 ULTRASOUND REPORT\r\n\r\n                                 AZ WOMEN'S SPECIALISTS\r\n\r\n        Fetal Abdomen                                                      Value\r\n         Bladder                                                               Seen\r\n          Lt. Kidney                                                                     Seen\r\n         Rt Kidney                                                            Seen\r\n\r\n         Maternal Others                                 Avg.         1           2           3\r\n         Cervix L                                          3.27        3.22        3.29        3.31         cm\r\n\r\n       Comment\r\n        FETAL ANATOMY G1 TEEN PREGNANCY\r\n\r\n         SLIUP @ 18WSD EDD 12/29/23 BY ULTRASOUND, SIZE C/W DATES, OVERALL 16% (259G OLB 902). BREECH.\r\n        FHR=150BPM. GOOD FETAL MOVEMENT SEEN. UNABLE TO OBTAIN PROFILE, N/L\r\n                                                                                 , CARDIAC, SPINE, FEET, LOWER\r\n        EXT VIEWS DUE TO FETAL POSITION. ALL OTHER ANATOMY APPEARS WNL. POST FUNDAL PL- NO PREVIA.\r\n         CX=3.2CM.\r\n\r\n        TA & TV SCAN PERFORMED.\r\n\r\n       AM RDMS\r\n     Images\r\n\r\n                       [I=                   EaTELERR)\r\n                LIE Lanal          ae   EE LU RR  SEE\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                                                                                                                 08-02-2023 11:04 am\r\n\r\n\x0c"""
 
-#         report_text_85978 = """
-#                                                   ULTRASOUND REPORT
+        report_text_85978 = """
+                                                  ULTRASOUND REPORT
 
-#                                            Ultrasound Report
+                                           Ultrasound Report
 
-#        7
-#                                                                                Exam. Date        08-07-2023
-#         Gender                           Binhpate                   Age             251m
-#                        =~    ~~ Female                            Institute           AZ WOMEN'S SPECI... Diag. Physician SHAH                Ref. Physician     "HETAL SHAH...
-#          Sonographer    KS.RDMS
-#           Description       BPP
-#            w
-#     [OB]
-#         LMP(EDD) 11-21-2022            EstabDD 08-28-2023                EDD 08-28-2023
-#         GA(EDD) 37w0d                  AUA 40w0d             EDD(AUA) 08-07-2023
-#               EFW 9lb 20z (41479)      EFW Aut... Hadlock2(BPD,...   Pctl.(EFW) 98.40"
-#          Pctl. Crit... EstabDD
+       7
+                                                                               Exam. Date        08-07-2023
+        Gender                           Binhpate                   Age             251m
+                       =~    ~~ Female                            Institute           AZ WOMEN'S SPECI... Diag. Physician SHAH                Ref. Physician     "HETAL SHAH...
+         Sonographer    KS.RDMS
+          Description       BPP
+           w
+    [OB]
+        LMP(EDD) 11-21-2022            EstabDD 08-28-2023                EDD 08-28-2023
+        GA(EDD) 37w0d                  AUA 40w0d             EDD(AUA) 08-07-2023
+              EFW 9lb 20z (41479)      EFW Aut... Hadlock2(BPD,...   Pctl.(EFW) 98.40"
+         Pctl. Crit... EstabDD
 
-#          Fetal Biomet      Avg.     1       2       3                  GA                Pctl.
-#       BPD          9.73   9.73             cm     39wé6d+22d  Hadl... 99.27% Hadl...
-#       HC           36.08  36.08                       ek
-#                                             cm                Hadl... 99.69% Hadl...
-#       AC           37.31  37.31             cm     41w2d+21d  Hadl... 99.98* Hadl...
-#        FL              7.62   7.62                cm      39w0d+22d  Hadl...  90.18  Hadi...
+         Fetal Biomet      Avg.     1       2       3                  GA                Pctl.
+      BPD          9.73   9.73             cm     39wé6d+22d  Hadl... 99.27% Hadl...
+      HC           36.08  36.08                       ek
+                                            cm                Hadl... 99.69% Hadl...
+      AC           37.31  37.31             cm     41w2d+21d  Hadl... 99.98* Hadl...
+       FL              7.62   7.62                cm      39w0d+22d  Hadl...  90.18  Hadi...
 
-#         General                               Avg.       1        2        3
-#         Fetal HR                            |   147      147                         bpm
+        General                               Avg.       1        2        3
+        Fetal HR                            |   147      147                         bpm
 
-#         AFI                           Last       1         2        3                          Pctl.
-#        Q1                        5.53     5.53                     cm     Avg.
-#        Q2                      0.00    0.00                    cm     Avg.
-#        Q3                      3.52    3.52                    cm     Avg.
-#       Q4                      1.35    1.35                    cm     Avg.
-#         AFI                           10.40     10.40                         cm               19.76
+        AFI                           Last       1         2        3                          Pctl.
+       Q1                        5.53     5.53                     cm     Avg.
+       Q2                      0.00    0.00                    cm     Avg.
+       Q3                      3.52    3.52                    cm     Avg.
+      Q4                      1.35    1.35                    cm     Avg.
+        AFI                           10.40     10.40                         cm               19.76
 
-#          Ratio           Value      Il       | 8 Normal Range  1
-#        FL/AC         20.43     %      (20.0~24.0%, >21w)
-#        FL/BPD       78.32     %     (71.0~87.0%, >23w)
-#        FL/HC         21.13     %    (19.90~23.50%, 37w...
-#        HC/AC        0.97            (0.92~1.05, 37w0d)
-#          Fetal Description                                               Value
-#                                                                                              AN  1
-#        Gender                                              Male
-#          Fetal Position                                                   Vertex
-#         Placenta Location                                           Fundal
-#         Placenta Grade                                              2
-#          Amniotic Fluid                                                Normal
-#          Biophysical Profile
-#         Fetal Movements                  nN          Fetal Breathing Move...           2
-#         Fetal Tone                                     Amniotic Fluid Volume              2
-#          Total                                oo
+         Ratio           Value      Il       | 8 Normal Range  1
+       FL/AC         20.43     %      (20.0~24.0%, >21w)
+       FL/BPD       78.32     %     (71.0~87.0%, >23w)
+       FL/HC         21.13     %    (19.90~23.50%, 37w...
+       HC/AC        0.97            (0.92~1.05, 37w0d)
+         Fetal Description                                               Value
+                                                                                             AN  1
+       Gender                                              Male
+         Fetal Position                                                   Vertex
+        Placenta Location                                           Fundal
+        Placenta Grade                                              2
+         Amniotic Fluid                                                Normal
+         Biophysical Profile
+        Fetal Movements                  nN          Fetal Breathing Move...           2
+        Fetal Tone                                     Amniotic Fluid Volume              2
+         Total                                oo
 
-#       Comment
-
-
-
-#                                                                                                                   08-07-2023 10:05 am
-
-#                                                   ULTRASOUND REPORT
-
-#                                             Ultrasound Report
-
-#        BPP
-
-#           Single vertex male fetus.
-#          FHR=147bpm with normal cardiac rhythm.
-#         EFW=9#20z / 98th%
-#         AFI=10.4cm
-#          Fundal placenta grade 2
-#         BPP8/8
-
-#        KS.RDMS
+      Comment
 
 
+
+                                                                                                                  08-07-2023 10:05 am
+
+                                                  ULTRASOUND REPORT
+
+                                            Ultrasound Report
+
+       BPP
+
+          Single vertex male fetus.
+         FHR=147bpm with normal cardiac rhythm.
+        EFW=9#20z / 98th%
+        AFI=10.4cm
+         Fundal placenta grade 2
+        BPP8/8
+
+       KS.RDMS
 
 
 
@@ -365,10 +363,12 @@ def upload_file():
 
 
 
-#                                                                                                                   08-07-2023 10:05 am
 
-# 
-# """
+
+                                                                                                                  08-07-2023 10:05 am
+
+
+"""
          
 #         report_text_53152 = """
 #                                                        ULTRASOUND REPORT
@@ -840,7 +840,7 @@ def upload_file():
 # 
 # """
         
-        json_data = text_to_json(report_text)
+        json_data = text_to_json(report_text_85978)
         # final_response = parse_report(json_data)
 
         print(json_data)

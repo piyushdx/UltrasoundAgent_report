@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 from langchain.embeddings import OpenAIEmbeddings
-
+import re
+from ultrabot import json_parser
+import json
 
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 
@@ -20,6 +22,28 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     )
     return response.choices[0].message["content"]
 
+
+def remove_bad_escaped_characters(input_string):
+    # Define a regular expression pattern to match bad escaped characters
+    pattern = re.compile(r'\\[^\w\s]')  # Matches any backslash followed by a non-alphanumeric character
+
+    # Use sub() function to replace matched patterns with an empty string
+    cleaned_string = re.sub(pattern, '', input_string)
+
+    return cleaned_string
+import string
+def remove_bad_characters(input_text):
+    # Define the set of printable characters
+    # printable_chars = set(string.printable)
+    # Filter out characters that are not in the set of printable characters
+    # cleaned_text = ''.join(char for char in input_text if char in printable_chars)
+    cleaned_text =  ''.join(char for char in input_text if char.isprintable())
+
+# Remove extra whitespace and normalize spaces
+    # cleaned_text = ' '.join(cleaned_text.split())
+    print(cleaned_text)
+
+    return cleaned_text
 
 def text_to_json(report_text):
     post_prompt_json = """
@@ -137,13 +161,24 @@ Lt. Overy W avg value in cm
 
 Lt. Overy Vol. avg value in ml  
 
-Comment //strictly consider all the data in the report above as a comment until the word "RDMS" is encountered.
 """
-    # consider all the data till the word KS RDMS OR AM RDMS foundas a comment 
-    # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
-    history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
-    # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
-    jsonReport = get_completion(history)
-    return jsonReport
+    result = re.search(r'Comment(.*?)(?:RDMS|$)', report_text, re.DOTALL)
 
+    if result:
+        comment = result.group(1).strip()
+    else:
+        comment = "Not Found"
+    cleaned_string = remove_bad_characters(comment)
+    print(cleaned_string)
+    print("above is comment...")
+    # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
+    # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
+    # history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
+    history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
+    jsonReport = get_completion(history)
+    print(jsonReport)
+    print("above is json report from get completion")
+    jsonReport = json.loads(json_parser(jsonReport))
+    jsonReport["Comment"] = str(comment)
+    return str(jsonReport).replace("'", "\"")
 

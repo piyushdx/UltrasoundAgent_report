@@ -382,7 +382,7 @@ def get_age_edd(EstabDD,ExamDate,Age,ageFlag):
         if final_age > 35:
             ageFlag = True
     except Exception as E:
-        print(str(estab_date)+str(exam_date)+"\n"+"may be any of the above missing....")
+        print("may be any of the above missing....")
         try:
             if Age>34:
                 ageFlag = True
@@ -414,8 +414,8 @@ def get_not_seen_mvp_edc(reportString):
             EDD = str(v)
         if str(k) == "Exam Date":
             ExamDate = str(v)
-        if str(k) == "Age in years":
-            Age = str(v)
+        if str(k) == "Age" and str(v) != "Not Found":
+            Age = str(v[:2])
 
     if EstabDD is not None:
         ageFlag = get_age_edd(EstabDD,ExamDate,Age,ageFlag)
@@ -512,7 +512,9 @@ def parse_report(Report_string):
     print(abnormalities)
     print("above are intermediate things............")
     abnormal_keys,Report_string = get_abnormal_keys(json.loads(json_parser(abnormalities)),json.loads(json_parser(Report_string)))
+    Report_string = Report_string.replace("'", "\"")
     final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
+    # final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
     abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
     print(abnormalities)
     print("Above are final Abnormalities....................]]]]]]]]]]]]]]]]]]]]")
