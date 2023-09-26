@@ -329,13 +329,18 @@ def get_abnormal_keys(json_data,report_string):
         if "AFI cm value" in abnormal_keys and "AFI pctl value" in abnormal_keys:
             abnormal_keys.remove("AFI pctl value")
     
-    if "EFW in gram" in abnormal_keys or "EFW in pctl" in abnormal_keys:
+    # if "EFW in gram" in abnormal_keys or "EFW in pctl" in abnormal_keys:
+    #     abnormal_keys.append("Known Macrosomia ≥90th percentile")
+    #     if "EFW in pctl" in abnormal_keys:
+    #         report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in pctl"])
+    #     else:
+    #         if "EFW in gram" in abnormal_keys:
+    #             report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in gram"])
+
+    if "EFW in pctl" in abnormal_keys:
         abnormal_keys.append("Known Macrosomia ≥90th percentile")
         if "EFW in pctl" in abnormal_keys:
             report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in pctl"])
-        else:
-            if "EFW in gram" in abnormal_keys:
-                report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in gram"])
 
     if "EFW in gram" in abnormal_keys:
         abnormal_keys.remove("EFW in gram")
@@ -386,8 +391,12 @@ def get_age_edd(EstabDD,ExamDate,Age,ageFlag):
         try:
             if Age>34:
                 ageFlag = True
+            else :
+                ageFlag = False
         except Exception as e:
-            pass
+            ageFlag = False
+
+    print(f"final age flag is :{ageFlag}")
     return ageFlag
 
 def get_not_seen_mvp_edc(reportString):
@@ -415,7 +424,15 @@ def get_not_seen_mvp_edc(reportString):
         if str(k) == "Exam Date":
             ExamDate = str(v)
         if str(k) == "Age" and str(v) != "Not Found":
-            Age = str(v[:2])
+            try:
+                Age = int(v.split("yr")[0])
+            except Exception as e:
+                try:
+                    Age = int(str(v[:2]))
+                except:
+                    pass
+    print(Age)
+    print("Above is Age....................................................................................")
 
     if EstabDD is not None:
         ageFlag = get_age_edd(EstabDD,ExamDate,Age,ageFlag)

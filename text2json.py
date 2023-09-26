@@ -37,8 +37,8 @@ def remove_bad_characters(input_text):
     # printable_chars = set(string.printable)
     # Filter out characters that are not in the set of printable characters
     # cleaned_text = ''.join(char for char in input_text if char in printable_chars)
-    cleaned_text =  ''.join(char for char in input_text if char.isprintable())
-
+    # cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', '', input_text)
+    cleaned_text = input_text.replace("\n"," ").replace("\x0c"," ")
 # Remove extra whitespace and normalize spaces
     # cleaned_text = ' '.join(cleaned_text.split())
     print(cleaned_text)
@@ -61,8 +61,8 @@ GA(EFW)
 EDD(LMP)
 AUA
 EDD(AUA)
-EFW in gram
 EFW in pctl
+EFW in gram
 
 Fetal HR avg value
 AFI cm value
@@ -162,23 +162,21 @@ Lt. Overy W avg value in cm
 Lt. Overy Vol. avg value in ml  
 
 """
-    result = re.search(r'Comment(.*?)(?:RDMS|$)', report_text, re.DOTALL)
+    result = re.search(r'Comment(.*?)(?:RDMS|$)', str(report_text), re.DOTALL)
 
     if result:
         comment = result.group(1).strip()
     else:
         comment = "Not Found"
-    cleaned_string = remove_bad_characters(comment)
-    print(cleaned_string)
-    print("above is comment...")
+    cleaned_string = comment.replace("\n"," ").replace("\x0c"," ")
     # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
-    # history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
-    history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
+    history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
+    # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
     jsonReport = get_completion(history)
     print(jsonReport)
     print("above is json report from get completion")
     jsonReport = json.loads(json_parser(jsonReport))
-    jsonReport["Comment"] = str(comment)
+    jsonReport["Comment"] = str(cleaned_string)
     return str(jsonReport).replace("'", "\"")
 
