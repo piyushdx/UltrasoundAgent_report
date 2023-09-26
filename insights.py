@@ -1,5 +1,5 @@
 insightsAll = {
-"Fetal HR avg value": {
+    "Fetal HR avg value": {
       "normal_values": "Normal Fetal HR avg value : 120 bpm to 160 bpm",
       "abnormal_values": "Abnormal Fetal HR avg value :  Less than 120 bpm or greater than 160 bpm",
       "check": "yes"
@@ -249,7 +249,15 @@ insightsAll = {
           "normal_values": "Normal value of Placenta Previa: No",
           "abnormal_values": "Abnormal value of Placenta Previa: yes",
           "check": "yes"
-    
-    }
-  
+    },
+    "EFW in gram": {
+      "normal_values": "The normal range for the EFW in gram value is typically below 4000 grams.",
+      "abnormal_values": "EFW in g is deemed abnormal when it exceeds 4000 grams.",
+      "check": "yes"
+    },    
+    "EFW in pctl": {
+      "normal_values": "EFW in pctl normal if less than 89.99 pctl",
+      "abnormal_values": f"EFW in pctl consider Abnormal if exceeds 90.01 pctl",
+      "check": "yes"
+    },    
   }

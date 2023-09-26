@@ -319,7 +319,7 @@ def get_insights(reportString, insightsAll):
     return insights
 
 
-def get_abnormal_keys(json_data):
+def get_abnormal_keys(json_data,report_string):
 
     abnormal_keys = []
 
@@ -328,7 +328,22 @@ def get_abnormal_keys(json_data):
             abnormal_keys.append(key)
         if "AFI cm value" in abnormal_keys and "AFI pctl value" in abnormal_keys:
             abnormal_keys.remove("AFI pctl value")
-    return abnormal_keys
+    
+    if "EFW in gram" in abnormal_keys or "EFW in pctl" in abnormal_keys:
+        abnormal_keys.append("Known Macrosomia ≥90th percentile")
+        if "EFW in pctl" in abnormal_keys:
+            report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in pctl"])
+        else:
+            if "EFW in gram" in abnormal_keys:
+                report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in gram"])
+
+    if "EFW in gram" in abnormal_keys:
+        abnormal_keys.remove("EFW in gram")
+        
+    if "EFW in pctl" in abnormal_keys:
+        abnormal_keys.remove("EFW in pctl")
+
+    return abnormal_keys,str(report_string)
 
 def get_abnormal_keys_comment(json_data):
 
@@ -399,7 +414,7 @@ def get_not_seen_mvp_edc(reportString):
             EDD = str(v)
         if str(k) == "Exam Date":
             ExamDate = str(v)
-        if str(k) == "Age":
+        if str(k) == "Age in years":
             Age = str(v)
 
     if EstabDD is not None:
@@ -496,11 +511,11 @@ def parse_report(Report_string):
     abnormalities = response3
     print(abnormalities)
     print("above are intermediate things............")
-    abnormal_keys = get_abnormal_keys(json.loads(json_parser(abnormalities)))
+    abnormal_keys,Report_string = get_abnormal_keys(json.loads(json_parser(abnormalities)),json.loads(json_parser(Report_string)))
     final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
     abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
     print(abnormalities)
-    print("Above are final Abnormalities....................")
+    print("Above are final Abnormalities....................]]]]]]]]]]]]]]]]]]]]")
     final_ans += get_reports(json.loads(abnormalities),negative_finding_keys,AUA)
     final_ans += "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
     final_response = final_ans.split("^_^")

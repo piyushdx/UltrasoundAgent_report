@@ -1,58 +1,95 @@
-                                                      ULTRASOUND REPORT
+                                                  ULTRASOUND REPORT
 
-                                     AZ WOMEN'S SPECIALISTS
+                                           Ultrasound Report
 
-            Name                           ID                         Exam. Date       08-03-2023
-             Gender         Female              BirthDate                       Age              29yr 8m
-                 Institute           AZ WOMEN'S SPECI...  Ref. Physician                HAH    Sonographer        KS.RDMS
-              Description       GROWTH
-        [OB]
-                  LMP(EDD) 01-17-2023                         EDD 10-24-2023                     GA(EDD) 28w2d
-                    AUA 30w1d                    EDD(AUA) 10-11-2023                     EFW 3ib 50z (1510g)
-               EFW Author Hadlock4(BPD,HC,A...       Pctl.(EFW) 93.42"                    Pctl. Criteria EstabDD
+       7
+                                                                               Exam. Date        08-07-2023
+        Gender                           Binhpate                   Age             251m
+                       =~    ~~ Female                            Institute           AZ WOMEN'S SPECI... Diag. Physician SHAH                Ref. Physician     "HETAL SHAH...
+         Sonographer    KS.RDMS
+          Description       BPP
+           w
+    [OB]
+        LMP(EDD) 11-21-2022            EstabDD 08-28-2023                EDD 08-28-2023
+        GA(EDD) 37w0d                  AUA 40w0d             EDD(AUA) 08-07-2023
+              EFW 9lb 20z (41479)      EFW Aut... Hadlock2(BPD,...   Pctl.(EFW) 98.40"
+         Pctl. Crit... EstabDD
 
-               Fetal Biometry         Avg.       1        2        3                      GA                    Pctl.
-           BPD              7.39    7.39                cm        29w4d+15d ~~ Hadlock   79.69   Hadlock
-             HC                 27.94    27.94                  cm        30wddt21d    Hadlock   85.47   Hadlock
-            AC                25.57    25.57                 cm        29w5d+15d   Hadlock  83.72   Hadlock
-                FL                     5.86      5.86                       cm   Last    30w4d+21d    Hadlock    91.46    Hadlock
-              General                                       Avg.         1          2          3
-               Fetal HR                                      |    154         154                               bpm
-                AFI                                    Avg.          1           2           3                                 Pctl.
-              Q1                                  8.43       8.43                             cm
-             Q2                              7.19       7.19                           cm
-             Q3                              2.71       2.71                           cm
-         Q4                       6.93     6.93                    cm
-            AFI                            25.26      25.26                         cm                98.28*
-            Ratio             Value                    Normal Range
-                 FL/IAC                22.91          %            (20.0~24.0%, >21w)
-             FL/BPD            79.32       %         (71.0~87.0%, >23w)
-              FL/HC              20.97        %        (18.21~21.47%, 28w2d)
-             HC/AC             1.09                  (1.03~1.22, 28w2d)
-               Fetal Description                                                             Value
-             Gender                                                          Male
-                Fetal Position                                                                   Vertex
-               Placenta Location                                                        Anterior
-              Placenta Grade                                                            2
-               Amniotic Fluid                                                             Normal
+         Fetal Biomet      Avg.     1       2       3                  GA                Pctl.
+      BPD          9.73   9.73             cm     39wé6d+22d  Hadl... 99.27% Hadl...
+      HC           36.08  36.08                       ek
+                                            cm                Hadl... 99.69% Hadl...
+      AC           37.31  37.31             cm     41w2d+21d  Hadl... 99.98* Hadl...
+       FL              7.62   7.62                cm      39w0d+22d  Hadl...  90.18  Hadi...
 
-           Comment
-           GROWTH
+        General                               Avg.       1        2        3
+        Fetal HR                            |   147      147                         bpm
 
-                Single vertex male fetus seen with + fetal movement.
-               FHR=154bpm with normal cardiac rhythm.
-              EFW=3#50z / 93rd%
-                Anterior placenta grade 2.
-               AFI1=25.3cm / polyhydramnios
+        AFI                           Last       1         2        3                          Pctl.
+       Q1                        5.53     5.53                     cm     Avg.
+       Q2                      0.00    0.00                    cm     Avg.
+       Q3                      3.52    3.52                    cm     Avg.
+      Q4                      1.35    1.35                    cm     Avg.
+        AFI                           10.40     10.40                         cm               19.76
 
-            KS.RDMS
+         Ratio           Value      Il       | 8 Normal Range  1
+       FL/AC         20.43     %      (20.0~24.0%, >21w)
+       FL/BPD       78.32     %     (71.0~87.0%, >23w)
+       FL/HC         21.13     %    (19.90~23.50%, 37w...
+       HC/AC        0.97            (0.92~1.05, 37w0d)
+         Fetal Description                                               Value
+                                                                                             AN  1
+       Gender                                              Male
+         Fetal Position                                                   Vertex
+        Placenta Location                                           Fundal
+        Placenta Grade                                              2
+         Amniotic Fluid                                                Normal
+         Biophysical Profile
+        Fetal Movements                  nN          Fetal Breathing Move...           2
+        Fetal Tone                                     Amniotic Fluid Volume              2
+         Total                                oo
 
-
-
-
-
-
+      Comment
 
 
 
-                                                                                                                        08-03-2023 11:02 am
+                                                                                                                  08-07-2023 10:05 am
+
+                                                  ULTRASOUND REPORT
+
+                                            Ultrasound Report
+
+       BPP
+
+          Single vertex male fetus.
+         FHR=147bpm with normal cardiac rhythm.
+        EFW=9#20z / 98th%
+        AFI=10.4cm
+         Fundal placenta grade 2
+        BPP8/8
+
+       KS.RDMS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                  08-07-2023 10:05 am
+
+
