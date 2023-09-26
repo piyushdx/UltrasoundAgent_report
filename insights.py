@@ -30,8 +30,8 @@ insightsAll = {
       "check": "yes"
     },
     "Amniotic Fluid": {
-      "normal_values": "Value of Amniotic Fluid Adequate or Normal is fine.",
-      "abnormal_values": "Abnormal values fo Amniotic Fluid are Low, High, Oligohydramnios and Polyhydramnios",
+      "normal_values": "Normal value of <Amniotic Fluid> are 'Adequate' or 'Normal'",
+      "abnormal_values": "Abnormal values of <Amniotic Fluid> are 'Low', 'High', 'Oligohydramnios' and 'Polyhydramnios'",
       "check": "yes"
     },
     "Fetal Movements": {
