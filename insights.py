@@ -15,8 +15,8 @@ insightsAll = {
       "check": "yes"
     },    
     "Fetal Position": {
-      "normal_values": "Normal Fetal positions are Head down (vertex), Anterior and Posterior",
-      "abnormal_values": "Abnormal Fetal positions are  Transverse, Shoulder Presentation and Head up (breech)",
+      "normal_values": "Normal <Fetal positions> are only Head down (vertex), Anterior and Posterior",
+      "abnormal_values": "Abnormal <Fetal positions> are  Transverse, Shoulder Presentation and Head up (breech)",
       "check": "yes"
     },
     "Placenta Location": {
@@ -30,8 +30,8 @@ insightsAll = {
       "check": "yes"
     },
     "Amniotic Fluid": {
-      "normal_values": "Normal value of <Amniotic Fluid> are 'Adequate' or 'Normal'",
-      "abnormal_values": "Abnormal values of <Amniotic Fluid> are 'Low', 'High', 'Oligohydramnios' and 'Polyhydramnios'",
+      "normal_values": "Normal : 'Adequate' or 'Normal'",
+      "abnormal_values": "Abnormal : 'Low', 'High', 'Oligohydramnios' and 'Polyhydramnios'",
       "check": "yes"
     },
     "Fetal Movements": {
@@ -50,8 +50,8 @@ insightsAll = {
       "check": "yes"
     },
     "Amniotic Fluid Volume": {
-      "normal_values": "Normal values of Amniotic Fluid volume are Normal,Adequate Or 2",
-      "abnormal_values": "Abnormal values of Amniotic Fluid volume are Low, High, Oligohydramnios, Polyhydramnios Or less than or equal to 1",
+      "normal_values": "if <Amniotic Fluid Volume> values are Normal,Adequate Or 2 classify them as Normal",
+      "abnormal_values": "if <Amniotic Fluid Volume> values are 'Low', 'High', 'Oligohydramnios', 'Polyhydramnios' Or less than or equal to 1 classify them as Abnormal",
       "check": "yes"
     },
     "BPP Total out of 8": {
@@ -256,8 +256,8 @@ insightsAll = {
       "check": "yes"
     },    
     "EFW in pctl": {
-      "normal_values": "EFW in pctl normal if less than 89.99 pctl",
-      "abnormal_values": f"EFW in pctl consider Abnormal if exceeds 90.01 pctl",
+      "normal_values": "<EFW in pctl> cosider normal if less than 89.99 pctl",
+      "abnormal_values": f"<EFW in pctl> consider Abnormal if exceeds 90.01 pctl",
       "check": "yes"
     },    
   }

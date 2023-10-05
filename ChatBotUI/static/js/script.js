@@ -125,6 +125,11 @@ function convertPdf() {
 
     const formData = new FormData(form);
     alert("PDF uploaded successfully!");
+    // loader.style.display = 'block';
+    var submitButton = document.getElementById("submitbtn");
+    submitButton.disabled = true;
+    disableAndFreezeButton('SendBtnID')
+    
     pdfstatus = true;
     if (pdfstatus)
     {
@@ -149,17 +154,31 @@ function convertPdf() {
           return response.json(); // Parse response as JSON
 
         }
+        // var submitButton = document.getElementById("submitbtn");
+        // submitButton.disabled = false;
+        // enableAndUnfreezeButton("SendBtnID")
+
+
         throw new Error("Network response was not ok.");
       })
       .then((formData) => {
+        // const submitButton = document.getElementById("submitbtn");
+        // submitButton.disabled = true;
         botResponse(formData);
         console.log("Success here:", formData);
+        var submitButton = document.getElementById("submitbtn");
+        submitButton.disabled = false;
+        enableAndUnfreezeButton("SendBtnID")
         // Once the response is received, hide the loader icon
         loader.style.display = 'none';
         const loaderCLS = document.getElementById('loaderID');
         loaderCLS.remove();
         // Enable the button
         enableAndUnfreezeButton("SendBtnID")
+
+        
+        
+
       })
       // .then(data => {
       //   const responseDiv = document.getElementById("response");
@@ -172,7 +191,8 @@ function convertPdf() {
 }
 
 document.addEventListener("DOMContentLoaded", convertPdf);
-
+var submitButton = document.getElementById("submitbtn");
+submitButton.disabled = false;
 
 
 

@@ -62,7 +62,6 @@ EDD(LMP)
 AUA
 EDD(AUA)
 EFW in pctl
-EFW in gram
 
 Fetal HR avg value
 AFI cm value
@@ -88,8 +87,7 @@ Placenta Previa
 Fetal Movements 
 Fetal Tone
 Fetal Breathing Move
-Amniotic Fluid Volume
-BPP Total out of 8
+Total out of 8
 
 Q1 avg value in cm
 Q2 avg value in cm
@@ -168,15 +166,19 @@ Lt. Overy Vol. avg value in ml
         comment = result.group(1).strip()
     else:
         comment = "Not Found"
-    cleaned_string = comment.replace("\n"," ").replace("\x0c"," ")
+    cleaned_string = comment.replace("\n"," ").replace("\x0c"," ").replace("\"","").replace("\'","").replace(","," ")
     # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
     history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
     # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
     jsonReport = get_completion(history)
-    print(jsonReport)
-    print("above is json report from get completion")
     jsonReport = json.loads(json_parser(jsonReport))
-    jsonReport["Comment"] = str(cleaned_string)
+    try:
+        jsonReport["Comment"] = str(cleaned_string)[:-2]
+    except Exception as e:
+        print(f"comment is not added because...........{e}")
+    print(jsonReport)
+    print("above is final json report......................")
+
     return str(jsonReport).replace("'", "\"")
 

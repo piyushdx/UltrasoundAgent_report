@@ -11,7 +11,8 @@ from pdf_utils import PDFUtils
 # load_dotenv()
 from insights import insightsAll
 from datetime import datetime
-
+import time
+import difflib
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
@@ -119,8 +120,9 @@ def remove_AC(abno):
 
 
 def get_reports(abnormalities,negative_finding_keys,AUA):
-    for key in negative_finding_keys:
-        abnormalities[key] = ""
+    if negative_finding_keys is not None:
+        for key in negative_finding_keys:
+            abnormalities[key] = ""
     print(abnormalities)
     print("above are all the possible abnormalities........................................................")
     if any(abnormalities):
@@ -130,7 +132,10 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
                 continue
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
-            query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.\n"
+            if key == "Fetal Position":
+                query = "I would like comprehensive guidelines for the confirm suspected abnormal" + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
+            else:
+                query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
             result = pdf_utils.chat_with_pdf_q(query,AUA)
             result += '^_^'
             reports += result
@@ -241,7 +246,7 @@ def get_guidelines(Question_string):
     # result = get_answer_from_pdf(Question_string)
     return str(result)
 
-# def get_abno_biometry(Report_string):
+def get_abno_biometry(Report_string):
     # history = [{"role": "system", "content": "You have comprehensive knowledge regarding ultrasound reports. If any of the measurements provided (AC, BPD, FL, HC) in the report and if they are below the 10th percentile, consider them as abnormal.check for each parameter and think step by step..."}]
     history = [{"role": "system", "content": "You possess extensive expertise in analyzing ultrasound reports. According to US imaging guidelines, any value for AC, BPD, FL, or HC that falls below the 10th percentile is considered an abnormality."}]
     history += [{"role": "user",
@@ -430,7 +435,7 @@ def get_not_seen_mvp_edc(reportString):
                 try:
                     Age = int(str(v[:2]))
                 except:
-                    pass
+                    Age = None
     print(Age)
     print("Above is Age....................................................................................")
 
@@ -447,6 +452,7 @@ def get_not_seen_mvp_edc(reportString):
     flag = False
     if sum_mvp > 8.0:
         flag = True
+    print(f"sum_mvp is :{sum_mvp}, and flag is:{flag}")
     if len(final_ans) < 110:
         final_ans = ""
     return final_ans,flag,ageFlag
@@ -491,20 +497,24 @@ def get_negative_findings(reportString):
         return abnormal_keys
     except Exception as E:
         print("No negative connotation is fond in the Comment")
-        return []
+        return None
 def get_AUA(Report_string):
     try:
         AUA_data = Report_string["AUA"]
         AUA = int(AUA_data.split("w")[0])
+        if AUA < 50:
+            pass
+        else:
+            AUA = AUA+"generate error"
     except Exception as e:
         print("AUA Not Found")
-        AUA = 10
+        AUA = None
     return AUA
 
 def parse_report(Report_string):
     print("------------------- \nParsing Report \n------------------")
     history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>", get_insights(
-        json.loads(Report_string), insightsAll))+"\n"+Report_string}]
+        json.loads(Report_string), insightsAll))+"\n\nHere is the ultrasound Report\n"+Report_string}]
     AUA = get_AUA(json.loads(json_parser(Report_string)))
     step2 = """
     create list of abnormalities
@@ -566,6 +576,113 @@ def remove_last_source_pages(text):
     return text
 
 
+
+def remove_duplicate(text):
+    del1 = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you."
+    del2 = "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
+    try:
+        text.remove(del1)
+        text.remove(del2)
+    except Exception as e:
+        pass
+    new_text = []
+    remaining_list = {}
+    for i in range(len(text)):
+        if len(text[i]) > 120:
+            new_text.append(text[i][100:])
+        else:
+            remaining_list[str(i)] = text[i]
+
+
+
+    def is_similar(a, b, threshold=0.45):
+        """
+        Determine if two strings are similar based on the difflib ratio.
+        """
+        ratio = difflib.SequenceMatcher(None, a, b).ratio()
+        print(ratio)
+        return ratio >= threshold
+
+    def remove_duplicates(input_list):
+        unique_list = []
+        for item in input_list:
+            is_duplicate = False
+            for unique_item in unique_list:
+                if is_similar(item, unique_item):
+                    is_duplicate = True
+                    break
+            if not is_duplicate:
+                unique_list.append(item)
+        return unique_list
+
+    unique_text = remove_duplicates(new_text)
+
+    final_answer = []
+    for tex in text:
+        for item in unique_text:
+            if str(item[:19]) == str(tex[100:119]):
+                print(item[:19])
+                print(tex[100:119])
+                final_answer.append(tex)
+
+    if any(remaining_list):
+        print("yes found in json")
+        for key,value in remaining_list.items():
+            final_answer.insert(int(key),value)
+    final_answer.insert(0,del1)
+    final_answer.append(del2)
+    return final_answer
+
+import re
+
+def remove_duplicate_using_key_analysis(final_response):
+    def get_key_analysis(final_response,key_json={}):
+        # Use regular expressions to extract Key Analysis and Recommendations
+        for i in range(len(final_response)):
+            key_analysis_match = re.search(r'Key Analysis:(.*?)Recommendation:', final_response[i], re.DOTALL | re.IGNORECASE)
+            key_analysis = key_analysis_match.group(1).strip() if key_analysis_match else ""
+            if key_analysis != "":
+                key_json[str(i)] = key_analysis
+
+        return key_json
+
+    def is_similar(a, b, threshold=0.45):
+        """
+        Determine if two strings are similar based on the difflib ratio.
+        """
+        ratio = difflib.SequenceMatcher(None, a, b).ratio()
+        print(ratio)
+        return ratio >= threshold
+
+    def remove_duplicates(input_list):
+        unique_list = []
+        for item in input_list:
+            is_duplicate = False
+            for unique_item in unique_list:
+                if is_similar(item, unique_item):
+                    is_duplicate = True
+                    break
+            if not is_duplicate:
+                unique_list.append(item)
+        return unique_list
+    try:
+        json_data = get_key_analysis(final_response)
+        value_list = remove_duplicates(list(json_data.values()))
+
+        # Initialize a list to store keys
+        keys_not_in_list = []
+
+        # Iterate through the dictionary and check if the value is not in the value_list
+        for key, value in json_data.items():
+            if value not in value_list:
+                keys_not_in_list.append(key)
+        for i in keys_not_in_list:
+            final_response.pop(int(i))
+    except Exception as e:
+        pass
+    
+    return final_response
+
 class UltraBot():
     def __init__(self):
         self.chat_history = [
@@ -588,6 +705,11 @@ class UltraBot():
         print("Chat History cleared.....")
         return jsonify({"status": "True"})
 
+
+    # def get_response(self, data):
+    #     time.sleep(3)
+    #     return jsonify({"response": "done done done..."})
+
     def get_response(self, data):
         function_response = None
         query = data["query"]
@@ -608,6 +730,8 @@ class UltraBot():
                 function_response = parse_report(query)
                 if isinstance(function_response, list):
                     final_response = function_response
+                    final_response=remove_duplicate(final_response)
+                    final_response = remove_duplicate_using_key_analysis(final_response)
                 else:
                     final_response = "Apologies! I could not understand, Can you please rephrase and try again..."
 
@@ -639,7 +763,8 @@ class UltraBot():
                     response.choices[0].message["content"])
         else:
             final_response = response.choices[0].message["content"]
-
+        print("below is final response")
+        print(final_response)
         self.chat_history += [{"role": "assistant",
                                "content": str(final_response)}]
         print("final_response:", final_response)

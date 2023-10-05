@@ -7,36 +7,16 @@ API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94ca
 # Base URL for PDF.co Web API requests
 BASE_URL = "https://api.pdf.co/v1"
 
-# def convert2txt(args = None):
-
-#     # The authentication key (API Key).
-#     # Get your own by registering at https://app.pdf.co
-#     API_KEY = "piyush@dxfactor.com_abaab3291ab8029766bc5eb6a3655270594ec2883bdfaf7184f01b25c1224a910c000f7c"
-
-
-#     # Source PDF file
-#     SourceFile = "/home/piyush/Work/UltrasoundAgent_report/US REPORTS/others/SKM_C65823071313500    2.pdf"
-#     # Destination CSV file name
-#     DestinationFile = "SKM_C65823071313500    2.txt"
-
-
-#     uploadedFileUrl = uploadFile(SourceFile)
-#     if (uploadedFileUrl != None):
-#         return convertPdfToText(uploadedFileUrl, DestinationFile)
 def convert2text(args = None):
-
-    # The authentication key (API Key).
-    # Get your own by registering at https://app.pdf.co
     API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
-
 
     # Source PDF file
     SourceFile = "ChatBotUI/static/pdf/uploaded.pdf"
     # Destination CSV file name
     DestinationFile = "SKM_C65823071313500    2.txt"
 
-
     uploadedFileUrl = uploadFile(SourceFile)
+    print(uploadedFileUrl)
     if (uploadedFileUrl != None):
         return convertPdfToText(uploadedFileUrl, DestinationFile)
 
@@ -106,6 +86,7 @@ def uploadFile(fileName):
     
     # Execute request and get response as JSON
     response = requests.get(url, headers={ "x-api-key": API_KEY })
+    print(response)
     if (response.status_code == 200):
         json = response.json()
         
@@ -127,9 +108,5 @@ def uploadFile(fileName):
         print(f"Request error: {response.status_code} {response.reason}")
 
     return None
-
-
-# if __name__ == '__main__':
-#     main()
 
             

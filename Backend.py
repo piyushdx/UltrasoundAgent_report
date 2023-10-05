@@ -4,16 +4,13 @@ from flask_cors import CORS, cross_origin
 from config import config, environment, ip_config
 import re
 from ultrabot import UltraBot
-from ultrabot import parse_report
-from utils import convert2text
+# from utils import convert2text
 import os
 from text2json import *
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 ultrabot = UltraBot()
-
-
 
 @app.route('/UltraBot_clear_cache')
 @cross_origin(supports_credentials=True)
@@ -24,18 +21,6 @@ def UltraBot_clear_cache():
 @cross_origin(supports_credentials=True)
 def UltraBot_get_response():
     return ultrabot.get_response(request.get_json())
-
-
-# @app.route('/convert', methods=['POST'])
-# @cross_origin(supports_credentials=True)
-# def convert():
-#     print("hiiiii")
-#     pdf_file = request.files['pdf']
-#     print(type(pdf_file))
-#     pdf_file.save("temp.pdf")
-
-#     print("in")
-#     convert2text(request.files['pdf'])
 
 import json
 def remove_null_keys(json_str):
@@ -841,15 +826,12 @@ def upload_file():
 # """
         
         json_data = text_to_json(report_text)
-        # final_response = parse_report(json_data)
 
         print(json_data)
         # print("---------------------------")
         json_data_pure = remove_null_keys(json_data)
         print(json_data_pure)
         print("cleaned data................")
-        # return jsonify({"message": "File uploaded successfully."}), 200
-        # return jsonify({"response": final_response})
         data = {'query': str(json_data_pure), type: ''}
         return ultrabot.get_response(data)
     else:
