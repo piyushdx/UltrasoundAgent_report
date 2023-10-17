@@ -86,6 +86,22 @@ Recommendation:
 	- Complicated SLE (e.g. active lupus nephritis, or recent flares)
 	- Major fetal anomaly in the current pregnancy (e.g. gastroschisis, fetal ventriculomegaly, fetal hydronephrosis (>10mm), achondroplasias, fetal congenital heart disease, neural tube defect, sustained fetal arrhythmias)
     """
+
+# You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."""
+filter_by_AUA_prompt = """
+[Personality]
+I am Fetal Life Bot, an AI assistant created by Anthropic to provide helpful information to expectant mothers. I aim to be supportive, empathetic, and knowledgeable regarding pregnancy health. 
+
+[Purpose]
+My role is to take ultrasound recommendations for pregnant patients and filter out any advice not applicable to the patient's current stage of pregnancy. This ensures patients only receive relevant guidance for their fetus's gestational age.
+
+[Input]
+Ultrasound reports containing various recommendations, along with the fetus's current gestational age in weeks. 
+
+[Output]
+Ultrasound recommendations same formate as input tailored to the fetus's developmental stage by removing any advice meant for a younger fetus.
+"""
+
 class PDFUtils:
     def __init__(self, pdf_folder_path, persist_directory):
         self.pdf_folder_path = pdf_folder_path
@@ -154,6 +170,7 @@ class PDFUtils:
             final_ans = ans_for_age
         else :
             prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
+            
             [Sample Output]
                 Key Analysis: //will solely consist of an explanation of the analysis. 
                 Recommendation: //will include all the CPT reports in detail and guidelines, as demonstrated in the <Sample Output>.
@@ -174,6 +191,11 @@ class PDFUtils:
                     performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
 
             Context : {context}
+            [STRICT RULE]
+                1.Answer questions based solely on provided context. do not infer or generate your own answers.
+                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>,simply say and only say "No specific CPT reports are mentioned in the context" in Recommendation. But if context contain answer then give recommendation.
+                3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say "No Recommendation Needed Cause Findind is Normal" in Recommendation.
+            
             Question: {question}
             Answer:"""
 
@@ -184,27 +206,39 @@ class PDFUtils:
             qa = RetrievalQA.from_chain_type(llm=ChatOpenAI(temperature=0.2), retriever=self.retriever, chain_type_kwargs=chain_type_kwargs)
 
             final_ans = qa.run(query)
-            print(f"{AUA} is AUA")
-            print("\n\nBelow is the Row Answer:\n\n")
+            print("-----------------\n")
+            # print(f"{AUA} is AUA")
+            print("\n\nBelow is the Row Answer:\n")
             print(final_ans)
 
+        try:
+            if len(final_ans.split("Recommendation:")[1].strip())<110:
+                if "No specific CPT reports are mentioned in the context" in final_ans or "No Recommendation Needed Cause Finding is Normal" in final_ans:
+                    final_ans = " "
+                    AUA = None
+        except Exception as e:
+            pass
+
+# "You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."
+        AUA = None
         if AUA is not None:
-            prompt_filter_fetus_age = [{"role": "system", "content": """You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations related to age. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."""},
-                    {"role":"user", "content": f"""The fetal age is {AUA}. The ultrasound report is as follows:""" + "\n" + final_ans}]
+            prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},
+                    {"role":"user", "content": f"""The fetal age is {AUA} weeks. The ultrasound report is as follows:""" + "\n" + final_ans}]
 
             final_ans = get_completion(prompt_filter_fetus_age)
             
             text_list = find_and_extract_abnormalities(str.lower(final_ans))
             changes = find_changes_in_first_word(text_list)
-            print("\nBelow are the list of change:")
-            print(changes)
+            # print("\nBelow are the list of change:")
+            # print(changes)
             
             for change in changes:
                 prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
                 final_ans = get_completion(prompt_known_suspected)
 
-            print(final_ans)
-            print("\n\n")
+        print("\nBelow is the final answer.......................>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+        print(final_ans)
+        print("\n\n")
 
         return final_ans
 

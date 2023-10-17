@@ -122,12 +122,18 @@ def remove_AC(abno):
 def get_reports(abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
         for key in negative_finding_keys:
-            abnormalities[key] = ""
+            if key not in abnormalities.keys():
+                abnormalities[key] = ""
     print(abnormalities)
     print("above are all the possible abnormalities........................................................")
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
+            if "Myoma" in value:
+                try:
+                    value = value.replace("Myoma","Myoma/ Fibroids in Pregnancy")
+                except Exception as e:
+                    pass
             if str.lower(value) == "not seen":
                 continue
             print(str(key) + ": " + str(value))
@@ -137,6 +143,8 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             else:
                 query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
             result = pdf_utils.chat_with_pdf_q(query,AUA)
+            if result == " ":
+                pass 
             result += '^_^'
             reports += result
         final_ans = reports
@@ -457,12 +465,12 @@ def get_not_seen_mvp_edc(reportString):
         final_ans = ""
     return final_ans,flag,ageFlag
 
-prompt_comment = """You are expert in understanding ultrasound Reports."""
+prompt_comment = """You are expert in understanding ultrasound Reports. Identify each obstetric complications separately from ultrasound report. you will get a draft of ultrasound report."""
 
 def get_negative_findings(reportString):
     try:
         history = [{"role": "system", "content": prompt_comment}]
-        history += [{"role": "user", "content": "give me names of obstetric complications from below text\n"+str(reportString["Comment"])}] # 
+        history += [{"role": "user", "content": str(reportString["Comment"])}] #"give me names of obstetric complications from below text\n"+ 
         try:
             # it will get me a json which contains possible abnormalities
             response3 = get_completion(history)
@@ -479,7 +487,7 @@ def get_negative_findings(reportString):
         [compulsory JSON output formate]
                 obstetric_complications = {1:"",2:""} // //list of abnormalities Ex. 1 : "<obstetric_complications> name",2 : "<obstetric_complications> name",...
         [thought_chain]
-            populate <obstetric_complications> if report has any obstetric complications and return only JSON.    
+            populate each <obstetric_complications> separately if report has any obstetric complications and return only JSON.
         """
         history += [{"role": "user", "content": str(step2)}]
         print(history)
@@ -683,6 +691,60 @@ def remove_duplicate_using_key_analysis(final_response):
     
     return final_response
 
+
+def remove_duplicate_using_Recommendation(final_response):
+    def get_key_analysis(final_response,key_json={}):
+        # Use regular expressions to extract Key Analysis and Recommendations
+        for i in range(len(final_response)):
+            try:
+                recommendation = final_response[i].split("Recommendation:")[1]
+            except Exception as e:
+                continue
+            # key_analysis_match = re.search(r'Recommendation:(.*?)', final_response[i], re.DOTALL | re.IGNORECASE)
+            # key_analysis = key_analysis_match.group(1).strip() if key_analysis_match else ""
+            if recommendation != "":
+                key_json[str(i)] = recommendation
+                print(recommendation)
+                print("--------------")
+        return key_json
+
+    def is_similar(a, b, threshold=0.45):
+        """
+        Determine if two strings are similar based on the difflib ratio.
+        """
+        ratio = difflib.SequenceMatcher(None, a, b).ratio()
+        print(ratio)
+        return ratio >= threshold
+
+    def remove_duplicates(input_list):
+        unique_list = []
+        for item in input_list:
+            is_duplicate = False
+            for unique_item in unique_list:
+                if is_similar(item, unique_item):
+                    is_duplicate = True
+                    break
+            if not is_duplicate:
+                unique_list.append(item)
+        return unique_list
+    try:
+        json_data = get_key_analysis(final_response)
+        value_list = remove_duplicates(list(json_data.values()))
+
+        # Initialize a list to store keys
+        keys_not_in_list = []
+
+        # Iterate through the dictionary and check if the value is not in the value_list
+        for key, value in json_data.items():
+            if value not in value_list:
+                keys_not_in_list.append(key)
+        for i in keys_not_in_list:
+            final_response.pop(int(i))
+    except Exception as e:
+        pass
+    
+    return final_response
+
 class UltraBot():
     def __init__(self):
         self.chat_history = [
@@ -732,6 +794,7 @@ class UltraBot():
                     final_response = function_response
                     final_response=remove_duplicate(final_response)
                     final_response = remove_duplicate_using_key_analysis(final_response)
+                    final_response = remove_duplicate_using_Recommendation(final_response)
                 else:
                     final_response = "Apologies! I could not understand, Can you please rephrase and try again..."
 
@@ -775,110 +838,22 @@ class UltraBot():
         print(query)
         self.chat_history += [{"role": "user", "content": str(query)}]
         print(query)
-        # return jsonify({"response": query})
+        return jsonify({"response": query})
+
+# AUA = None
+# # abnormalities = {"Socio-Demographic Risk Factors (maternal age)": "Age ≥ 35"}
+# # abnormalities = {'Fetal Position': 'Breech',}
+# abnormalities = {"Fetal Position": "Breech", "Placenta Previa": "Yes"}
+# negative_finding_keys = {'Fetal Position': 'Breech', 'Placenta Previa': 'Yes', 'EIF (echogenic intracardiac focus) seen in the left ventricle': '', 'Anterior placenta grade 2 partial previa, covering the 10S by 1.5cm': ''} 
+# # negative_finding_keys = {'Socio-Demographic Risk Factors (maternal age)': 'Age ≥ 35', 'SLIUP (Suboptimal Lie of the Uterus)': '', 'Gas/Bowel interference in visualizing the right ovary': '', 'Possible post myoma (fibroid) measuring 3.1 x 2.7 x 2.7 cm': '', 'Possible anterior subserosal myoma measuring 2.5 x 1.7 x 2.0 cm': ''}
+# get_reports(abnormalities,negative_finding_keys,AUA)
+
+# ultrabot = UltraBot()
+# json_data_pure = {"EFW in pctl": "71.72", "Fetal HR avg value": "148 bpm", "AFI cm value": "16.98 cm", "AFI pctl value": "68.38", "Gender": "Female", "Fetal Position": "Breech", "Placenta Location": "Posterior", "Placenta Grade": "2", "Amniotic Fluid": "Normal", "Fetal Movements": "Single breech female fetus with positive fetal movement.", "Q1 avg value in cm": "4.77 cm", "Q2 avg value in cm": "3.41 cm", "Q3 avg value in cm": "6.08 cm", "Q4 avg value in cm": "2.72 cm", "BPD value in cm": "6.98 cm", "HC value in cm": "26.62 cm", "AC value in cm": "24.90 cm", "FL value in cm": "5.62 cm", "FL/AC in %": "22.57%", "FL/AC normal range": "(20.0~24.0%, >21w)", "FL/BPD in %": "80.58%", "FL/BPD normal range": "(71.0~87.0%, >23w)", "FL/HC in %": "21.11%", "FL/HC normal range": "(17.87~21.47%, 27w...)", "HC/AC in %": "1.07", "HC/AC normal range": "( 1.05~1.22, 27w6d)", "Comment": "\n\\r\\n\\r\\n\\r\\n\\r\\n\\r\\n\\r\\n                                                                                                                 07-07-2023 09:50 am\\r\\n\\r\\n\\x0c                                                  ULTRASOUND REPORT\\r\\n\\r\\n                                            Ultrasound Report\\r\\n\\r\\n      GROWTH\\r\\n\\r\\n         Single breech female fetus with positive fetal movement.\\r\\n         FHR=154bpm with normal cardiac rhythm.\\r\\n        EFW=3#00z / 72nd%\\r\\n        AFI=17cm\\r\\n          Posterior placenta grade 2  previa seen.\\r\\n\\r\\n       K"}
+# data = {'query': str(json_data_pure), type: ''}
+# print(get_negative_findings(json_data_pure))
 
 
-# reportString = {
-#   "Exam Date": "02 GD",
-#   "Age": "28yr 8m",
-#   "LMP(EDD)": "09-30-2023",
-#   "LMP": "12-24-2022",
-#   "EstabDD": "09-30-2023",
-#   "EDD": "09-30-2023",
-#   "GA(EDD)": "27wéd",
-#   "GA(LMP)": "27wéd",
-#   "GA(EFW)": "29w2d",
-#   "EDD(LMP)": "09-30-2023",
-#   "AUA": "29w0d",
-#   "EDD(AUA)": "09-22-2023",
-#   "EFW in oz": "3ib 0oz (13499)",
-#   "EFW in pctl": "71.72",
-#   "Fetal HR avg value": "148 bpm",
-#   "AFI cm value": "16.98 cm",
-#   "AFI pctl value": "68.38",
-#   "Gender": "Female",
-#   "Fetal Position": "Breech",
-#   "Fetal Head": "Not Found",
-#   "Fetal Spine": "Not Found",
-#   "Placenta Location": "Posterior",
-#   "Placenta Grade": "2",
-#   "3 V Cord": "Not Found",
-#   "Cord Insertion": "Not Found",
-#   "Amniotic Fluid": "Normal",
-#   "Facial Profile": "Not Found",
-#   "Diaphragm": "Not Found",
-#   "Upper Extremity": "Not Found",
-#   "Lower Extremity": "Not Found",
-#   "Hands": "Not Found",
-#   "Feet": "Not Found",
-#   "Placenta Previa": "Not Found",
-#   "Fetal Movements": "Positive",
-#   "Fetal Tone": "Not Found",
-#   "Fetal Breathing Move": "Not Found",
-#   "Amniotic Fluid Volume": "Not Found",
-#   "BPP Total out of 8": "Not Found",
-#   "Q1 avg value in cm": "4.77 cm",
-#   "Q2 avg value in cm": "3.41 cm",
-#   "Q3 avg value in cm": "6.08 cm",
-#   "Q4 avg value in cm": "2.72 cm",
-#   "BPD value in cm": "6.98 cm",
-#   "BPD value in pctl": "Not Found",
-#   "HC value in cm": "26.62 cm",
-#   "HC value in pctl": "Not Found",
-#   "AC value in cm": "24.90 cm",
-#   "AC value in pctl": "Not Found",
-#   "FL value in cm": "5.62 cm",
-#   "FL value in pctl": "Not Found",
-#   "CRL value in cm": "Not Found",
-#   "CRL value in pctl": "Not Found",
-#   "YS value in cm": "Not Found",
-#   "YS value in pctl": "Not Found",
-#   "NT value in mm": "Not Found",
-#   "NT value in pctl": "Not Found",
-#   "CEREB avg value in cm": "Not Found",
-#   "CEREB value in pctl": "Not Found",
-#   "CM avg value in cm": "Not Found",
-#   "CM value in pctl": "Not Found",
-#   "NF avg value in cm": "Not Found",
-#   "Lat Vent avg value in cm": "Not Found",
-#   "FL/AC in %": "22.57%",
-#   "FL/AC normal range": "(20.0~24.0%, >21w)",
-#   "FL/BPD in %": "80.58%",
-#   "FL/BPD normal range": "(71.0~87.0%, >23w)",
-#   "FL/HC in %": "21.11%",
-#   "FL/HC normal range": "(17.87~21.47%, 27w...)",
-#   "HC/AC in %": "1.07",
-#   "HC/AC normal range": "(1.05~1.22, 27w6d)",
-#   "4 Chamber": "Not Found",
-#   "Lt. Outflow Tract": "Not Found",
-#   "Rt. Qutflow Tract": "Not Found",
-#   "3 Vessel": "Not Found",
-#   "Aortic Arch": "Not Found",
-#   "Ductal Arch": "Not Found",
-#   "Cardiac Rhythm": "Not Found",
-#   "Lateral Ventricles": "Not Found",
-#   "Cerebellum": "Not Found",
-#   "Cist Magna": "Not Found",
-#   "Cranium": "Not Found",
-#   "Abdominal Wall": "Not Found",
-#   "Spine": "Not Found",
-#   "Stomach": "Not Found",
-#   "Bladder": "Not Found",
-#   "Lt. Kidney": "Not Found",
-#   "Rt. Kidney": "Not Found",
-#   "Cervix L avg value in cm": "Not Found",
-#   "Rt. Overy L avg value in cm": "Not Found",
-#   "Rt. Overy H avg value in cm": "Not Found",
-#   "Rt. Overy W avg value in cm": "Not Found",
-#   "Rt. Overy Vol. avg value in ml": "Not Found",
-#   "Lt. Overy L avg value in cm": "Not Found",
-#   "Lt. Overy H avg value in cm": "Not Found",
-#   "Lt. Overy W avg value in cm": "Not Found",
-#   "Lt. Overy Vol. avg value in ml": "Not Found",
-#   "Comment": "NT AMA SLIUP @  12w4d (60.7MM) EDD 02/10/24 BY ULTRASOUND, SIZE C/W  DATES. YS SEEN. NT=1.4MM. NB SEEN. FHR= 155BPM. LT OV APPEARS WNL-SMALL FOLLICLE SEEN. RT OV NOT SEEN DUE TO GAS/BOWEL. ADNEXAE APPEARS WNL. POSSIBLE POST MYOMA MEASURING 3.1 X 2.7 X 2.7CM. POSSIBLE ANT SUBSEROSLAMYOMA MEASURNG 2.5 X 1.7 X 2.0CM. TA SCAN PERFORMED. AM RDMS"
-# }
 
-# negative_findings = get_negative_findings(reportString)
-# print("------------final_______answer--------------")
-# print(json_parser(negative_findings))
-# print(get_guidelines("detailed guidelines for placenta previa with cpt reports"))
+# final_response = ['Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.', 'Fetal Position : Breech\n\nKey Analysis: Fetal presentation should be assessed by abdominal palpation (Leopold’s) at 36 weeks or later, when presentation is likely to influence the plans for the birth. Routine assessment of presentation by abdominal palpation before 36 weeks is not always accurate. Suspected fetal malpresentation should be confirmed by an ultrasound assessment. An ultrasound can be performed at ≥36 weeks gestation to determine fetal position to allow for external cephalic version. Ultrasound to determine fetal position is not necessary prior to 36 weeks gestation unless delivery is imminent.\n\nRecommendation:\n- To confirm suspected abnormal fetal position or presentation (transverse or breech presentation) at ≥36 weeks gestation, report one of the following:\n  - CPT® 76805 (plus CPT® 76810 for each additional fetus) when complete anatomy scan has not yet been performed in the pregnancy\n  - CPT® 76815 for limited ultrasound to check fetal position\n  - CPT® 76816 if version is being considered and/or for delivery planning', 'confirmed diagnosis of polyhydramnios : maximum vertical pocket(MVP) ≥8cm.\n\nKey Analysis: Polyhydramnios is confirmed when the maximum vertical pocket (MVP) is ≥8cm.\nRecommendation:\n- Perform a Detailed Fetal Anatomy Scan (CPT® 76811) at diagnosis, if not previously performed.\n- Perform a follow-up ultrasound (CPT® 76816) every 3-4 weeks for mild polyhydramnios (AFI 24-29.9cm or MVP 8-9.9cm).\n- Perform a follow-up ultrasound (CPT® 76816) every 2 weeks for severe polyhydramnios (AFI ≥30cm or MVP ≥10cm).\n- Perform antepartum fetal surveillance with a quick look for AFI check (CPT® 76815) weekly starting at ≥23 weeks.\n- Perform a Biophysical Profile (BPP) or modified BPP (CPT® 76818, CPT® 76819, or CPT® 76815) for AFI with NST starting at 26 weeks.\n- Perform umbilical artery (UA) Doppler (CPT® 76820) weekly starting at the time of diagnosis if ≥23 weeks.', 'Breech presentation : \n\nKey Analysis: Breech presentation refers to the position of the fetus in which the buttocks or feet are positioned to be delivered first instead of the head. It is important to assess fetal presentation to determine the appropriate management and delivery plan.\n\nRecommendation:\n- To confirm suspected breech presentation at ≥36 weeks gestation, the following CPT reports can be considered:\n  - CPT® 76805 (plus CPT® 76810 for each additional fetus) if a complete anatomy scan has not yet been performed in the pregnancy.\n  - CPT® 76815 for a limited ultrasound to check fetal position.\n  - CPT® 76816 if version (manually turning the fetus) is being considered and/or for delivery planning.\n\nNote: No specific CPT reports are mentioned in the context for breech presentation.', 'Placenta previa : \n\nKey Analysis: Placenta previa is characterized by the placental edge covering the internal cervical os or being less than 2 cm away from it. \nRecommendation:\n- For suspected placenta previa, the following ultrasound options can be performed:\n  - CPT® 76805 [plus CPT® 76810 for each additional fetus] and/or CPT® 76817 if a complete fetal anatomic scan has not yet been performed during this pregnancy, with or without CPT® 93976 (limited duplex scan)\n  - CPT® 76815 for limited ultrasound and/or CPT® 76817 with or without CPT® 93976 (limited duplex scan)\n  - CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817 for a transvaginal ultrasound with or without CPT® 93976 (limited duplex scan)\n- For known placenta previa or low lying placenta (placental edge <2 cm from internal os):\n  - One routine follow-up ultrasound can be performed in the 3rd trimester (CPT® 76815 or CPT® 76816 and/or CPT® 76817)\n  - If placenta previa or low lying placenta is still present, one follow-up ultrasound (CPT® 76815 or CPT® 76816 and/or CPT® 76817) can be performed in 3-4 weeks\n  - If persistent placenta previa (placental edge covers the internal cervical os), BPP (CPT® 76818/CPT® 76819 or modified BPP (CPT® 76815) can be performed weekly, starting at 32 weeks\n  - Follow-up ultrasound can be performed at any time if bleeding occurs, using BPP (CPT® 76818 or CPT® 76819) or CPT® 76815 or CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817', "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"]
+# print(remove_duplicate_using_Recommendation(final_response))
