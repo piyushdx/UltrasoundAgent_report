@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 from langchain.prompts import PromptTemplate
 import openai
+import re
+
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     # messages = [{"role": "user", "content": prompt}]
@@ -18,6 +20,7 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
         temperature=0.4  # this is the degree of randomness of the model's output
     )
     return response.choices[0].message["content"]
+
 def find_and_extract_abnormalities(text):
     words = text.split()
     occurrences = []
@@ -101,6 +104,18 @@ Ultrasound reports containing various recommendations, along with the fetus's cu
 [Output]
 Ultrasound recommendations same formate as input tailored to the fetus's developmental stage by removing any advice meant for a younger fetus.
 """
+
+
+def contains_cpt_code(text):
+    # Define a regular expression pattern to match "CPT® XXXXX" where XXXXX is any digit
+    pattern = r'CPT® \d{5}'
+    
+    # Use the re.search function to find the pattern in the text
+    match = re.search(pattern, text)
+    
+    # If a match is found, return True; otherwise, return False
+    return bool(match)
+
 
 class PDFUtils:
     def __init__(self, pdf_folder_path, persist_directory):
@@ -191,10 +206,10 @@ class PDFUtils:
                     performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
 
             Context : {context}
-            [STRICT RULE]
+            [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
                 1.Answer questions based solely on provided context. do not infer or generate your own answers.
-                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>,simply say and only say "No specific CPT reports are mentioned in the context" in Recommendation. But if context contain answer then give recommendation.
-                3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say "No Recommendation Needed Cause Findind is Normal" in Recommendation.
+                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>, then only, simply say and only say following... Recommendation: "No specific CPT reports are mentioned in the context". But if context contain answer then give recommendations only.
+                3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say following... Recommendation: "No Recommendation Needed Cause Findind is Normal"
             
             Question: {question}
             Answer:"""
@@ -209,7 +224,11 @@ class PDFUtils:
             print("-----------------\n")
             # print(f"{AUA} is AUA")
             print("\n\nBelow is the Row Answer:\n")
-            print(final_ans)
+            contain_cpt_reports = contains_cpt_code(final_ans)
+            print(f"contain cpt reports : {contain_cpt_reports}")
+            if not contain_cpt_reports:
+                final_ans = " "
+
 
         try:
             if len(final_ans.split("Recommendation:")[1].strip())<110:
@@ -219,6 +238,15 @@ class PDFUtils:
         except Exception as e:
             pass
 
+        text_list = find_and_extract_abnormalities(str.lower(final_ans))
+        changes = find_changes_in_first_word(text_list)
+        # print("\nBelow are the list of change:")
+        # print(changes)
+        
+        for change in changes:
+            prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
+            final_ans = get_completion(prompt_known_suspected)
+
 # "You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."
         AUA = None
         if AUA is not None:
@@ -227,14 +255,14 @@ class PDFUtils:
 
             final_ans = get_completion(prompt_filter_fetus_age)
             
-            text_list = find_and_extract_abnormalities(str.lower(final_ans))
-            changes = find_changes_in_first_word(text_list)
-            # print("\nBelow are the list of change:")
-            # print(changes)
+            # text_list = find_and_extract_abnormalities(str.lower(final_ans))
+            # changes = find_changes_in_first_word(text_list)
+            # # print("\nBelow are the list of change:")
+            # # print(changes)
             
-            for change in changes:
-                prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
-                final_ans = get_completion(prompt_known_suspected)
+            # for change in changes:
+            #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
+            #     final_ans = get_completion(prompt_known_suspected)
 
         print("\nBelow is the final answer.......................>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
         print(final_ans)

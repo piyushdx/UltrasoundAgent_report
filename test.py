@@ -208,50 +208,142 @@ import re
 
 # print(f"Cosine Similarity: {similarity}")
 
-def remove_duplicate_using_key_analysis(final_response):
-    def get_key_analysis(final_response,key_json={}):
-        # Use regular expressions to extract Key Analysis and Recommendations
-        for i in range(len(final_response)):
-            key_analysis_match = re.search(r'Key Analysis:(.*?)Recommendation:', final_response[i], re.DOTALL | re.IGNORECASE)
-            key_analysis = key_analysis_match.group(1).strip() if key_analysis_match else ""
-            if key_analysis != "":
-                key_json[str(i)] = key_analysis
+# def remove_duplicate_using_key_analysis(final_response):
+#     def get_key_analysis(final_response,key_json={}):
+#         # Use regular expressions to extract Key Analysis and Recommendations
+#         for i in range(len(final_response)):
+#             key_analysis_match = re.search(r'Key Analysis:(.*?)Recommendation:', final_response[i], re.DOTALL | re.IGNORECASE)
+#             key_analysis = key_analysis_match.group(1).strip() if key_analysis_match else ""
+#             if key_analysis != "":
+#                 key_json[str(i)] = key_analysis
 
-        return key_json
+#         return key_json
 
-    def is_similar(a, b, threshold=0.45):
-        """
-        Determine if two strings are similar based on the difflib ratio.
-        """
-        ratio = difflib.SequenceMatcher(None, a, b).ratio()
-        print(ratio)
-        return ratio >= threshold
+#     def is_similar(a, b, threshold=0.45):
+#         """
+#         Determine if two strings are similar based on the difflib ratio.
+#         """
+#         ratio = difflib.SequenceMatcher(None, a, b).ratio()
+#         print(ratio)
+#         return ratio >= threshold
 
-    def remove_duplicates(input_list):
-        unique_list = []
-        for item in input_list:
-            is_duplicate = False
-            for unique_item in unique_list:
-                if is_similar(item, unique_item):
-                    is_duplicate = True
-                    break
-            if not is_duplicate:
-                unique_list.append(item)
-        return unique_list
-    try:
-        json_data = get_key_analysis(final_response)
-        value_list = remove_duplicates(list(json_data.values()))
+#     def remove_duplicates(input_list):
+#         unique_list = []
+#         for item in input_list:
+#             is_duplicate = False
+#             for unique_item in unique_list:
+#                 if is_similar(item, unique_item):
+#                     is_duplicate = True
+#                     break
+#             if not is_duplicate:
+#                 unique_list.append(item)
+#         return unique_list
+#     try:
+#         json_data = get_key_analysis(final_response)
+#         value_list = remove_duplicates(list(json_data.values()))
 
-        # Initialize a list to store keys
-        keys_not_in_list = []
+#         # Initialize a list to store keys
+#         keys_not_in_list = []
 
-        # Iterate through the dictionary and check if the value is not in the value_list
-        for key, value in json_data.items():
-            if value not in value_list:
-                keys_not_in_list.append(key)
-        for i in keys_not_in_list:
-            final_response.pop(int(i))
-    except Exception as e:
-        pass
+#         # Iterate through the dictionary and check if the value is not in the value_list
+#         for key, value in json_data.items():
+#             if value not in value_list:
+#                 keys_not_in_list.append(key)
+#         for i in keys_not_in_list:
+#             final_response.pop(int(i))
+#     except Exception as e:
+#         pass
     
-    return final_response
+#     return final_response
+# import re
+
+# def contains_cpt_code(text):
+#     # Define a regular expression pattern to match "CPT® XXXXX" where XXXXX is any digit
+#     pattern = r'CPT® \d{5}'
+    
+#     # Use the re.search function to find the pattern in the text
+#     match = re.search(pattern, text)
+    
+#     # If a match is found, return True; otherwise, return False
+#     return bool(match)
+
+# text = """Unable to obtain profile view :
+
+# Key Analysis: Unable to obtain profile view is a technical difficulty encountered during the ultrasound examination, which may limit the assessment of fetal anatomy.
+
+# Recommendation:
+# - Repeat the ultrasound examination to obtain a profile view if clinically indicated.
+# - Consider using alternative imaging techniques such as transvaginal ultrasound or three-dimensional ultrasound to assess fetal anatomy.
+# - Consult with a specialist or experienced sonographer for further evaluation and guidance.
+# - No specific CPT reports are mentioned in the context."""
+
+# print(contains_cpt_code(text))
+
+
+
+# import ast
+# # from nltk.corpus import wordnet
+
+# text = "{'Fetal Position': 'Breech', 'Facial Profile': 'Not seen', 'Feet': 'Not seen', '4 Chamber': 'Not seen', 'Lt. Outflow Tract': 'Not seen', 'Rt. Qutflow Tract': 'Not seen', 'Spine': 'Not seen', 'Known Macrosomia ≥90th percentile': 'EFW is 16.32 pctl', 'Breech presentation': '', 'Small for gestational age (SGA)': '', 'Unable to obtain profile views': '', 'Short cervical length': ''}"
+
+# data = ast.literal_eval(text)
+# # unique_data = {}
+# final_list = []
+# for key, value in data.items():
+#     if value == "Not seen":
+#         pass
+#     else:
+#         combined = key + " " + value
+#         final_list.append(combined)
+# print(final_list)  
+
+
+#     for syn in wordnet.synsets(combined): 
+#         for lemma in syn.lemmas():
+#             synonyms.add(lemma.name())
+            
+#     if not any(syn in unique_data for syn in synonyms):
+#         unique_data[key] = value
+
+# print(unique_data)
+
+
+# def remove_duplicate_using_Recommendation(final_list):
+#     def is_similar(a, b, threshold=0.45):
+#         """
+#         Determine if two strings are similar based on the difflib ratio.
+#         """
+#         ratio = difflib.SequenceMatcher(None, a, b).ratio()
+#         print(f'{a},{b}:{ratio}')
+#         return ratio >= threshold
+
+#     def remove_duplicates(input_list):
+#         unique_list = []
+#         for item in input_list:
+#             is_duplicate = False
+#             for unique_item in unique_list:
+#                 if is_similar(item, unique_item):
+#                     is_duplicate = True
+#                     break
+#             if not is_duplicate:
+#                 unique_list.append(item)
+#         return unique_list
+    
+#     try:
+#         value_list = remove_duplicates(final_list)
+#         print(value_list)
+#         # # Initialize a list to store keys
+#         # keys_not_in_list = []
+
+#         # # Iterate through the dictionary and check if the value is not in the value_list
+#         # for key, value in json_data.items():
+#         #     if value not in value_list:
+#         #         keys_not_in_list.append(key)
+#         # for i in keys_not_in_list:
+#         #     final_list.pop(int(i))
+#     except Exception as e:
+#         pass
+    
+#     return final_list
+
+# remove_duplicate_using_Recommendation(final_list)

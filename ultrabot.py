@@ -121,17 +121,23 @@ def remove_AC(abno):
 
 def get_reports(abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
-        for key in negative_finding_keys:
-            if key not in abnormalities.keys():
-                abnormalities[key] = ""
+        print(negative_finding_keys) # debug here
+        try:
+            if any(negative_finding_keys):
+                for key in negative_finding_keys:
+                    if key not in abnormalities.keys():
+                        abnormalities[key] = ""
+        except Exception as e:
+            print(e)
+            pass
     print(abnormalities)
     print("above are all the possible abnormalities........................................................")
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
-            if "Myoma" in value:
+            if "myoma" in str.lower(key):
                 try:
-                    value = value.replace("Myoma","Myoma/ Fibroids in Pregnancy")
+                    key = key.title().replace("Myoma","Myoma/ Fibroids in Pregnancy")
                 except Exception as e:
                     pass
             if str.lower(value) == "not seen":
@@ -353,7 +359,7 @@ def get_abnormal_keys(json_data,report_string):
     if "EFW in pctl" in abnormal_keys:
         abnormal_keys.append("Known Macrosomia ≥90th percentile")
         if "EFW in pctl" in abnormal_keys:
-            report_string["Known Macrosomia ≥90th percentile"] = "EFW "+str(report_string["EFW in pctl"])
+            report_string["Known Macrosomia ≥90th percentile"] = "EFW is "+ str(report_string["EFW in pctl"])+" pctl"
 
     if "EFW in gram" in abnormal_keys:
         abnormal_keys.remove("EFW in gram")
@@ -841,11 +847,12 @@ class UltraBot():
         return jsonify({"response": query})
 
 # AUA = None
-# # abnormalities = {"Socio-Demographic Risk Factors (maternal age)": "Age ≥ 35"}
-# # abnormalities = {'Fetal Position': 'Breech',}
-# abnormalities = {"Fetal Position": "Breech", "Placenta Previa": "Yes"}
-# negative_finding_keys = {'Fetal Position': 'Breech', 'Placenta Previa': 'Yes', 'EIF (echogenic intracardiac focus) seen in the left ventricle': '', 'Anterior placenta grade 2 partial previa, covering the 10S by 1.5cm': ''} 
-# # negative_finding_keys = {'Socio-Demographic Risk Factors (maternal age)': 'Age ≥ 35', 'SLIUP (Suboptimal Lie of the Uterus)': '', 'Gas/Bowel interference in visualizing the right ovary': '', 'Possible post myoma (fibroid) measuring 3.1 x 2.7 x 2.7 cm': '', 'Possible anterior subserosal myoma measuring 2.5 x 1.7 x 2.0 cm': ''}
+# abnormalities = {"Socio-Demographic Risk Factors (maternal age)": "Age ≥ 35"}
+# # # abnormalities = {'Fetal Position': 'Breech',}
+# # abnormalities = {"Fetal Position": "Breech", "Placenta Previa": "Yes"}
+# negative_finding_keys = ['Subserosal myoma', 'Gas/Bowel obstruction'] 
+# # negative_finding_keys = {'Fetal Position': 'Breech', 'Placenta Previa': 'Yes', 'EIF (echogenic intracardiac focus) seen in the left ventricle': '', 'Anterior placenta grade 2 partial previa, covering the 10S by 1.5cm': ''} 
+# # # negative_finding_keys = {'Socio-Demographic Risk Factors (maternal age)': 'Age ≥ 35', 'SLIUP (Suboptimal Lie of the Uterus)': '', 'Gas/Bowel interference in visualizing the right ovary': '', 'Possible post myoma (fibroid) measuring 3.1 x 2.7 x 2.7 cm': '', 'Possible anterior subserosal myoma measuring 2.5 x 1.7 x 2.0 cm': ''}
 # get_reports(abnormalities,negative_finding_keys,AUA)
 
 # ultrabot = UltraBot()

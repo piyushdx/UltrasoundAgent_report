@@ -255,8 +255,8 @@ insightsAll = {
       "check": "yes"
       },    
       "EFW in pctl": {
-      "normal_values": "<EFW in pctl> cosider normal if less than 89.99 pctl",
-      "abnormal_values": f"<EFW in pctl> consider Abnormal if exceeds 90.01 pctl",
+      "normal_values": "if EFW in pctl <89.99 pctl then it's Normal otherwise it's Abnormal",
+      "abnormal_values": " ",
       "check": "yes"
       },
 }
