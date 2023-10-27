@@ -185,6 +185,11 @@ class PDFUtils:
             final_ans = ans_for_age
         else :
             prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
+            [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
+                1.Answer questions based solely on provided context. do not infer or generate your own answers.
+                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>, then only, simply say and only say following... Recommendation: "No specific CPT reports are mentioned in the context". But if context contain answer then give recommendations only.
+                3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say following... Recommendation: "No Recommendation Needed Cause Findind is Normal"
+                4.find page number from context and show as sample output.
             
             [Sample Output]
                 Key Analysis: //will solely consist of an explanation of the analysis. 
@@ -208,12 +213,6 @@ class PDFUtils:
                 Page Number : 146 of 198
 
             Context : {context}
-            [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
-                1.Answer questions based solely on provided context. do not infer or generate your own answers.
-                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>, then only, simply say and only say following... Recommendation: "No specific CPT reports are mentioned in the context". But if context contain answer then give recommendations only.
-                3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say following... Recommendation: "No Recommendation Needed Cause Findind is Normal"
-                4.find page number from context and show as sample output.
-                
             Question: {question}
             Answer:"""
 
