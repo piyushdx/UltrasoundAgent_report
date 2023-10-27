@@ -46,7 +46,7 @@ def upload_file():
         uploaded_file.save("ChatBotUI/static/pdf/uploaded.pdf")
         print("file is saved")
         report_text = convert2text(request.files['pdf'])
-        
+        print("convert to text is done.")
 #         report_text = """
 #                                                   ULTRASOUND REPORT
 

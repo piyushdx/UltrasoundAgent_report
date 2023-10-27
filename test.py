@@ -347,3 +347,77 @@ import re
 #     return final_list
 
 # remove_duplicate_using_Recommendation(final_list)
+
+# from flask import Flask, render_template, request, Response
+import openai
+from flask import jsonify
+import os
+import openai
+import json
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from pdf_utils import PDFUtils
+# from dotenv import load_dotenv
+# load_dotenv()
+from insights import insightsAll
+from datetime import datetime
+import time
+
+
+abnormalities = {'Fetal Position': 'Breech', 'Known Macrosomia ≥90th percentile': 'EFW is 76.87 pctl', 'Breech presentation': 'yes', 'Mild pyelectasis': '', 'right kidney': 'unseen', 'Suboptimal cardiac views': '', 'Unable to obtain optimal ACI and spine views': '', 'Short and closed cervix': ''}
+
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    # messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=prompt,
+        temperature=0.4  # this is the degree of randomness of the model's output
+    )
+    return response.choices[0].message["content"]
+
+def extract_content_in_braces(text):
+    # Find the first opening brace from the left
+    left_brace_index = text.find("[")
+    
+    # Find the first closing brace from the right
+    right_brace_index = text.rfind("]")
+    
+    if left_brace_index != -1 and right_brace_index != -1 and left_brace_index < right_brace_index:
+        # Extract the content within the curly braces
+        content_between_braces = text[left_brace_index:right_brace_index+1].strip()
+        return content_between_braces
+    else:
+        return None
+
+def find_indices_of_difference(old_list, new_list):
+    # Find the indices of elements in old_list that are not in new_list
+    indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
+    return indices_of_difference
+
+def remove_elements_by_indices(indices, data):
+    # Create a new dictionary with elements removed at specified indices
+    updated_data = {key: value for i, (key, value) in enumerate(data.items()) if i not in indices}
+    return updated_data
+
+def remove_similar(abnormalities):
+    print(abnormalities)
+    old_list = [f"{key} {value}" for key, value in abnormalities.items()]
+    print(old_list)
+    try:
+        output = get_completion([{"role": "system", "content": """use with give you a Abnormality List. Remove abnormalities from the provided list that mean the same. Output only the final list and nothing else."""}, {
+                                         "role": "user", "content": "Abnormality List: "+str(old_list)}])
+        print(output)
+        new_list = extract_content_in_braces(output)
+        print(new_list)
+        indices = find_indices_of_difference(old_list, new_list)
+        print(indices)
+        abnormalities = remove_elements_by_indices(indices, abnormalities)
+    except Exception as e:
+        return abnormalities    
+    return abnormalities
+
+
+print(remove_similar(abnormalities))
+
+['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Breech presentation yes', 'Mild pyelectasis ', 'right kidney unseen', 'Suboptimal cardiac views ', 'Unable to obtain optimal ACI and spine views ', 'Short and closed cervix ']
+['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Mild pyelectasis', 'right kidney unseen', 'Suboptimal cardiac views', 'Unable to obtain optimal ACI and spine views', 'Short and closed cervix']

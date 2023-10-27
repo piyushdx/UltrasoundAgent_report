@@ -118,6 +118,60 @@ def remove_AC(abno):
     print(abno)
     return abno
 
+def extract_list_from_text(text):
+    # Define a regular expression pattern to match the list inside square brackets
+    pattern = r'\[([^[\]]*)\]'
+    
+    # Use the re.search function to find the list pattern in the text
+    match = re.search(pattern, text)
+    
+    if match:
+        # If a match is found, extract the content of the list and split it into individual elements
+        list_content = match.group(1)
+        extracted_list = [item.strip() for item in list_content.split(",")]
+        return extracted_list
+    else:
+        # If no list is found, return None
+        return None
+
+
+def extract_content_in_braces(text):
+    # Find the first opening brace from the left
+    left_brace_index = text.find("[")
+    
+    # Find the first closing brace from the right
+    right_brace_index = text.rfind("]")
+    
+    if left_brace_index != -1 and right_brace_index != -1 and left_brace_index < right_brace_index:
+        # Extract the content within the curly braces
+        content_between_braces = text[left_brace_index:right_brace_index+1].strip()
+        return content_between_braces
+    else:
+        return None
+
+def find_indices_of_difference(old_list, new_list):
+    # Find the indices of elements in old_list that are not in new_list
+    indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
+    return indices_of_difference
+
+def remove_elements_by_indices(indices, data):
+    # Create a new dictionary with elements removed at specified indices
+    updated_data = {key: value for i, (key, value) in enumerate(data.items()) if i not in indices}
+    return updated_data
+
+def remove_similar(abnormalities):
+    old_list = [f"{key} {value}" for key, value in abnormalities.items()]
+    try:
+        output = get_completion([{"role": "system", "content": """use with give you a Abnormality List. Remove abnormalities from the provided list that mean the same. Output only the final list and nothing else."""}, {
+                                         "role": "user", "content": "Abnormality List: "+str(old_list)}])
+        new_list = extract_content_in_braces(output)
+        indices = find_indices_of_difference(old_list, new_list)
+        abnormalities = remove_elements_by_indices(indices, abnormalities)
+    except Exception as e:
+        return abnormalities    
+    print(abnormalities)
+    return abnormalities
+
 
 def get_reports(abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
@@ -132,6 +186,9 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             pass
     print(abnormalities)
     print("above are all the possible abnormalities........................................................")
+    abnormalities = remove_similar(abnormalities)
+    print(abnormalities)
+    print("above are all the possible abnormalities list........................................................")
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
@@ -751,6 +808,11 @@ def remove_duplicate_using_Recommendation(final_response):
     
     return final_response
 
+def reprocess_report_check(final_report):
+
+    pass
+
+
 class UltraBot():
     def __init__(self):
         self.chat_history = [
@@ -837,6 +899,7 @@ class UltraBot():
         self.chat_history += [{"role": "assistant",
                                "content": str(final_response)}]
         print("final_response:", final_response)
+        reprocess_report = reprocess_report_check(final_response)
         return jsonify({"response": final_response})
 
     def get_response1(self, data):

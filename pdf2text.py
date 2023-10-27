@@ -45,6 +45,7 @@ def convertPdfToText(uploadedFileUrl, destinationFile):
 
     # Execute request and get response as JSON
     response = requests.post(url, data=parameters, headers={ "x-api-key": API_KEY })
+    print(response.status_code)
     if (response.status_code == 200):
         json = response.json()
 
