@@ -172,6 +172,11 @@ def remove_similar(abnormalities):
     print(abnormalities)
     return abnormalities
 
+def remove_not_seen_values(abnormalities):
+    # Create a new dictionary with elements where the value is not "Not seen"
+    updated_abnormalities = {key: value for key, value in abnormalities.items() if str.lower(value) != "not seen"}
+    return updated_abnormalities
+
 
 def get_reports(abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
@@ -186,6 +191,9 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             pass
     print(abnormalities)
     print("above are all the possible abnormalities........................................................")
+    abnormalities = remove_not_seen_values(abnormalities)
+    print("\nNot seen value is removed...")
+    print(abnormalities)
     abnormalities = remove_similar(abnormalities)
     print(abnormalities)
     print("above are all the possible abnormalities list........................................................")
@@ -197,8 +205,8 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
                     key = key.title().replace("Myoma","Myoma/ Fibroids in Pregnancy")
                 except Exception as e:
                     pass
-            if str.lower(value) == "not seen":
-                continue
+            # if str.lower(value) == "not seen":
+            #     continue
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
             if key == "Fetal Position":
