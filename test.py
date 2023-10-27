@@ -348,7 +348,7 @@ import re
 
 # remove_duplicate_using_Recommendation(final_list)
 
-# from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response
 import openai
 from flask import jsonify
 import os
@@ -357,14 +357,10 @@ import json
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from pdf_utils import PDFUtils
-# from dotenv import load_dotenv
-# load_dotenv()
+
 from insights import insightsAll
-from datetime import datetime
-import time
 
-
-abnormalities = {'Fetal Position': 'Breech', 'Known Macrosomia ≥90th percentile': 'EFW is 76.87 pctl', 'Breech presentation': 'yes', 'Mild pyelectasis': '', 'right kidney': 'unseen', 'Suboptimal cardiac views': '', 'Unable to obtain optimal ACI and spine views': '', 'Short and closed cervix': ''}
+# abnormalities = {'Fetal Position': 'Breech', 'Known Macrosomia ≥90th percentile': 'EFW is 76.87 pctl', 'Breech presentation': 'yes', 'Mild pyelectasis': '', 'right kidney': 'unseen', 'Suboptimal cardiac views': '', 'Unable to obtain optimal ACI and spine views': '', 'Short and closed cervix': ''}
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     # messages = [{"role": "user", "content": prompt}]
@@ -375,49 +371,138 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     )
     return response.choices[0].message["content"]
 
-def extract_content_in_braces(text):
-    # Find the first opening brace from the left
-    left_brace_index = text.find("[")
+# def extract_content_in_braces(text):
+#     # Find the first opening brace from the left
+#     left_brace_index = text.find("[")
     
-    # Find the first closing brace from the right
-    right_brace_index = text.rfind("]")
+#     # Find the first closing brace from the right
+#     right_brace_index = text.rfind("]")
     
-    if left_brace_index != -1 and right_brace_index != -1 and left_brace_index < right_brace_index:
-        # Extract the content within the curly braces
-        content_between_braces = text[left_brace_index:right_brace_index+1].strip()
-        return content_between_braces
-    else:
-        return None
+#     if left_brace_index != -1 and right_brace_index != -1 and left_brace_index < right_brace_index:
+#         # Extract the content within the curly braces
+#         content_between_braces = text[left_brace_index:right_brace_index+1].strip()
+#         return content_between_braces
+#     else:
+#         return None
 
-def find_indices_of_difference(old_list, new_list):
-    # Find the indices of elements in old_list that are not in new_list
-    indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
-    return indices_of_difference
+# def find_indices_of_difference(old_list, new_list):
+#     # Find the indices of elements in old_list that are not in new_list
+#     indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
+#     return indices_of_difference
 
-def remove_elements_by_indices(indices, data):
-    # Create a new dictionary with elements removed at specified indices
-    updated_data = {key: value for i, (key, value) in enumerate(data.items()) if i not in indices}
-    return updated_data
+# def remove_elements_by_indices(indices, data):
+#     # Create a new dictionary with elements removed at specified indices
+#     updated_data = {key: value for i, (key, value) in enumerate(data.items()) if i not in indices}
+#     return updated_data
 
-def remove_similar(abnormalities):
-    print(abnormalities)
-    old_list = [f"{key} {value}" for key, value in abnormalities.items()]
-    print(old_list)
-    try:
-        output = get_completion([{"role": "system", "content": """use with give you a Abnormality List. Remove abnormalities from the provided list that mean the same. Output only the final list and nothing else."""}, {
-                                         "role": "user", "content": "Abnormality List: "+str(old_list)}])
-        print(output)
-        new_list = extract_content_in_braces(output)
-        print(new_list)
-        indices = find_indices_of_difference(old_list, new_list)
-        print(indices)
-        abnormalities = remove_elements_by_indices(indices, abnormalities)
-    except Exception as e:
-        return abnormalities    
-    return abnormalities
+# def remove_similar(abnormalities):
+#     print(abnormalities)
+#     old_list = [f"{key} {value}" for key, value in abnormalities.items()]
+#     print(old_list)
+#     try:
+#         output = get_completion([{"role": "system", "content": """use with give you a Abnormality List. Remove abnormalities from the provided list that mean the same. Output only the final list and nothing else."""}, {
+#                                          "role": "user", "content": "Abnormality List: "+str(old_list)}])
+#         print(output)
+#         new_list = extract_content_in_braces(output)
+#         print(new_list)
+#         indices = find_indices_of_difference(old_list, new_list)
+#         print(indices)
+#         abnormalities = remove_elements_by_indices(indices, abnormalities)
+#     except Exception as e:
+#         return abnormalities    
+#     return abnormalities
 
 
-print(remove_similar(abnormalities))
+# print(remove_similar(abnormalities))
 
-['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Breech presentation yes', 'Mild pyelectasis ', 'right kidney unseen', 'Suboptimal cardiac views ', 'Unable to obtain optimal ACI and spine views ', 'Short and closed cervix ']
-['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Mild pyelectasis', 'right kidney unseen', 'Suboptimal cardiac views', 'Unable to obtain optimal ACI and spine views', 'Short and closed cervix']
+# ['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Breech presentation yes', 'Mild pyelectasis ', 'right kidney unseen', 'Suboptimal cardiac views ', 'Unable to obtain optimal ACI and spine views ', 'Short and closed cervix ']
+# ['Fetal Position Breech', 'Known Macrosomia ≥90th percentile EFW is 76.87 pctl', 'Mild pyelectasis', 'right kidney unseen', 'Suboptimal cardiac views', 'Unable to obtain optimal ACI and spine views', 'Short and closed cervix']
+
+# sys_prompt = """
+# Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
+# [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
+#     1.Answer questions based solely on provided context. do not infer or generate your own answers.
+#     2.Only If above context does not contain relevant answer with CPT reports for Below <Question>, then only, simply say and only say following... Recommendation: "No specific CPT reports are mentioned in the context". But if context contain answer then give recommendations only.
+#     3.If the key analysis suggests that the condition is normal, commonly encountered,common finding or benign, your response should simply say and only say following... Recommendation: "No Recommendation Needed Cause Findind is Normal"
+#     4.find page number from context and show as sample output.
+
+# [Sample Output]
+#     Key Analysis: //will solely consist of an explanation of the analysis. 
+#     Recommendation: //will include all the CPT reports in detail and guidelines, as demonstrated in the <Sample Output>.
+#     Page Number : //will show page number from Context
+
+# [Sample Question]
+#     I would like comprehensive guidelines for the AC value 8% along with CPT reports.\n"
+# [Sample Output] 
+#     Key Analysis: AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or
+#         actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal
+#         Circumference ≤10th percentile.
+#     Recommendation:
+#          Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
+#          Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
+#         can be performed once or twice weekly
+#          Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
+#         weekly
+#          Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
+#         performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
+#     Page Number : 146 of 198
+
+# Remember <STRICT RULES TO FOLLOW WHILE GIVING ANSWER> and <Sample Output>
+
+# Context : 
+#     Adnexal Mass 
+#         • For a known or suspected adnexal/pelvic mass, perform:
+#             Complete first trimester ultrasound CPT® 76801 [plus CPT® 76802 for each
+#             additional fetus] if <14 weeks and a complete ultrasound has not yet been
+#             performed, and/or CPT® 76817 for a transvaginal ultrasound
+#             CPT® 76801 is preferred for dating, but if this is unable to be completed
+#             then CPT® 76815 and/or CPT® 76817 for a transvaginal ultrasound is
+#             indicated
+#             CPT® 76805 [plus CPT® 76810 if more than one fetus] if a complete fetal
+#             anatomic scan has not yet been performed and ≥14 weeks, or
+#             CPT® 76816 if a complete anatomy scan was done previously and/or CPT ®
+#             76817 if poor visualization of the adnexal mass.
+#         • Following the initial ultrasound, follow up can be done once in each trimester
+#             CPT® 76805 [plus CPT® 76810 for each additional fetus] if a complete fetal
+#             anatomic scan has not yet been performed, or
+#             CPT® 76815 or CPT® 76816 if a complete ultrasound was previously
+#             performed.
+#             CPT® 76817 if poor visualization of the adnexal mass
+#         •MRI Pelvis (CPT® 72195) without contrast can be done for indeterminate findings on ultrasound; for surgical planning and/or for suspected malignancy.
+#         •See Adnexal Mass/Ovarian Cysts (PV-5) in the Pelvis Imaging Guidelines
+
+#     Background and Supporting Information
+#         The majority of adnexal masses in pregnancy are benign, the most common
+#         diagnoses are mature teratomas and corpus luteum or paraovarian cysts.
+#         Malignancy is reported in only 1.2-6.8% of pregnant patients with persistent mass.
+#         Levels of CA-125 are elevated in pregnancy, a low-level elevation in pregnancy is
+#         not typically associated with malignancy.
+#         ACOG recommendations for imaging during pregnancy and lactation:
+#         o Ultrasonography and magnetic resonance imaging (MRI) are not associated
+#         with risk and are the imaging techniques of choice for the pregnant patient, but
+#         they should be used prudently and only when use is expected to answer a
+#         relevant clinical question or otherwise provide medical benefit to the patient.
+
+# Remember <STRICT RULES TO FOLLOW WHILE GIVING ANSWER> and <Sample Output>
+# """
+# output = get_completion([{"role": "system", "content": sys_prompt}, {"role": "user", "content": "I would like comprehensive guidelines for the Fetal position breech along with CPT reports.if there is any."}])
+# print(output)
+
+
+
+def process_final_list(final_list):
+    # Filter out strings that end with a colon and create a concatenated result
+    result = "Negative finding detected. Below was included in the comments section:\n"
+    result += '\n'.join([s.strip()[:-1] for s in final_list if s.strip().endswith(':')])
+    result += "\n\nPlease schedule an ultrasound in 4 weeks to check again."
+
+    # Modify final_list in place to remove the filtered strings
+    final_list[:] = [s for s in final_list if not s.strip().endswith(':')]
+    if len(result)>130:
+        final_list.insert(-1,result)
+    return final_list,result
+
+
+final_list,result = process_final_list(final_list)
+print(final_list)
+

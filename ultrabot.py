@@ -816,9 +816,19 @@ def remove_duplicate_using_Recommendation(final_response):
     
     return final_response
 
-def reprocess_report_check(final_report):
+def process_final_list(final_list):
+    # Filter out strings that end with a colon and create a concatenated result
+    result = "Negative finding detected. Below was included in the comments section:\n"
+    result += '\n'.join([s.strip()[:-1] for s in final_list if s.strip().endswith(':')])
+    result += "\n\nPlease schedule an ultrasound in 4 weeks to check again."
 
-    pass
+    # Modify final_list in place to remove the filtered strings
+    final_list[:] = [s for s in final_list if not s.strip().endswith(':')]
+    if len(result)>130:
+        final_list.insert(-1,result)
+    return final_list
+
+
 
 
 class UltraBot():
@@ -907,7 +917,7 @@ class UltraBot():
         self.chat_history += [{"role": "assistant",
                                "content": str(final_response)}]
         print("final_response:", final_response)
-        reprocess_report = reprocess_report_check(final_response)
+        final_response = process_final_list(final_response)
         return jsonify({"response": final_response})
 
     def get_response1(self, data):
