@@ -90,6 +90,27 @@ Recommendation:
 	- Major fetal anomaly in the current pregnancy (e.g. gastroschisis, fetal ventriculomegaly, fetal hydronephrosis (>10mm), achondroplasias, fetal congenital heart disease, neural tube defect, sustained fetal arrhythmias)
     """
 
+ans_for_myoma = """
+Key Analysis: 
+Myomas, also known as fibroids, are benign tumors in the uterus that can cause complications during pregnancy, such as miscarriage, preterm labor, or placental abruption.
+
+Recommendation: 
+For Multiple Fibroids: When assessing multiple fibroids, consider their total size. For instance, if there's a 2 cm fibroid and a 3 cm fibroid, the total size is 5 cm, and imaging is as follows:
+
+Moderate (>5 cm) and Large (>10 cm) Fibroids:
+
+    - First-trimester ultrasound CPT® 76801 (plus CPT® 76802 for each additional fetus) if <14 weeks and a complete ultrasound hasn't been done yet.
+        - CPT® 76817 for transvaginal ultrasound if the first-trimester ultrasound cannot be completed.
+    - Fetal anatomic scan (CPT® 76805 or CPT® 76811 if there's another high-risk indication) if ≥16 weeks.
+    - Fetal Anatomy Survey Timing: Ideally, perform fetal anatomy surveys (CPT® 76805/CPT® 76811) between 18 to 22 weeks of gestation. Although they can be done as early as 14 weeks, it's recommended to wait.
+
+    - Lower Uterine Segment or Cervical Fibroid: If the fibroid is in the lower uterine segment or the cervix (cervical fibroid):
+        - Ultrasound (CPT® 76815) and/or transvaginal ultrasound (CPT® 76817) every 2 weeks between 16 to 24 weeks.
+        - Follow-up ultrasound (CPT® 76816) every 3 to 6 weeks, starting at 23 weeks.
+    
+For Submucosal Fibroids also follow above Recommendation.
+Page Number : 117 of 198
+"""
 # You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."""
 filter_by_AUA_prompt = """
 [Personality]
@@ -183,6 +204,8 @@ class PDFUtils:
 
         if "Socio-Demographic Risk Factors (maternal age)" in query:
             final_ans = ans_for_age
+        elif "myoma" in str.lower(query):
+            final_ans = ans_for_myoma
         else :
             prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
@@ -221,6 +244,7 @@ class PDFUtils:
             print("-----------------\n")
             # print(f"{AUA} is AUA")
             print("\n\nBelow is the Row Answer:\n")
+            print(final_ans)
             contain_cpt_reports = contains_cpt_code(final_ans)
             print(f"contain cpt reports : {contain_cpt_reports}")
             if not contain_cpt_reports:

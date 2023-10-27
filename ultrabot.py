@@ -200,17 +200,20 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
-            if "myoma" in str.lower(key):
-                try:
-                    key = key.title().replace("Myoma","Myoma/ Fibroids in Pregnancy")
-                except Exception as e:
-                    pass
+            # if "myoma" in str.lower(key):
+            #     try:
+            #         key = key.title().replace("Myoma","Myoma/ Uterine Fibroids in Pregnancy")
+            #     except Exception as e:
+            #         pass
             # if str.lower(value) == "not seen":
             #     continue
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
             if key == "Fetal Position":
                 query = "I would like comprehensive guidelines for the confirm suspected abnormal" + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
+            # elif "myoma" in str.lower(key):
+            #     print("did myoma search")
+            #     query = ""
             else:
                 query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
             result = pdf_utils.chat_with_pdf_q(query,AUA)
