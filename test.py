@@ -489,20 +489,3 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 # print(output)
 
 
-
-def process_final_list(final_list):
-    # Filter out strings that end with a colon and create a concatenated result
-    result = "Negative finding detected. Below was included in the comments section:\n"
-    result += '\n'.join([s.strip()[:-1] for s in final_list if s.strip().endswith(':')])
-    result += "\n\nPlease schedule an ultrasound in 4 weeks to check again."
-
-    # Modify final_list in place to remove the filtered strings
-    final_list[:] = [s for s in final_list if not s.strip().endswith(':')]
-    if len(result)>130:
-        final_list.insert(-1,result)
-    return final_list,result
-
-
-final_list,result = process_final_list(final_list)
-print(final_list)
-
