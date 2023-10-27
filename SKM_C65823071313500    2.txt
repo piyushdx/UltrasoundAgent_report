@@ -1,95 +1,82 @@
-                                                 ULTRASOUND REPORT
+                                                      ULTRASOUND REPORT
 
-                                 AZ WOMEN'S SPECIALISTS
-       Name        GED         ID                          Exam. Date       08-02-2023
-        Gender         Female              BirthDate                      Age              16yr Om
-           institute            AZ WOMEN'S SPECI...  Ref. Physician DR.HETAL SHAH    Sonographer        AM RDMS
-          Description       FETAL ANATOMY
-    [OB]
-             LMP(EDD) 03-19-2023                         EDD 12-24-2023                     GA(EDD) 19w3d
-               AUA 18w5d                    EDD(AUA) 12-29-2023                     EFW 0lb 90z (259g)
-          EFW Author Hadlock4(BPD,HC,A...       Pctl.(EFW) 16.32                    Pctl. Criteria EstabDD
-        Fetal Biometry        Avg.      1        2        3                     GA                   Pctl.
-       BPD              4.35    4.35                 cm        19w1dt12d   Hadlock   38.49   Hadlock
-        HC                15.16    15.16                  cm        18w1d+10d    Hadlock   3.63   Hadlock
-       AC               13.51    13.51                 cm        19w0dt14d   Hadlock   29.97   Hadlock
-         FL                    2.86     2.56     2.86             cm   Last    18w5d+13d    Hadlock    21.00   Hadlock
-         Fetal Cranium         Avg.       1        2        3                      GA                   Pctl.
-       CEREB             1.92    1.92                 cm        18w5d+13d     Hill     33.21   Nicolai...
-       cm               0.46    0.46                cm                          39.72  Nicolai...
-        NF                  0.38     0.38                    cm  Max
-         Lat Vent               0.67      0.67                       cm
-         General                                       Avg.         1                     3
-         Fetal HR                                          150         150                               bpm
-          Ratio                Value                        Normal Range
-         FL/AC              21.18        %          (20.0~24.0%, >21w)
-        FL/BPD            65.77       %         {71.0~87.0%, >23w)
-        FL/HC             18.87        %        (15.13~20.21%, 19w3d)
-        HC/AC             1.12                  (1.09~1.26, 19w3d)
+                                     AZ WOMEN'S SPECIALISTS
 
-          Fetal Description                                                               Value
-        Gender                                                         Seen
-          Fetal Position                                                                   Breech
-          Fetal Spine                                                                 Anterior
-         Placenta Location                                                        Posterior
-         Placenta Grade                                                            1
-         Placenta Previa                                                              No
-        3V Cord                                                            Yes
-         Amniotic Fluid                                                             Normal
-          Facial Profile                                                                    Not seen
-        Diaphragm                                                         Seen
-         Upper Extremity                                                           Seen
-         Lower Extremity                                                         Seen
-        Hands                                                           Seen
-         Feet                                                                  Not seen
+           Name        GED-                         Exam. Date       07-19-2023
+             Gender         Female              BirthDate                      Age              20yr Om
+                Institute           AZ WOMEN'S SPECI...  Ref. Physician   DR.HETAL SHAH    Sonographer        AM RDMS
+              Description       FU ANATOMY
+        [OB]
+                  LMP(EDD) 01-30-2023                         EDD 11-06-2023                     GA(EDD) 24w2d
+                    AUA 24w3d                    EDD(AUA) 11-05-2023                     EFW 1Ib110z (771g)
+               EFW Author Hadlock4(BPD,HC,A...       Pctl.(EFW) 76.87                    Pctl. Criteria EstabDD
+              Fetal Biometry         Avg.       1        2        3                      GA                    Pctl.
+            BPD               5.42    5.42                  cm        22w3dt12d    Hadlock   2.59   Hadlock
+         HC            22.46   22.46             cm      24w3dt14d   Hadlock  38.27  Hadlock
+           AC                20.95   20.95                 cm        25w3dt15d   Hadlock   78.13   Hadlock
+              FL                    4.58     4.58                     cm   Last    25w1dt15d    Hadlock   65.75   Hadlock
 
-          Fetal Heart                                                                   Value
-        4 Chamber                                                      Not seen
-          Lt. Outflow Tract                                                              Not seen
-          Rt. Outflow Tract                                                             Not seen
+              General                                      Avg.         1          2          3
+              Fetal HR                                         148        148                              bpm
+               AFI                                    Avq.          1           2           3                                 Pctl.
+             Q1                                 2.89       2.89                             cm
+            Q2                              3.52       3.52                           cm
+            Q3                              1.61       1.61                          cm
+            Q4                             3.53     © 3.53                          cm
+               AFI                                    11.55       11.55                                cm                    14.67
+            Ratio             Value                    Normal Range
+             FLIAC             21.84       %          (20.0~24.0%, >21w)
+             FL/BPD            84.45       %         (71.0~87.0%, >23w)
+             FL/HC             20.38        %        (17.69~21.74%, 24w2d)
+            HC/AC             1.07                  (1.05~1.21, 24w2d)
+               Fetal Description                                                             Value
+            Gender                                                         Female
+                Fetal Position                                                                  Breech
+              Placenta Location                                                         Fundal
+              Placenta Grade                                                           2
+               Placenta Previa                                                              No
+               Amniotic Fluid                                                              Normal
 
-          Fetal Brain                                                                    Value
-          Lateral Ventricles                                                              Seen
-        Cerebellum                                                          Seen
-         Cist Magna                                                               Seen
-        Cranium                                                           Seen
+               Fetal Heart                                                                  Value
+            4 Chamber                                                        Seen
+              Lt Outflow Tract                                                           Seen
+               Rt. Outflow Tract                                                              Seen
+             Cardiac Rhythm                                                       Regular
 
-        Fetal Abdomen                                                       Value
-        Abdominal Wall                                                       Seen
-         Spine                                                                Not seen
-        Stomach                                                        Seen
+             Fetal Abdomen                                                      Value
+             Abdominal Wall                                                     Not seen
+             Spine                                                                Not seen
+            Stomach                                                         Seen
+              Bladder                                                                Seen
+               Lt. Kidney                                                                    Seen
+             Rt Kidney                                                           Not seen
+
+              Maternal Others                                  Avg.         1           2          3
+              Cervix L                                           2.57        2.59        2.61        2.51         cm
+
+           Comment
 
 
-                                                                                                                  08-02-2023 11:04 am
 
-                                                 ULTRASOUND REPORT
 
-                                 AZ WOMEN'S SPECIALISTS
+                                                                                                                       07-19-2023 02:28 pm
 
-        Fetal Abdomen                                                      Value
-         Bladder                                                               Seen
-          Lt. Kidney                                                                     Seen
-         Rt Kidney                                                            Seen
+                                                      ULTRASOUND REPORT
 
-         Maternal Others                                 Avg.         1           2           3
-         Cervix L                                          3.27        3.22        3.29        3.31         cm
+                                     AZ WOMEN'S SPECIALISTS
 
-       Comment
-        FETAL ANATOMY G1 TEEN PREGNANCY
+             F/U ANATOMY CARDIAC/SPINE/ACI AND KIDNEYS
+            FETAL GROWTH
 
-         SLIUP @ 18WSD EDD 12/29/23 BY ULTRASOUND, SIZE C/W DATES, OVERALL 16% (259G OLB 902). BREECH.
-        FHR=150BPM. GOOD FETAL MOVEMENT SEEN. UNABLE TO OBTAIN PROFILE, N/L
-                                                                                 , CARDIAC, SPINE, FEET, LOWER
-        EXT VIEWS DUE TO FETAL POSITION. ALL OTHER ANATOMY APPEARS WNL. POST FUNDAL PL- NO PREVIA.
-         CX=3.2CM.
+              SLIUP @ 24W3D EDD 11/05/23 BY ULTRASOUND, SIZE C/W DATES, OVERALL 77% (771G 1LB 1102). BPD=2%.
+             BREECH. FHR=148BPM. AFI=11.6CM. GOOD FETAL MOVEMENT SEEN. POST FUNDAL PL. CARDIAC VIEWS
+             SUBOPTIMAL. RVOT APPEARS WNL. UNABLE TO OBTAIN OPTIMAL ACI AND SPINE VIEWS DUE TO FETAL
+              POSITION. FETAL LT KIDNEY RENAL PELVIS =07MM INDICTAING MILD PYELECTASIS.FETAL RT KIDNEY NOT SEEN.
+             CX APPEARS SHORT AND CLOSED ON TODAY'S SCAN. CX=2.5CM.
 
-        TA & TV SCAN PERFORMED.
+             TA & TV SCAN PERFORMED
 
-       AM RDMS
-     Images
-
-                       [I=                   EaTELERR)
-                LIE Lanal          ae   EE LU RR  SEE
+            AM RDMS
 
 
 
@@ -113,6 +100,12 @@
 
 
 
-                                                                                                                 08-02-2023 11:04 am
+
+
+
+
+
+
+                                                                                                                       07-19-2023 02:28 pm
 
 

@@ -255,8 +255,9 @@ insightsAll = {
       "check": "yes"
       },    
       "EFW in pctl": {
-      "normal_values": "if EFW in pctl <89.99 pctl then it's Normal otherwise it's Abnormal",
-      "abnormal_values": " ",
+      "normal_values": "If value of EFW in pctl unit is less than 89.99 pctl then classify it as a Norma",
+      "abnormal_values": "If value of EFW in pctl unit is greater than 89.99 pctl then classify it as a Abnormal",
       "check": "yes"
       },
+      
 }
