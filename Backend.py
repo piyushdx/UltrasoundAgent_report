@@ -9,7 +9,7 @@ import os
 from text2json import *
 app = Flask(__name__)
 CORS(app, support_credentials=True)
-
+import time
 ultrabot = UltraBot()
 
 @app.route('/UltraBot_clear_cache')
@@ -37,6 +37,9 @@ def remove_null_keys(json_str):
   # Convert updated dict back to JSON
   return json.dumps(data)
 
+
+
+
 @app.route("/convert", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def upload_file():
@@ -45,7 +48,11 @@ def upload_file():
         # Do something with the uploaded file (e.g., save it)
         uploaded_file.save("ChatBotUI/static/pdf/uploaded.pdf")
         print("file is saved")
+        start = time.time()
         report_text = convert2text(request.files['pdf'])
+        end = time.time()
+        print("The time of execution for convert2text is :",(end-start)," second")
+
         print("convert to text is done.")
 #         report_text = """
 #                                                   ULTRASOUND REPORT
@@ -824,12 +831,71 @@ def upload_file():
 
 # 
 # """
+
+#         report_text = """"
+# GGA(EDD) 37w6d   EDD 10/10/2023	GA(AUA) 36w4d	EDD(AUA) 10/19/2023
+
+# EFw(Hadlock)	value	range	Age	Range	
+# AC/BPD/FL/HC	2978g
+
+# 2D Measurements		Value
+# BPD (Hadlock)		8.96 cm
+# OFD (HC)		11.31 cm
+# HC (Hadlock)		32.63 cm
+# AC (Hadlock)		32.96 cm
+# FL (Hadlock)		7.01 cm
+
+# AFI	value
+# m1	2.60 cm
+# m2	4.18 cm
+# m3	4.02 cm
+# m4	3.59 cm
+# AFI	14.39 cm
+
+
+# 2D Calculations			Range
+# CI (BPD/OFD)	79%		(70-86%)
+# FL/AC		21%		(20-24%)
+# FU/BPD		78%		(71-87%)
+# FL/HC (Hadlock) 21%		(21-23%)
+# HC/AC (Campbell)0.99		(0.92-1.05)
+
+# Doppler Measurements	Value
+# FHR			139 bpm
+
+# Anatomical Survey
+# Fetal Description
+# 	Fetal Position	Transverse RT
+# 	Placenta Location	Posterior
+# 	Amniotic Fluid	Normal
+
+# Biophysical Profile
+# 	Fetal Movements	2
+# 	Fetal Breathing Moveme	2
+# 	Fetal Tone	2
+# 	Amniotic Fluid Volume	2
+# 	Total	8/8
+
+# Comment
+# 	EFW 6LB 9OZ, 31%
+# 	TRV MAT RT
+# 	POSTERIOR PLACENTA WNL
+# 	BPP 8/8
+# 	AFI 14.1CM
+#         """
+#         print("it's here ?")
         
+        start = time.time()
         json_data = text_to_json(report_text)
+        end = time.time()
+        print("The time of execution for text_to_json :",(end-start)," second")
 
         print(json_data)
         # print("---------------------------")
+        start = time.time()
         json_data_pure = remove_null_keys(json_data)
+        end = time.time()
+        print("The time of execution for remove_null_keys :",(end-start)," second")
         print(json_data_pure)
         print("cleaned data................")
         data = {'query': str(json_data_pure), type: ''}

@@ -169,6 +169,7 @@ Lt. Overy Vol. avg value in ml
     cleaned_string = comment.replace("\n"," ").replace("\x0c"," ").replace("\"","").replace("\'","").replace(","," ")
     # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
+    print(report_text)
     history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
     # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
     jsonReport = get_completion(history)
@@ -179,6 +180,5 @@ Lt. Overy Vol. avg value in ml
         print(f"comment is not added because...........{e}")
     print(jsonReport)
     print("above is final json report......................")
-
     return str(jsonReport).replace("'", "\"")
 

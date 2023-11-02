@@ -367,7 +367,7 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     response = openai.ChatCompletion.create(
         model=model,
         messages=prompt,
-        temperature=0.4  # this is the degree of randomness of the model's output
+        temperature=0.2  # this is the degree of randomness of the model's output
     )
     return response.choices[0].message["content"]
 
@@ -488,4 +488,157 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 # output = get_completion([{"role": "system", "content": sys_prompt}, {"role": "user", "content": "I would like comprehensive guidelines for the Fetal position breech along with CPT reports.if there is any."}])
 # print(output)
 
+# AUA = 15
 
+# filter_by_AUA_prompt = f"""
+# You excel at filtering ultrasound report recommendations. Take a moment to review each recommendation line, and if it indicates < {AUA} weeks, remove it; otherwise, keep everything else as it is and provide the resulting output. 
+# """
+
+# filter_by_AUA_prompt = """
+# You excel at filtering ultrasound report recommendations. Take a moment to review each recommendation line, and if it indicates a gestational age of less than {AUA} weeks, remove it; otherwise, keep everything as it is and provide the resulting output.
+# """
+
+# final_ans = """
+# To confirm suspected abnormal fetal position or presentation (transverse or breech
+# presentation) at ≥36 weeks gestation, report one of the following:
+# o CPT® 76805 (plus CPT® 76810 for each additional fetus) when complete
+# anatomy scan has not yet been performed in the pregnancy or
+# o CPT® 76815 for limited ultrasound to check fetal position or
+# o CPT® 76816 if version is being considered and/or for delivery planning
+# """
+
+# filter_by_AUA_prompt = f"""
+# show all the remaining information after eliminate recommendations intended to do CPT report <14 weeks.
+# """
+
+
+# final_ans = """
+# - Complete first trimester ultrasound CPT® 76801 [plus CPT® 76802 for each additional fetus] if <14 weeks and a complete ultrasound has not yet been performed, and/or CPT® 76817 for a transvaginal ultrasound
+# - CPT® 76801 is preferred for dating, but if this is unable to be completed then
+# - CPT® 76815 and/or CPT® 76817 for a transvaginal ultrasound is indicated
+# - See Detailed First Trimester Fetal Anatomic Scan (OB-9.12) for indications for detailed first trimester fetal anatomic evaluation 5,6
+# - Detailed Fetal Anatomic Scan CPT® 76811 if ≥16 weeks
+# - Though CPT® 76811 can be performed as early as 14 weeks gestation, per ACOG, in the absence of other specific indications, it is optimally performed at 18 to 22 weeks of gestation
+# - Starting at 23 follow-up growth scans (CPT® 76816) every 3 to 6 weeks
+# - BPP (CPT® 76818 or CPT® 76819) or modified BPP (CPT® 76815), weekly starting at 32 weeks
+# - More frequent antepartum fetal surveillance can be performed as stipulated below:
+# - Starting at 32 weeks, perform BPP (CPT® 76818 or CPT® 76819) or modified BPP (CPT® 76815) up to 2x weekly for the conditions below:
+# - Antiphospholipid Syndrome
+# - Maternal Renal Disease (moderate to severe with creatinine >1.4mg/dl)
+# - Sickle cell disease
+# - Starting at diagnosis perform BPP (CPT® 76818 or CPT® 76819) if ≥26 weeks, or modified BPP (CPT® 76815) if ≥23 weeks, up to 2x weekly:
+# - Intra-hepatic cholestasis of pregnancy (IHCP)
+# - Complicated Sickle cell disease (e.g. co-existing hypertension, vaso-occlusive crisis, fetal growth restriction)
+# - Complicated SLE (e.g. active lupus nephritis, or recent flares)
+# - Major fetal anomaly in the current pregnancy (e.g. gastroschisis, fetal ventriculomegaly, fetal hydronephrosis (>10mm), achondroplasias, fetal congenital heart disease, neural tube defect, sustained fetal arrhythmias)
+# """
+
+# final_ans = """
+# If more than one fibroid, total size of all fibroids should be used, i.e. one fibroid at 2 cm and one 3 cm is total of 5 cm and imaging would be indicated as below:
+# o Moderate (>5 cm) and large (>10 cm) fibroid(s):
+# - Complete first trimester ultrasound CPT® 76801 [plus CPT® 76802 for each additional fetus] if <14 weeks and a complete ultrasound has not yet been performed, and/or CPT® 76817 for a transvaginal ultrasound
+# - CPT® 76801 is preferred for dating, but if this is unable to be completed then CPT® 76815 and/or CPT® 76817 for a transvaginal ultrasound is indicated
+# - Fetal anatomic scan (CPT® 76805 or CPT® 76811 if other high risk indication. See High Risk Pregnancy (OB-9)) if ≥16 weeks.
+# - Though fetal anatomy survey (CPT® 76805/CPT® 76811) can be performed as early as 14 weeks gestation, per ACOG, in the absence of other specific indications, it is optimally performed at 18 to 22 weeks of gestation.
+# - If the fibroid is in the lower uterine segment or the cervix (cervical fibroid), can perform ultrasound (CPT® 76815) and/or transvaginal ultrasound (CPT ® 76817) every 2 weeks between 16 to 24 weeks, and
+# - Follow up ultrasound (CPT® 76816) every 3 to 6 weeks, starting at 23 weeks.
+# """
+
+
+
+# filter_by_AUA_prompt = """Process the provided recommendation of CPT reports individually. think step by step and Remove any individual recommendation that are intended for an age less than {AUA} weeks. then return a json in below formate.
+# final_ans = {
+# important_results = "<result>" // <result> will be remaining output
+# }
+# """
+
+# history = [{"role": "system", "content": "you are ultrasound report agent."},{"role": "assistant", "content": filter_by_AUA_prompt},{"role": "user", "content": final_ans}]
+
+# if AUA is not None:
+# filter_by_AUA_prompt = f"""
+# show all the remaining information after eliminate recommendations intended to do CPT report <14 weeks.
+# """
+#     prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},{"role":"user", "content": f"""The ultrasound report is as follows:""" + "\n" + final_ans}]
+#     # final_ans = get_completion(history)
+#     final_ans = get_completion(prompt_filter_fetus_age)
+# print(final_ans)
+
+
+# import re
+
+# text = """
+# Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings
+# of a suspected chromosomal abnormality (excluding soft markers as only
+# ultrasound findings)
+# •
+# Early onset FGR (<32 weeks)<12 weeks may be a sign of fetal aneuploidy 11,12
+# """
+
+# # Define the regular expression pattern
+# pattern = r'<\d+ weeks'
+
+# # Find all matches in the text
+# matches = re.findall(pattern, text)
+
+# # Print the matches
+
+# if any(matches):
+#     months = []
+#     for match in matches:
+#         months.append(int(match.split(" ")[0][1:]))
+# months.sort()
+# print(months[-1])
+
+# import re
+
+# text = """
+# Key Analysis:
+# - Fetal presentation should be assessed by abdominal palpation (Leopold's) at 36 weeks or later, when presentation is likely to influence the plans for the birth.
+# - Suspected fetal malpresentation should be confirmed by an ultrasound assessment.
+# - An ultrasound can be performed at ≥36 weeks gestation to determine fetal position to allow for external cephalic version.
+# - Ultrasound to determine fetal position is not necessary prior to 36 weeks gestation unless delivery is imminent.
+
+# Recommendation:
+# - To confirm suspected abnormal fetal position or presentation (transverse or breech presentation) at ≥36 weeks gestation, report one of the following:
+# - CPT® 76805 (plus CPT® 76810 for each additional fetus) when complete anatomy scan has not yet been performed in the pregnancy
+# - CPT® 76815 for limited ultrasound to check fetal position
+# - CPT® 76816 if version is being considered and/or for delivery planning
+# - CPT® 76815 should never be reported with complete studies CPT® 76801/CPT® 76802, CPT® 76805/CPT® 76810, or CPT® 76811/CPT® 76812 or with CPT® 76816 or BPP (CPT® 76818 and CPT® 76819).
+# """
+
+# # Define the regular expression pattern to capture data after "Recommendation:"
+# pattern = r'Recommendation:(.*)'
+
+# # Find the match
+# match = re.search(pattern, text, re.DOTALL)
+# # text_without_recommendation = re.sub(pattern, 'No data found', text, flags=re.DOTALL) # to replace recommendation with new
+
+# # Extract and print the data after "Recommendation:"
+# if match:
+#     recommendation_data = match.group(1).strip()
+#     print(recommendation_data)
+
+import re
+
+text = """
+Key Analysis:
+- Fetal presentation should be assessed by abdominal palpation (Leopold's) at 36 weeks or later, when presentation is likely to influence the plans for the birth.
+- Suspected fetal malpresentation should be confirmed by an ultrasound assessment.
+- An ultrasound can be performed at ≥36 weeks gestation to determine fetal position to allow for external cephalic version.
+- Ultrasound to determine fetal position is not necessary prior to 36 weeks gestation unless delivery is imminent.
+
+Recommendation:
+- To confirm suspected abnormal fetal position or presentation (transverse or breech presentation) at ≥36 weeks gestation, report one of the following:
+- CPT® 76805 (plus CPT® 76810 for each additional fetus) when complete anatomy scan has not yet been performed in the pregnancy
+- CPT® 76815 for limited ultrasound to check fetal position
+- CPT® 76816 if version is being considered and/or for delivery planning
+- CPT® 76815 should never be reported with complete studies CPT® 76801/CPT® 76802, CPT® 76805/CPT® 76810, or CPT® 76811/CPT® 76812 or with CPT® 76816 or BPP (CPT® 76818 and CPT® 76819).
+"""
+
+# Define the regular expression pattern to capture the "Recommendation:" section
+pattern = r'Recommendation:(.*)'
+
+# Replace the "Recommendation" section with "No data found"
+text_without_recommendation = re.sub(pattern, 'Recommendation:\nNo data found', text, flags=re.DOTALL)
+
+print(text_without_recommendation)

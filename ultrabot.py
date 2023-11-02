@@ -14,7 +14,7 @@ from datetime import datetime
 import time
 import difflib
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-
+import time
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 # prompt = "Identify"
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
@@ -151,7 +151,11 @@ def extract_content_in_braces(text):
 
 def find_indices_of_difference(old_list, new_list):
     # Find the indices of elements in old_list that are not in new_list
-    indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
+    # indices_of_difference = [i for i, item in enumerate(old_list) if item.strip() not in new_list]
+    indices_of_difference = []
+    for i, item in enumerate(old_list):
+        if item.strip() not in new_list:
+            indices_of_difference.append(i)
     return indices_of_difference
 
 def remove_elements_by_indices(indices, data):
@@ -162,7 +166,7 @@ def remove_elements_by_indices(indices, data):
 def remove_similar(abnormalities):
     old_list = [f"{key} {value}" for key, value in abnormalities.items()]
     try:
-        output = get_completion([{"role": "system", "content": """use with give you a Abnormality List. Remove abnormalities from the provided list that mean the same. Output only the final list and nothing else."""}, {
+        output = get_completion([{"role": "system", "content": """Remove abnormalities from the provided list that mean the same, if any. Output only the final list and nothing else."""}, {
                                          "role": "user", "content": "Abnormality List: "+str(old_list)}])
         new_list = extract_content_in_braces(output)
         indices = find_indices_of_difference(old_list, new_list)
@@ -539,7 +543,8 @@ def get_not_seen_mvp_edc(reportString):
         final_ans = ""
     return final_ans,flag,ageFlag
 
-prompt_comment = """You are expert in understanding ultrasound Reports. Identify each obstetric complications separately from ultrasound report. you will get a draft of ultrasound report."""
+# prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Please review the ultrasound report and identify individual obstetric complications based on the provided values. If no values are provided then based on available information find the complication."""
+prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Only and only Identify each obstetric complications separately from ultrasound report and identify individual obstetric complications based on the provided information. make sure you provide only and only true obstetric complications by thinking carefully. you will get a draft of ultrasound report comment."""
 
 def get_negative_findings(reportString):
     try:
@@ -549,7 +554,7 @@ def get_negative_findings(reportString):
             # it will get me a json which contains possible abnormalities
             response3 = get_completion(history)
         except Exception as e:
-            print("Function calling Error : ", e)
+            print("3Function calling Error : ", e)
             response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
             history.append({"role": "assistant", "content": response3})
             return jsonify({"response": response3})
@@ -610,14 +615,14 @@ def parse_report(Report_string):
     history += [{"role": "user", "content": str(step2)}]
     try:
         # it will get me a json which contains possible abnormalities
-        response3 = get_completion(history)
+        abnormalities = get_completion(history)
     except Exception as e:
         print("Function calling Error : ", e)
-        response3 = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
-        history.append({"role": "assistant", "content": response3})
-        return jsonify({"response": response3})
+        abnormalities = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
+        history.append({"role": "assistant", "content": abnormalities})
+        return jsonify({"response": abnormalities})
     negative_finding_keys = get_negative_findings(json.loads(json_parser(Report_string)))
-    abnormalities = response3
+    # abnormalities = response3
     print(abnormalities)
     print("above are intermediate things............")
     abnormal_keys,Report_string = get_abnormal_keys(json.loads(json_parser(abnormalities)),json.loads(json_parser(Report_string)))
@@ -866,11 +871,12 @@ class UltraBot():
         query = data["query"]
         self.chat_history += [{"role": "user", "content": str(query)}]
         messages = self.chat_history  # + [{"role": "user", "content": query}]
+
         try:
             response = ask_function_calling(
                 messages, self.function_descriptions)
         except Exception as e:
-            print("Function calling Error : ", e)
+            print("1Function calling Error : ", e)
             response = "Apologies! You have exceeded the maximum token limit of 4097. Please clear the chat and try again.\n"
             self.chat_history.append(
                 {"role": "assistant", "content": response})
@@ -881,7 +887,7 @@ class UltraBot():
                 function_response = parse_report(query)
                 if isinstance(function_response, list):
                     final_response = function_response
-                    final_response=remove_duplicate(final_response)
+                    final_response = remove_duplicate(final_response)
                     final_response = remove_duplicate_using_key_analysis(final_response)
                     final_response = remove_duplicate_using_Recommendation(final_response)
                 else:
@@ -898,7 +904,7 @@ class UltraBot():
                     response = ask_function_calling(
                         messages, self.function_descriptions)
                 except Exception as e:
-                    print("Function calling Error : ", e)
+                    print("2Function calling Error : ", e)
                     response = "Apologies! You have exceeded the maximum token limit of 4097. Please clear the chat and try again.\n"
                     self.chat_history.append(
                         {"role": "assistant", "content": response})
@@ -948,3 +954,12 @@ class UltraBot():
 
 # final_response = ['Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.', 'Fetal Position : Breech\n\nKey Analysis: Fetal presentation should be assessed by abdominal palpation (Leopold’s) at 36 weeks or later, when presentation is likely to influence the plans for the birth. Routine assessment of presentation by abdominal palpation before 36 weeks is not always accurate. Suspected fetal malpresentation should be confirmed by an ultrasound assessment. An ultrasound can be performed at ≥36 weeks gestation to determine fetal position to allow for external cephalic version. Ultrasound to determine fetal position is not necessary prior to 36 weeks gestation unless delivery is imminent.\n\nRecommendation:\n- To confirm suspected abnormal fetal position or presentation (transverse or breech presentation) at ≥36 weeks gestation, report one of the following:\n  - CPT® 76805 (plus CPT® 76810 for each additional fetus) when complete anatomy scan has not yet been performed in the pregnancy\n  - CPT® 76815 for limited ultrasound to check fetal position\n  - CPT® 76816 if version is being considered and/or for delivery planning', 'confirmed diagnosis of polyhydramnios : maximum vertical pocket(MVP) ≥8cm.\n\nKey Analysis: Polyhydramnios is confirmed when the maximum vertical pocket (MVP) is ≥8cm.\nRecommendation:\n- Perform a Detailed Fetal Anatomy Scan (CPT® 76811) at diagnosis, if not previously performed.\n- Perform a follow-up ultrasound (CPT® 76816) every 3-4 weeks for mild polyhydramnios (AFI 24-29.9cm or MVP 8-9.9cm).\n- Perform a follow-up ultrasound (CPT® 76816) every 2 weeks for severe polyhydramnios (AFI ≥30cm or MVP ≥10cm).\n- Perform antepartum fetal surveillance with a quick look for AFI check (CPT® 76815) weekly starting at ≥23 weeks.\n- Perform a Biophysical Profile (BPP) or modified BPP (CPT® 76818, CPT® 76819, or CPT® 76815) for AFI with NST starting at 26 weeks.\n- Perform umbilical artery (UA) Doppler (CPT® 76820) weekly starting at the time of diagnosis if ≥23 weeks.', 'Breech presentation : \n\nKey Analysis: Breech presentation refers to the position of the fetus in which the buttocks or feet are positioned to be delivered first instead of the head. It is important to assess fetal presentation to determine the appropriate management and delivery plan.\n\nRecommendation:\n- To confirm suspected breech presentation at ≥36 weeks gestation, the following CPT reports can be considered:\n  - CPT® 76805 (plus CPT® 76810 for each additional fetus) if a complete anatomy scan has not yet been performed in the pregnancy.\n  - CPT® 76815 for a limited ultrasound to check fetal position.\n  - CPT® 76816 if version (manually turning the fetus) is being considered and/or for delivery planning.\n\nNote: No specific CPT reports are mentioned in the context for breech presentation.', 'Placenta previa : \n\nKey Analysis: Placenta previa is characterized by the placental edge covering the internal cervical os or being less than 2 cm away from it. \nRecommendation:\n- For suspected placenta previa, the following ultrasound options can be performed:\n  - CPT® 76805 [plus CPT® 76810 for each additional fetus] and/or CPT® 76817 if a complete fetal anatomic scan has not yet been performed during this pregnancy, with or without CPT® 93976 (limited duplex scan)\n  - CPT® 76815 for limited ultrasound and/or CPT® 76817 with or without CPT® 93976 (limited duplex scan)\n  - CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817 for a transvaginal ultrasound with or without CPT® 93976 (limited duplex scan)\n- For known placenta previa or low lying placenta (placental edge <2 cm from internal os):\n  - One routine follow-up ultrasound can be performed in the 3rd trimester (CPT® 76815 or CPT® 76816 and/or CPT® 76817)\n  - If placenta previa or low lying placenta is still present, one follow-up ultrasound (CPT® 76815 or CPT® 76816 and/or CPT® 76817) can be performed in 3-4 weeks\n  - If persistent placenta previa (placental edge covers the internal cervical os), BPP (CPT® 76818/CPT® 76819 or modified BPP (CPT® 76815) can be performed weekly, starting at 32 weeks\n  - Follow-up ultrasound can be performed at any time if bleeding occurs, using BPP (CPT® 76818 or CPT® 76819) or CPT® 76815 or CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817', "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"]
 # print(remove_duplicate_using_Recommendation(final_response))
+
+# reportString = {
+#  'Comment': '\\r\\n\\r\\n\\r\\n\\r\\n                                                                                                                  08-07-2023 10:05 am\\r\\n\\r\\n\\x0c                                                  ULTRASOUND REPORT\\r\\n\\r\\n                                            Ultrasound Report\\r\\n\\r\\n       BPP\\r\\n\\r\\n          Single vertex male fetus.\\r\\n         FHR=147bpm with normal cardiac rhythm.\\r\\n        EFW=9#20z / 98th%\\r\\n        AFI=10.4cm\\r\\n         Fundal placenta grade 2\\r\\n        BPP8/8\\r\\n\\r\\n       K'   
+# }
+# print(get_negative_findings(reportString))
+
+query = 'I would like comprehensive guidelines for the Socio-Demographic Risk Factors (maternal age) Age ≥ 35 along with CPT reports.if there is any.\n'
+AUA = 15
+print(pdf_utils.chat_with_pdf_q(query,AUA))
