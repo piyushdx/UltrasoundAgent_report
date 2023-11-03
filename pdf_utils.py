@@ -200,8 +200,8 @@ class PDFUtils:
             page_set.add(source.metadata['page']+1) # GPT given pages are always currunt page - 1
         return reply+str(list(page_set))
     
-    def chat_with_pdf_q(self, query,AUA):
-
+    def chat_with_pdf_q(self,db, query,AUA,query_context):
+        print(query)
         if "Socio-Demographic Risk Factors (maternal age)" in query:
             final_ans = ans_for_age
         elif "myoma" in str.lower(query):
@@ -209,11 +209,10 @@ class PDFUtils:
         else :
             prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
-                1.Answer questions based solely on provided context. do not infer or generate your own answers.
-                2.Only If above context does not contain relevant answer with CPT reports for Below <Question>, then only, simply say and only say following in Recommendation... Recommendation: "No specific CPT reports are mentioned in the context". But if context contain answer then give recommendations only.
+                1.do not infer or generate your own answers. Answer questions based solely on provided context. 
+                2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
                 3.If the key analysis suggests that the condition is considered normal, commonly encountered,common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
-                4.find page number from context and show as sample output.
-       
+
             [Sample Question]
                 I would like comprehensive guidelines for the AC value 8% along with CPT reports.\n"
             [Sample Output] 
@@ -221,30 +220,27 @@ class PDFUtils:
                     actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal
                     Circumference ≤10th percentile.
                 Recommendation:
-                     Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
-                     Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
+                    • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
+                    • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
                     can be performed once or twice weekly
-                     Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
+                    • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
                     weekly
-                     Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
+                    • Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
                     performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
-                Page Number : 146 of 198
 
-            Context : {context}
-            Question: {question} 
-            Answer:"""
+            [Context]
+            
+            <context>
+            """
 
-            PROMPT = PromptTemplate(
-                template=prompt_template, input_variables=["context","question"]
-            )
-            chain_type_kwargs = {"prompt": PROMPT}
-            qa = RetrievalQA.from_chain_type(llm=ChatOpenAI(temperature=0.2), retriever=self.retriever, chain_type_kwargs=chain_type_kwargs)
+            results = db.get_context(que=query_context)
+            context,page = db.get_context_combined(results)
 
-            final_ans = qa.run(query)
-            print("-----------------\n")
-            # print(f"{AUA} is AUA")
-            print("\n\nBelow is the Row Answer:\n")
-            print(final_ans)
+            history = [{"role": "system", "content": prompt_template.replace("<context>",context)},{"role": "user", "content": f"{query}" }]
+            final_ans = get_completion(history)
+            print(f"page number is {page}")
+            final_ans += "\nPage : "+str(page)
+
             contain_cpt_reports = contains_cpt_code(final_ans)
             print(f"contain cpt reports : {contain_cpt_reports}")
             if not contain_cpt_reports:
@@ -253,7 +249,7 @@ class PDFUtils:
 
         try:
             if len(final_ans.split("Recommendation:")[1].strip())<110:
-                if "No specific CPT reports are mentioned in the context" in final_ans or "No Recommendation Needed Cause Finding is Normal" in final_ans:
+                if "The answer is not found in the provided context." in final_ans or "No Recommendation Needed Cause Finding is Normal" in final_ans:
                     final_ans = " "
                     AUA = None
         except Exception as e:
@@ -269,6 +265,7 @@ class PDFUtils:
             final_ans = get_completion(prompt_known_suspected)
 
 # "You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."
+        AUA = None
         if AUA is not None:
 
             pattern = r'Recommendation:(.*)'
@@ -311,7 +308,7 @@ class PDFUtils:
             new_recommendations = get_completion(prompt_filter_fetus_age)    
             print(new_recommendations)
 
-            
+
             final_ans = re.sub(pattern, "Recommendation:\n"+new_recommendations, final_ans, flags=re.DOTALL) # to replace recommendation with new
 
             print("below is final answer")

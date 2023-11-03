@@ -15,6 +15,7 @@ import time
 import difflib
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 import time
+from app import VectorDB
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 # prompt = "Identify"
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
@@ -182,7 +183,7 @@ def remove_not_seen_values(abnormalities):
     return updated_abnormalities
 
 
-def get_reports(abnormalities,negative_finding_keys,AUA):
+def get_reports(db,abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
         print(negative_finding_keys) # debug here
         try:
@@ -198,9 +199,14 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
     abnormalities = remove_not_seen_values(abnormalities)
     print("\nNot seen value is removed...")
     print(abnormalities)
+
+    start = time.time()
     abnormalities = remove_similar(abnormalities)
+    end = time.time()
+    print("The time of execution for remove_similar which are below :",(end-start)," second")
     print(abnormalities)
     print("above are all the possible abnormalities list........................................................")
+    
     if any(abnormalities):
         reports = "Here are some noteworthy findings (abnormalities) along with corresponding CPT reports that could provide useful information to you.^_^"
         for key, value in abnormalities.items():
@@ -213,6 +219,7 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             #     continue
             print(str(key) + ": " + str(value))
             reports += f"{str(key)} : {str(value)}\n\n"
+            query_context = f"{str(key)} : {str(value)}"
             if key == "Fetal Position":
                 query = "I would like comprehensive guidelines for the confirm suspected abnormal" + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
             # elif "myoma" in str.lower(key):
@@ -220,7 +227,12 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             #     query = ""
             else:
                 query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
-            result = pdf_utils.chat_with_pdf_q(query,AUA)
+            
+            start = time.time()
+            result = pdf_utils.chat_with_pdf_q(db,query,AUA,query_context)
+            end = time.time()
+            print("The time of execution for get_reports :",(end-start)," second")
+  
             if result == " ":
                 pass 
             result += '^_^'
@@ -598,7 +610,7 @@ def get_AUA(Report_string):
         AUA = None
     return AUA
 
-def parse_report(Report_string):
+def parse_report(db, Report_string):
     print("------------------- \nParsing Report \n------------------")
     history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>", get_insights(
         json.loads(Report_string), insightsAll))+"\n\nHere is the ultrasound Report\n"+Report_string}]
@@ -613,6 +625,8 @@ def parse_report(Report_string):
         populate "<parameter>" : "<Normal OR Abnormal>" if any abnormalities in the report and return only json.    
     """
     history += [{"role": "user", "content": str(step2)}]
+
+    start = time.time()
     try:
         # it will get me a json which contains possible abnormalities
         abnormalities = get_completion(history)
@@ -621,18 +635,45 @@ def parse_report(Report_string):
         abnormalities = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."
         history.append({"role": "assistant", "content": abnormalities})
         return jsonify({"response": abnormalities})
-    negative_finding_keys = get_negative_findings(json.loads(json_parser(Report_string)))
+    end = time.time()
+    print("The time of execution for below abnormalities :",(end-start)," second")
     # abnormalities = response3
     print(abnormalities)
     print("above are intermediate things............")
+
+    start = time.time()
+    negative_finding_keys = get_negative_findings(json.loads(json_parser(Report_string)))
+    end = time.time()
+    print("The time of execution for get_negative_findings :",(end-start)," second")
+    
+    start = time.time()
     abnormal_keys,Report_string = get_abnormal_keys(json.loads(json_parser(abnormalities)),json.loads(json_parser(Report_string)))
+    end = time.time()
+    print("The time of execution for get_abnormal_keys :",(end-start)," second")
+
     Report_string = Report_string.replace("'", "\"")
+
+    start = time.time()
     final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
+    end = time.time()
+    print("The time of execution for get_negative_findings :",(end-start)," second")
+
     # final_ans, mvp_flag,ageFlag = get_not_seen_mvp_edc(json.loads(json_parser(Report_string)))
+
+    start = time.time()
     abnormalities = str(get_final_abnormalities(abnormal_keys, json.loads(json_parser(Report_string)),mvp_flag,ageFlag)["abnormalities"]).replace("'", "\"")
+    end = time.time()
+    print("The time of execution for get_final_abnormalities which are below :",(end-start)," second")
+
     print(abnormalities)
     print("Above are final Abnormalities....................]]]]]]]]]]]]]]]]]]]]")
-    final_ans += get_reports(json.loads(abnormalities),negative_finding_keys,AUA)
+
+
+    start = time.time()
+    final_ans += get_reports(db,json.loads(abnormalities),negative_finding_keys,AUA)
+    end = time.time()
+    print("The time of execution for get_reports :",(end-start)," second")
+
     final_ans += "Please feel free to ask me any specific questions you have regarding the report. I'm here to help!😊"
     final_response = final_ans.split("^_^")
     return final_response
@@ -848,7 +889,7 @@ class UltraBot():
         ]
         self.first_time = True
         self.function_descriptions = function_descriptions
-
+        self.db = VectorDB()
     def clear_cache(self):
         # user = data['email']
         self.chat_history = [
@@ -867,11 +908,13 @@ class UltraBot():
     #     return jsonify({"response": "done done done..."})
 
     def get_response(self, data):
+        start_time = time.time()
         function_response = None
         query = data["query"]
         self.chat_history += [{"role": "user", "content": str(query)}]
         messages = self.chat_history  # + [{"role": "user", "content": query}]
 
+        start = time.time()
         try:
             response = ask_function_calling(
                 messages, self.function_descriptions)
@@ -881,10 +924,12 @@ class UltraBot():
             self.chat_history.append(
                 {"role": "assistant", "content": response})
             return jsonify({"response": response})
+        end = time.time()
+        print("The time of execution for ask_function_calling :",(end-start)," second")
         # while response["choices"][0]["finish_reason"] == "function_call":
         if response["choices"][0]["finish_reason"] == "function_call":
             if response["choices"][0]["message"]["function_call"]["name"] == "parse_report":
-                function_response = parse_report(query)
+                function_response = parse_report(self.db,query)
                 if isinstance(function_response, list):
                     final_response = function_response
                     final_response = remove_duplicate(final_response)
@@ -927,6 +972,9 @@ class UltraBot():
                                "content": str(final_response)}]
         print("final_response:", final_response)
         final_response = process_final_list(final_response)
+        end_time = time.time()
+        time_taken = "The time of execution :" + str(end_time-start_time)+" second"
+        final_response.append(time_taken) 
         return jsonify({"response": final_response})
 
     def get_response1(self, data):
@@ -960,6 +1008,6 @@ class UltraBot():
 # }
 # print(get_negative_findings(reportString))
 
-query = 'I would like comprehensive guidelines for the Socio-Demographic Risk Factors (maternal age) Age ≥ 35 along with CPT reports.if there is any.\n'
-AUA = 15
-print(pdf_utils.chat_with_pdf_q(query,AUA))
+# query = 'I would like comprehensive guidelines for the Socio-Demographic Risk Factors (maternal age) Age ≥ 35 along with CPT reports.if there is any.\n'
+# AUA = 15
+# print(pdf_utils.chat_with_pdf_q(query,AUA))
