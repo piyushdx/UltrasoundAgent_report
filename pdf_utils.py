@@ -202,7 +202,7 @@ class PDFUtils:
     
     def chat_with_pdf_q(self,db, query,AUA,query_context):
         print(query)
-        if "Socio-Demographic Risk Factors (maternal age)" in query:
+        if "Socio-Demographic Risk Factors (maternal age)....................." in query:
             final_ans = ans_for_age
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
@@ -229,7 +229,7 @@ class PDFUtils:
                     performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
 
             [Context]
-            
+
             <context>
             """
 

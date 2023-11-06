@@ -907,7 +907,7 @@ class UltraBot():
     #     time.sleep(3)
     #     return jsonify({"response": "done done done..."})
 
-    def get_response(self, data):
+    def get_response(self, data,extra_time = None):
         start_time = time.time()
         function_response = None
         query = data["query"]
@@ -973,7 +973,7 @@ class UltraBot():
         print("final_response:", final_response)
         final_response = process_final_list(final_response)
         end_time = time.time()
-        time_taken = "The time of execution :" + str(end_time-start_time)+" second"
+        time_taken = "The time of execution :" + str((end_time-start_time)+extra_time)+" second"
         final_response.append(time_taken) 
         return jsonify({"response": final_response})
 

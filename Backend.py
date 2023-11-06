@@ -43,6 +43,7 @@ def remove_null_keys(json_str):
 @app.route("/convert", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def upload_file():
+    start_extra = time.time()
     uploaded_file = request.files["pdf"]
     if uploaded_file:
         # Do something with the uploaded file (e.g., save it)
@@ -899,7 +900,9 @@ def upload_file():
         print(json_data_pure)
         print("cleaned data................")
         data = {'query': str(json_data_pure), type: ''}
-        return ultrabot.get_response(data)
+        end_extra =  time.time()
+        
+        return ultrabot.get_response(data,extra_time=end_extra-start_extra)
     else:
         return jsonify({"message": "No file uploaded."}), 400
 
