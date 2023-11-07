@@ -188,7 +188,7 @@ class PDFUtils:
             self.process_llm_response(result)
 
     def get_context(self,query):
-        persist_directory = 'db'
+        persist_directory = './db'
         embedding = OpenAIEmbeddings()
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
         docs = vectordb.similarity_search(query,k=2,search_type="similarity")
