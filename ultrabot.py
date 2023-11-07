@@ -167,7 +167,7 @@ def remove_elements_by_indices(indices, data):
 def remove_similar(abnormalities):
     old_list = [f"{key} {value}" for key, value in abnormalities.items()]
     try:
-        output = get_completion([{"role": "system", "content": """Remove abnormalities from the provided list that mean the same, if any. Output only the final list and nothing else."""}, {
+        output = get_completion([{"role": "system", "content": """Remove abnormalities from the provided list that mean the same, if any (remove the latter one). Output only the final list and nothing else."""}, {
                                          "role": "user", "content": "Abnormality List: "+str(old_list)}])
         new_list = extract_content_in_braces(output)
         indices = find_indices_of_difference(old_list, new_list)

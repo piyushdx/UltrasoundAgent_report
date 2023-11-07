@@ -172,7 +172,10 @@ Lt. Overy Vol. avg value in ml
     print(report_text)
     history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
     # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
-    jsonReport = get_completion(history)
+    try:
+        jsonReport = get_completion(history)
+    except Exception as e:
+        return(f"{e}\nplease try after sometime. issue @OpenAI side.")
     jsonReport = json.loads(json_parser(jsonReport))
     try:
         jsonReport["Comment"] = str(cleaned_string)[:-2]

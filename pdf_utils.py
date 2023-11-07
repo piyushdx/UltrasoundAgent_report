@@ -234,26 +234,22 @@ class PDFUtils:
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
         else :
-            prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.Do not copy Recommendation from <Sample Output>. 
+            prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>. 
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
-                1.do not infer or generate your own answers. Answer questions based solely on provided context. 
+                1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
                 2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
-                3.If the key analysis suggests that the condition is considered normal, commonly encountered,common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
+                3.If the key analysis suggests that the condition is considered normal, commonly encountered, common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
 
             [Sample Question]
                 I would like comprehensive guidelines for the AC value 8%"
             [Sample Output] 
-                Key Analysis:   // will contain only 1-2 line of analysis 
-                    • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or
-                    actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal
-                    Circumference ≤10th percentile.
+                Key Analysis:   // will contain only 1 liner analysis based on the [Context]
+                    • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
 
-                Recommendation: // will contain comprehensive guidelines with CPT reports.
+                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
                     • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
-                    • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
-                    can be performed once or twice weekly
-                    • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
-                    weekly
+                    • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly
+                    • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed weekly
                     • Starting at diagnosis, iAmniotic Fluid : Polyhydramnios
 
             [Context]
@@ -261,9 +257,11 @@ class PDFUtils:
             <context>
             """
 
-            results = self.get_context(que=query_context)
+            results = self.get_context(query_context)
             context,page = self.get_context_combined(results)
-
+            print("here is the context..........................................................................................................")
+            print(context)
+            print("..........................................................................................................")
             history = [{"role": "system", "content": prompt_template.replace("<context>",context)},{"role": "user", "content": f"{query}" }]
             try:
                 final_ans = get_completion(history)

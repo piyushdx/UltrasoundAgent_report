@@ -888,6 +888,8 @@ def upload_file():
         
         start = time.time()
         json_data = text_to_json(report_text)
+        if "please try after sometime. issue @OpenAI side." in json_data:
+           return jsonify({"message": json_data}), 400
         end = time.time()
         print("The time of execution for text_to_json :",(end-start)," second")
 
