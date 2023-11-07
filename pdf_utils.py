@@ -234,7 +234,7 @@ class PDFUtils:
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
         else :
-            prompt_template = """ Your role is to provide Key Analysis (One Liner without CPT Reports) and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
+            prompt_template = """ Your role is to provide a short Key Analysis (about 20 words) and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
                 1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
                 2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
@@ -248,7 +248,7 @@ class PDFUtils:
                 Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed - Starting at 23 weeks, a modified BPP (CPT®76815) can be performed once or twice weekly, or Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly, and Starting at 23 weeks Umbilical artery (UA) Doppler (CPT ® 76820) can be performed weekly. If FGR is diagnosed in the current ultrasound, BPP (CPT ® 76818 or CPT® 76819) can be performed if ≥26 weeks, and/or UA Doppler (CPT ® 76820) if ≥23 weeks.
 
             [Sample Output 1] 
-                Key Analysis:   // will contain only 1 liner analysis
+                Key Analysis:   // will contain a short analysis
                     • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
 
                 Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
@@ -270,7 +270,7 @@ class PDFUtils:
                     Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings of a suspected chromosomal abnormality (excluding soft markers as only ultrasound findings):
                     
             [Sample Output 2] 
-                Key Analysis:   // will contain only 1 liner analysis
+                Key Analysis:   // will contain a short analysis
                     • Echogenic intracardiac focus (EIF) is a bright spot seen in the left ventricle of the fetal heart during an ultrasound.
                     • EIF is a common finding and is considered a soft marker for chromosomal abnormalities, particularly Down syndrome.
                     • EIF alone is not considered a significant finding and does not typically warrant further testing or intervention.
@@ -289,7 +289,7 @@ class PDFUtils:
                     Detailed anatomic ultrasound at ≥16 weeks:The fetal anatomy survey (CPT® 76805/CPT® 76811) is optimally performed at 18 to 22 weeks of gestation, though it can be conducted as early as 14 weeks gestation, per ACOG guidelines.
                       
             [Sample Output 3] 
-                Key Analysis:   // will contain only 1 liner analysis
+                Key Analysis:   // will contain a short analysis
                     The answer is not found in the provided context.
                 Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
                     The answer is not found in the provided context.
