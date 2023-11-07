@@ -198,7 +198,7 @@ class PDFUtils:
         context = ""
         page_number = set()
         for ele in docs:
-            json_context = json.loads((ele.page_content.replace("\'","\"")))
+            json_context = json.loads((ele.page_content.replace("'","\"")))
             # print(json_context['title'])
             page_number.add(json_context['page'])
             # chunk = json.loads(ele.replace("\'","\""))
@@ -234,7 +234,139 @@ class PDFUtils:
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
         else :
-            prompt_template = """ Your role is to provide a short Key Analysis (about 20 words) and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
+            # prompt_template = """ Your role is to provide a simple short Key Analysis and Recommendations(including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
+            # [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
+            #     1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
+            #     2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
+            #     3.If the key analysis suggests that the condition is considered normal, commonly encountered, common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
+
+            # [Sample Question 1]
+            #     I would like comprehensive guidelines for the AC value 8% if there is any.
+
+            #     Context: 
+            #     The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
+            #     Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed - Starting at 23 weeks, a modified BPP (CPT®76815) can be performed once or twice weekly, or Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly, and Starting at 23 weeks Umbilical artery (UA) Doppler (CPT ® 76820) can be performed weekly. If FGR is diagnosed in the current ultrasound, BPP (CPT ® 76818 or CPT® 76819) can be performed if ≥26 weeks, and/or UA Doppler (CPT ® 76820) if ≥23 weeks.
+
+            # [Sample Output 1] 
+            #     Key Analysis:   // will contain short key analysis 
+            #         • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
+
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the <Context>.
+            #         • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
+            #         • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly
+            #         • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed weekly
+
+
+            # [Sample Question 2] 
+            #     I would like comprehensive guidelines for Echogenic intracardiac focus (EIF) seen in the left ventricle .if there is any.
+
+            #     Context:
+            #         Fetal Echocardiography - Indications for Fetal Conditions::
+            #         Initial Fetal echocardiography (CPT® 76825) and/or Doppler echocardiography (CPT® 76827) with or without Doppler color flow velocity mapping (CPT® 93325) can be performed if ≥16 weeks:
+            #         Known or suspected abnormal fetal cardiac evaluation on fetal anatomic scan:Known or suspected abnormality must be documented as hard copy or acknowledged verbally by the provider of known or suspected fetal cardiac evaluation.
+            #         • Suboptimal cardiac evaluation alone is not an indication for a fetal echogram. If the 4-chamber view is adequate and there is no other suspicion of a cardiac abnormality, a fetal echocardiogram is not considered medically necessary. A follow-up ultrasound (CPT® 76815 or CPT® 76816) is indicated for suboptimal visualization. If the follow-up ultrasound fails to show a 4-chamber view or there is suspicion of a cardiac abnormality, fetal echocardiogram is indicated.
+            #         Fetal cardiac arrhythmia; persistent fetal tachycardia or bradycardia.Major fetal extra-cardiac anomaly (excluding soft markers for aneuploidy: for example shortened long bones, pyelectasis, echogenic bowel, hypoplastic nasal bone, cardiac echogenic foci, and choroid plexus cyst).
+            #         Congenital heart disease (CHD) in a 1st-degree relative of the fetus (i.e. CHD in the mother, father, or sibling of the fetus).
+            #         Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings of a suspected chromosomal abnormality (excluding soft markers as only ultrasound findings):
+                    
+            # [Sample Output 2] 
+            #     Key Analysis:   // The defintion of abnormality. Does not contains the CPT reports.
+            #         • Echogenic intracardiac focus (EIF) is a bright spot seen in the left ventricle of the fetal heart during an ultrasound.
+            #         • EIF is a common finding and is considered a soft marker for chromosomal abnormalities, particularly Down syndrome.
+            #         • EIF alone is not considered a significant finding and does not typically warrant further testing or intervention.
+
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the <Context>.
+            #         No Recommendation Needed Cause Finding is Normal
+
+
+            # [Sample Question 3] 
+            #     I would like comprehensive guidelines for Anterior placenta grade 2, partial previa .if there is any.
+
+            #     Context:
+            #         Previa (Placenta Previa and Vasa Previa)::
+            #         Second and Third Trimesters:For known placenta previa (placental edge covers the internal cervical os) or low lying placenta (placental edge <2 cm from internal os):One routine follow-up ultrasound can be performed in the 3rd trimester (CPT® 76815 or CPT® 76816 and/or CPT® 76817).If placenta previa or low lying placenta is still present, one follow-up ultrasound (CPT® 76815 or CPT® 76816 and/or CPT® 76817) can be performed in 3-4 weeks.If persistent placenta previa (placental edge covers the internal cervical os), BPP (CPT® 76818/CPT® 76819 or modified BPP (CPT® 76815) weekly, starting at 32 weeks.Follow-up ultrasound can be performed at any time if bleeding occurs BPP (CPT® 76818 or CPT® 76819) or CPT® 76815 or CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817).Background and Supporting Information:For pregnancies beyond 16 weeks, if the placental edge is ≥2 cm away from the internal os, the placental location should be reported as normal.If the placental edge is <2 cm from the internal os but not covering the internal os, it should be labeled as low lying.If the placental edge covers the internal cervical os, the placenta should be labeled as a placenta previa.There is no evidence to guide the optimal time of subsequent imaging in pregnancies thought to have placenta previa. In stable patients it is reasonable to perform a follow-up ultrasonogram at approximately 32 weeks of gestation and an additional study at 36 weeks of gestation (if the previa persists) to determine the optimal route and timing of delivery. There is no clear benefit from more frequent ultrasonograms (eg, every 4 weeks) in stable cases.
+            #         Vasa Previa:Vasa previa occurs when fetal blood vessels that are unprotected by the umbilical cord or placenta run through the amniotic membranes and cross over the internal cervical os.If a Vasa Previa is found on initial imaging:
+            #         Detailed anatomic ultrasound at ≥16 weeks:The fetal anatomy survey (CPT® 76805/CPT® 76811) is optimally performed at 18 to 22 weeks of gestation, though it can be conducted as early as 14 weeks gestation, per ACOG guidelines.
+                      
+            # [Sample Output 3] 
+            #     Key Analysis:   // The defintion of abnormality. Does not contains the CPT reports.
+            #         The answer is not found in the provided context.
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+            #         The answer is not found in the provided context.
+
+                                        
+            # [Context]
+
+            # <context>
+            # """
+
+            # prompt_template = """ Your role is to provide a short Key Analysis(will contain a short 10-20 word Analysis) and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
+            # [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
+            #     1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
+            #     2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
+            #     3.If the key analysis suggests that the condition is considered normal, commonly encountered, common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
+
+            # [Sample Question 1]
+            #     I would like comprehensive guidelines for the AC value 8% if there is any.
+
+            #     Context: 
+            #     The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
+            #     Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed - Starting at 23 weeks, a modified BPP (CPT®76815) can be performed once or twice weekly, or Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly, and Starting at 23 weeks Umbilical artery (UA) Doppler (CPT ® 76820) can be performed weekly. If FGR is diagnosed in the current ultrasound, BPP (CPT ® 76818 or CPT® 76819) can be performed if ≥26 weeks, and/or UA Doppler (CPT ® 76820) if ≥23 weeks.
+
+            # [Sample Output 1] 
+            #     Key Analysis:   // will contain a short 10-20 word Analysis
+            #         • Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
+
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+            #         • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
+            #         • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly
+            #         • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed weekly
+
+
+            # [Sample Question 2] 
+            #     I would like comprehensive guidelines for Echogenic intracardiac focus (EIF) seen in the left ventricle .if there is any.
+
+            #     Context:
+            #         Fetal Echocardiography - Indications for Fetal Conditions::
+            #         Initial Fetal echocardiography (CPT® 76825) and/or Doppler echocardiography (CPT® 76827) with or without Doppler color flow velocity mapping (CPT® 93325) can be performed if ≥16 weeks:
+            #         Known or suspected abnormal fetal cardiac evaluation on fetal anatomic scan:Known or suspected abnormality must be documented as hard copy or acknowledged verbally by the provider of known or suspected fetal cardiac evaluation.
+            #         • Suboptimal cardiac evaluation alone is not an indication for a fetal echogram. If the 4-chamber view is adequate and there is no other suspicion of a cardiac abnormality, a fetal echocardiogram is not considered medically necessary. A follow-up ultrasound (CPT® 76815 or CPT® 76816) is indicated for suboptimal visualization. If the follow-up ultrasound fails to show a 4-chamber view or there is suspicion of a cardiac abnormality, fetal echocardiogram is indicated.
+            #         Fetal cardiac arrhythmia; persistent fetal tachycardia or bradycardia.Major fetal extra-cardiac anomaly (excluding soft markers for aneuploidy: for example shortened long bones, pyelectasis, echogenic bowel, hypoplastic nasal bone, cardiac echogenic foci, and choroid plexus cyst).
+            #         Congenital heart disease (CHD) in a 1st-degree relative of the fetus (i.e. CHD in the mother, father, or sibling of the fetus).
+            #         Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings of a suspected chromosomal abnormality (excluding soft markers as only ultrasound findings):
+                    
+            # [Sample Output 2] 
+            #     Key Analysis:   // will contain a short 10-20 word Analysis
+            #         • Echogenic intracardiac focus (EIF) is a bright spot seen in the left ventricle of the fetal heart during an ultrasound.
+            #         • EIF is a common finding and is considered a soft marker for chromosomal abnormalities, particularly Down syndrome.
+            #         • EIF alone is not considered a significant finding and does not typically warrant further testing or intervention.
+
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+            #         No Recommendation Needed Cause Finding is Normal
+
+
+            # [Sample Question 3] 
+            #     I would like comprehensive guidelines for Anterior placenta grade 2, partial previa .if there is any.
+
+            #     Context:
+            #         Previa (Placenta Previa and Vasa Previa)::
+            #         Second and Third Trimesters:For known placenta previa (placental edge covers the internal cervical os) or low lying placenta (placental edge <2 cm from internal os):One routine follow-up ultrasound can be performed in the 3rd trimester (CPT® 76815 or CPT® 76816 and/or CPT® 76817).If placenta previa or low lying placenta is still present, one follow-up ultrasound (CPT® 76815 or CPT® 76816 and/or CPT® 76817) can be performed in 3-4 weeks.If persistent placenta previa (placental edge covers the internal cervical os), BPP (CPT® 76818/CPT® 76819 or modified BPP (CPT® 76815) weekly, starting at 32 weeks.Follow-up ultrasound can be performed at any time if bleeding occurs BPP (CPT® 76818 or CPT® 76819) or CPT® 76815 or CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817).Background and Supporting Information:For pregnancies beyond 16 weeks, if the placental edge is ≥2 cm away from the internal os, the placental location should be reported as normal.If the placental edge is <2 cm from the internal os but not covering the internal os, it should be labeled as low lying.If the placental edge covers the internal cervical os, the placenta should be labeled as a placenta previa.There is no evidence to guide the optimal time of subsequent imaging in pregnancies thought to have placenta previa. In stable patients it is reasonable to perform a follow-up ultrasonogram at approximately 32 weeks of gestation and an additional study at 36 weeks of gestation (if the previa persists) to determine the optimal route and timing of delivery. There is no clear benefit from more frequent ultrasonograms (eg, every 4 weeks) in stable cases.
+            #         Vasa Previa:Vasa previa occurs when fetal blood vessels that are unprotected by the umbilical cord or placenta run through the amniotic membranes and cross over the internal cervical os.If a Vasa Previa is found on initial imaging:
+            #         Detailed anatomic ultrasound at ≥16 weeks:The fetal anatomy survey (CPT® 76805/CPT® 76811) is optimally performed at 18 to 22 weeks of gestation, though it can be conducted as early as 14 weeks gestation, per ACOG guidelines.
+                      
+            # [Sample Output 3] 
+            #     Key Analysis:   // will contain a short 10-20 word Analysis
+            #         The answer is not found in the provided context.
+            #     Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+            #         The answer is not found in the provided context.
+
+                                        
+            # [Context]
+
+            # <context>
+            # """
+
+            prompt_template = """ Your role is to provide a short Key Analysis and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
                 1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
                 2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
@@ -248,10 +380,10 @@ class PDFUtils:
                 Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed - Starting at 23 weeks, a modified BPP (CPT®76815) can be performed once or twice weekly, or Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly, and Starting at 23 weeks Umbilical artery (UA) Doppler (CPT ® 76820) can be performed weekly. If FGR is diagnosed in the current ultrasound, BPP (CPT ® 76818 or CPT® 76819) can be performed if ≥26 weeks, and/or UA Doppler (CPT ® 76820) if ≥23 weeks.
 
             [Sample Output 1] 
-                Key Analysis:   // will contain a short analysis
+                Key Analysis:   // explain single line defination of abnormality from user Query  
                     • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
 
-                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+                Recommendation: // will contain comprehensive guideline from the [Context].
                     • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
                     • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly
                     • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed weekly
@@ -269,13 +401,13 @@ class PDFUtils:
                     Congenital heart disease (CHD) in a 1st-degree relative of the fetus (i.e. CHD in the mother, father, or sibling of the fetus).
                     Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings of a suspected chromosomal abnormality (excluding soft markers as only ultrasound findings):
                     
-            [Sample Output 2] 
-                Key Analysis:   // will contain a short analysis
+            [Sample Output 2]
+                Key Analysis:   // explain single line defination of abnormality from user Query
                     • Echogenic intracardiac focus (EIF) is a bright spot seen in the left ventricle of the fetal heart during an ultrasound.
                     • EIF is a common finding and is considered a soft marker for chromosomal abnormalities, particularly Down syndrome.
                     • EIF alone is not considered a significant finding and does not typically warrant further testing or intervention.
 
-                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+                Recommendation: 
                     No Recommendation Needed Cause Finding is Normal
 
 
@@ -289,18 +421,19 @@ class PDFUtils:
                     Detailed anatomic ultrasound at ≥16 weeks:The fetal anatomy survey (CPT® 76805/CPT® 76811) is optimally performed at 18 to 22 weeks of gestation, though it can be conducted as early as 14 weeks gestation, per ACOG guidelines.
                       
             [Sample Output 3] 
-                Key Analysis:   // will contain a short analysis
+                Key Analysis:   // explain single line defination of abnormality from user Query
                     The answer is not found in the provided context.
-                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+                Recommendation: 
                     The answer is not found in the provided context.
-
                                         
             [Context]
 
             <context>
             """
-
             results = self.get_context(query_context)
+            print("below is results.................s")
+            print(results)
+            print("..............................")
             context,page = self.get_context_combined(results)
             print("here is the context..........................................................................................................")
             print(context)

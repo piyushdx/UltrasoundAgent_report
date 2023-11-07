@@ -249,15 +249,28 @@ insightsAll = {
             "abnormal_values": "Abnormal if value of Placenta Previa: yes",
             "check": "yes"
       },
-      "EFW in gram": {
-      "normal_values": "The normal range for the EFW in gram value is typically below 4000 grams.",
-      "abnormal_values": "EFW in g is deemed abnormal when it exceeds 4000 grams.",
-      "check": "yes"
-      },    
       "EFW in pctl": {
-      "normal_values": "If value of EFW in pctl unit is less than 89.99 pctl then classify it as a Norma",
-      "abnormal_values": "If value of EFW in pctl unit is greater than 89.99 pctl then classify it as a Abnormal",
-      "check": "yes"
+            "normal_values": "If the value of EFW ranges between >0.0 and < 89.99 pctl then classify it as a Normal.",
+            "abnormal_values": "If the value of EFW is >90.00 pctl then classify it as an Abnormal.",
+            "check": "yes"
       },
+      "EFW in gram": {
+            "normal_values": "The normal range for the EFW in gram value is typically below 4000 grams.",
+            "abnormal_values": "EFW in gram is deemed abnormal when it exceeds 4000 grams.",
+            "check": "yes"
+      },    
+      
+      # "EFW in gram": {
+      # "normal_values": "The normal range for the EFW in gram value is typically below 4000 grams.",
+      # "abnormal_values": "EFW in gram is deemed abnormal when it exceeds 4000 grams.",
+      # "check": "yes"
+      # },    
+      # "EFW in pctl": {
+      # "normal_values": "If value of EFW is < 89.99 pctl then classify it as a Normal",
+      # "abnormal_values": "If value of EFW is > 90 pctl then classify it as a Abnormal",
+      # # "normal_values": "If value of EFW in pctl unit is less than 89.99 pctl then classify it as a Normal",
+      # # "abnormal_values": "If value of EFW in pctl unit is greater than 89.99 pctl then classify it as a Abnormal",
+      # "check": "yes"
+      # },
       
 }

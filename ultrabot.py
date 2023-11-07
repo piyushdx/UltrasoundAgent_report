@@ -15,7 +15,7 @@ import time
 import difflib
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 import time
-from app import VectorDB
+# from app import VectorDB
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 # prompt = "Identify"
 # prompt = "Analyze the provided ultrasound report for abnormalities. Identify any parameter that deviates from the normal range and explain the implications."
@@ -557,8 +557,8 @@ def get_not_seen_mvp_edc(reportString):
         final_ans = ""
     return final_ans,flag,ageFlag
 
-# prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Please review the ultrasound report and identify individual obstetric complications based on the provided values. If no values are provided then based on available information find the complication."""
-prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Only and only Identify each obstetric complications separately from ultrasound report and identify individual obstetric complications based on the provided information. make sure you provide only and only true obstetric complications by thinking carefully. you will get a draft of ultrasound report comment."""
+# prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Please review the ultrasound report and identify individual obstetric complications based on the provided values. If no values are provided then based on available information find the complication."""and identify individual obstetric complications based on the provided information. 
+prompt_comment = """You are expert in finding obstetric complications from ultrasound Reports Comment. Only and only Identify each obstetric complications separately from ultrasound report. make sure you provide only and only true obstetric complications name from provided comment by thinking carefully. you will get a draft of ultrasound report comment."""
 
 def get_negative_findings(reportString):
     try:
