@@ -183,7 +183,7 @@ def remove_not_seen_values(abnormalities):
     return updated_abnormalities
 
 
-def get_reports(db,abnormalities,negative_finding_keys,AUA):
+def get_reports(abnormalities,negative_finding_keys,AUA):
     if negative_finding_keys is not None:
         print(negative_finding_keys) # debug here
         try:
@@ -221,15 +221,15 @@ def get_reports(db,abnormalities,negative_finding_keys,AUA):
             reports += f"{str(key)} : {str(value)}\n\n"
             query_context = f"{str(key)} : {str(value)}"
             if key == "Fetal Position":
-                query = "I would like comprehensive guidelines for the confirm suspected abnormal" + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
+                query = "I would like comprehensive guidelines for the confirm suspected abnormal" + str(key) + " "+str(value) + ".if there is any.\n"
             # elif "myoma" in str.lower(key):
             #     print("did myoma search")
             #     query = ""
             else:
-                query = "I would like comprehensive guidelines for the " + str(key) + " "+str(value) + " along with CPT reports.if there is any.\n"
+                query = "I would like comprehensive guidelines for " + str(key) + " "+str(value) + ".if there is any.\n"
             
             start = time.time()
-            result = pdf_utils.chat_with_pdf_q(db,query,AUA,query_context)
+            result = pdf_utils.chat_with_pdf_q(query,AUA,query_context)
             end = time.time()
             print("The time of execution for get_reports :",(end-start)," second")
   
@@ -610,7 +610,7 @@ def get_AUA(Report_string):
         AUA = None
     return AUA
 
-def parse_report(db, Report_string):
+def parse_report(Report_string):
     print("------------------- \nParsing Report \n------------------")
     history = [{"role": "system", "content": prompt.replace("<INSIGHTS_DATA>", get_insights(
         json.loads(Report_string), insightsAll))+"\n\nHere is the ultrasound Report\n"+Report_string}]
@@ -670,7 +670,7 @@ def parse_report(db, Report_string):
 
 
     start = time.time()
-    final_ans += get_reports(db,json.loads(abnormalities),negative_finding_keys,AUA)
+    final_ans += get_reports(json.loads(abnormalities),negative_finding_keys,AUA)
     end = time.time()
     print("The time of execution for get_reports :",(end-start)," second")
 
@@ -889,7 +889,8 @@ class UltraBot():
         ]
         self.first_time = True
         self.function_descriptions = function_descriptions
-        self.db = VectorDB()
+        # self.db = VectorDB()
+
     def clear_cache(self):
         # user = data['email']
         self.chat_history = [
@@ -929,14 +930,14 @@ class UltraBot():
         # while response["choices"][0]["finish_reason"] == "function_call":
         if response["choices"][0]["finish_reason"] == "function_call":
             if response["choices"][0]["message"]["function_call"]["name"] == "parse_report":
-                function_response = parse_report(self.db,query)
+                function_response = parse_report(query)
                 if isinstance(function_response, list):
                     final_response = function_response
                     final_response = remove_duplicate(final_response)
                     final_response = remove_duplicate_using_key_analysis(final_response)
                     final_response = remove_duplicate_using_Recommendation(final_response)
                 else:
-                    final_response = "Apologies! I could not understand, Can you please rephrase and try again..."
+                    final_response = ["Apologies! I could not understand, Can you please rephrase and try again...",]
 
             else:
                 function_response = function_call(response)

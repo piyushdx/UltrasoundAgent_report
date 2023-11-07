@@ -1,115 +1,106 @@
-                                                 ULTRASOUND REPORT
+                                                  ULTRASOUND REPORT
 
-                                 AZ WOMEN'S SPECIALISTS
-  Name GD-       Exam. Date  08-02-2023
-        Gender         Female              BirthDate  Co            )      Age              23yri0m
-           Institute            AZ WOMEN'S SPECI...  Ref. Physician   DR.HETAL SHAH    Sonographer        AM RDMS
-         Description       FETAL ANATOMY
-     OB]
-              Gravida §                                 Para 2                                 LMP 03-14-2023
-            EDD(LMP) 12-19-2023                    GA(LMP) 20w1d                            AUA 20w6d
-             EDD(AUA) 12-14-2023                         EFW 0lb140z (390g)              EFW Author Hadlock4(BPD,HC,A...
-             Pctl.(EFW) 86.25                       Pctl. Criteria EstabDD
-         Fetal Biometry         Avg.       1        2        3                      GA                    Pctl.
-       BPD                4.66    4.61     4.71           cm        20w1dt12d    Hadlock   47.07   Hadlock
-       HC                18.54    18.64    18.44          cm        20w6d+10d    Hadlock   75.16   Hadlock
-       AC                16.04    16.05    16.03          cm        21w1dt14d    Hadlock   76.23   Hadlock
-         FL                    3.45     3.41     3.45             cm   Last    20w6dx13d    Hadlock    68.13   Hadlock
-        Fetal Cranium         Avg.       1        2        3                     GA                   Pctl.
-       CEREB             2.27    2.27                  cm        21w2d+13d     Hill     83.06  Nicolai...
-      CM               0.46    0.46                cm                          32.61  Nicolai...
-        NF                  0.43     0.43                    cm  Max
-         Lat Vent               0.78      0.78                       cm
-        General                                       Avg.         1          2          3
-         Fetal HR                                          156         156                               bpm
-         Ratio                Value                        Normal Range
-        FL/AC             21.53        %          (20.0~24.0%, >21w)
-        FL/BPD            74.14       %         (71.0~87.0%, >23w)
-        FL/HC              18.63        %        (15.07~21.47%, 20w1d)
-        HC/AC             1.16                   (1.09~1.26, 20w1d)
-         Fetal Description                                                              Value
-      Gender                                                  Female
-          Fetal Position                                                                 Transverse
-         Fetal Head                                                                Seen
-         Fetal Spine                                                                  Seen
-         Placenta Location                                                        Anterior
-         Placenta Grade                                                            1
-         Placenta Previa                                                              No
-        3V Cord                                                           Seen
-         Cord Insertion                                                                 Seen
-         Amniotic Fluid                                                              Normal
-          Facial Profile                                                                     Seen
-      Diaphragm                                                     Seen
-         Upper Extremity                                                           Seen
-         Lower Extremity                                                         Seen
-        Hands                                                            Seen
-         Feet                                                                    Seen
-         Fetal Heart                                                                    Value
-       4 Chamber                                                        Seen
-         Lt. Outflow Tract                                                                Seen
-         Rt Outflow Tract                                                           Seen
-        Cardiac Rhythm                                                       Regular
-         Fetal Brain                                                                   Value
-         Lateral Ventricles                                                              Seen
-       Cerebellum                                                       Seen
-        Cist Magna                                                               Seen
-        Cranium                                                             Seen
+                                            Ultrasound Report
 
-                                                                                                                 08-02-2023 12:05 pm
+        Name                           ID                         Exam. Date       08-04-2023
+         Gender        Female                                            Age              24yr 8m
+                                               .
+            Institute           AZ WOMEN'S SPECI.    Diag. Physician SHAH                Ref. Physician       HETAL SHAH,...
+         Sonographer    KS.RDMS
+          Description       ANATOMY
+           .
+    [OB]
+        LMP(EDD) 03-05-2023            EstabDD 12-10-2023                EDD 12-10-2023
+         GA(EDD) 21w5d                  AUA 22w1d             EDD(AUA) 12-07-2023
+              EFW 1ib 30z (531g)       EFW Aut... Hadlock2(BPD,...    GA(EFW) 22w2d
+         Pctl. Crit... EstabDD
+         Fetal Biometry    Avg.     1       2       3                  GA                Pctl.
+      BPD          5.27   5.27             cm     22w0d+12d  Hadl   59.81  Hadl...
+      HC           19.87  19.87            cm     22w0d+10d  Hadl   53.40  Hadl...
+      AC           18.43  18.43            cm     23w2d+14d  Hadl   86.41  Hadl...
+       FL             3.83   3.83               cm      22w2d+13d  Hadl    59.29  Hadl...
 
-                                                 ULTRASOUND REPORT
+        Fetal Cranium     Avg. 1     2      3
+                                                                                             |  |   GA |          ERI       Petl,    Ig    !
+      CEREB        225   2.25             cm     21w1d+13d   Hill   60.90 Nicol...
+      CM          0.53  0.53            cm                   46.70 Nicol...
+           Vent         0.64   0.64                cm
+           | Lat
+        General
+                                                                    Ave '         A,            2            3
+        Fetal HR                                1         140                         bpm
+         Ratio           Value               yNormal Range
+      FLAC       20.78    %     (20.0~24.0%, >21w)
+       FL/BPD       72.63     %     (71.0~87.0%, >23w)
+       FL/HC         19.27     %    (16.41~21.50%, 21w...
+       HC/AC        1.08            (1.06~1.25, 21w5d)
+        Fetal Description                                             Value
+       Gender                                              Male
+         Fetal Position                                                   Breech
+        Fetal Head                                                   Seen
+         Fetal Spine                                                     Seen
+        Placenta Location                                           Anterior
+        Placenta Grade                                               2
+         Placenta Previa                                                Yes
+       3V Cord                                            Seen
+         Cord Insertion                                                 Seen
+         Amniotic Fluid                                                Normal
+          Facial Profile                                                        Seen
+       Diaphragm                                            Seen
+        Upper Extremity                                            Seen
+        Lower Extremity                                            Seen
+       Hands                                              Seen
+        Feet                                                       Seen
 
-                                 AZ WOMEN'S SPECIALISTS
+                                                                                                                   08-04-2023 03:24 pm
 
-        Fetal Abdomen                                                      Value
-         Abdominal Wall                                                       Seen
-         Spine                                                                 Seen
-        Stomach                                                         Seen
-         Bladder                                                               Seen
-          Lt. Kidney                                                                     Seen
-          Rt. Kidney                                                                    Seen
+                                                  ULTRASOUND REPORT
 
-         Maternal Others                                  Avg.         1           2           3
-         Cervix L                                           4.20        3.93        4.43        4.23         cm
+                                            Ultrasound Report
+
+        Fetal Heart                         -                       Value
+       4 Chamber                                            Seen
+         Lt. Outflow Tract                                               Seen
+         Rt. Outflow Tract                                              Seen
+         3 Vessel                                                      Seen
+         Aortic Arch                                                   Seen
+         Ductal Arch                                                  Seen
+        Cardiac Rhythm                                         Regular
+         Fetal Brain                                                       Value
+         Lateral Ventricles                                                Seen
+        Cerebellum                                                 Seen
+        Cist Magna                                                Seen
+       Cranium                                              Seen
+        Fetal Abdomen                                           Value
+        Abdominal Wall                                            Seen
+        Spine                                                    Seen
+       Stomach                                            Seen
+        Bladder                                                    Seen
+         Lt. Kidney                                                      Seen
+         Rt. Kidney                                                    Seen
+
+        Maternal Others                        Avg.       1         2        3
+         Cervix L                              |   s.09      6.09                          cm
 
        Comment
-        FETAL ANATOMY
+      ANATOMY
 
-         SLIUP @ 20W6D EDD 12/14/23 BY ULTRASOUND, SIZE C/W DATES, OVERALL 86% (390G 0LB1402). TRANS HEAD
-        MAT RT. FHR=156BPM. SUBOPTIMAL SPINE ANDKIDNEYS DUE TO FETAL POSITION. ALL OTHER ANATOMY
-        APPEARS WNL. FEMALE FETUS.  GOOD FETAL MOVEMENT SEEN. ANT PL- NO PREVIA. CX=4.2CM.
+         Single male fetus seen with positive fetal movement.
+        FHR=140bpm with normal cardiac rhythm.
+       EFW=1#30z
+         Amniotic fluid appears wnl.
+         Anatomy well visualized, no obvious abnormalities seen with the exception of an EIF seen
+         in the left ventricle. Suboptimal views of nasal bone and cisterna magna.
+          Anterior placenta grade 2, partial previa seen. Covering the 10S by 1.5cm.
+         The cervix was seen transabdominally measuring 6.1cm.
 
-        TA SCAN PERFORMED. LIMITED SCAN DUE TO MBH.
-
-       AM RDMS
-     Images
-
-                       Lie                   AL WOREN'S SPECIALISTS WE 12  0BG2.20T ’                      res
-                    LLL ZL LL                                                                        haan blog=
-             RS aE ER  LEI IER                    LL RE CL
-                                                                                         BARRAZA WFRRERA PE. 0920/1994  v aon—  —caine IRL LRBREA EEL PY)
+       KS.RDMS
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                 08-02-2023 12:05 pm
+                                                                                                                  08-04-2023 03:24 pm
 
 

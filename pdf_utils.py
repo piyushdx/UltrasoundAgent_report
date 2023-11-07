@@ -10,7 +10,7 @@ load_dotenv()
 from langchain.prompts import PromptTemplate
 import openai
 import re
-
+import json
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     # messages = [{"role": "user", "content": prompt}]
@@ -187,6 +187,33 @@ class PDFUtils:
             chat_history += [(query, result["answer"])]
             self.process_llm_response(result)
 
+    def get_context(self,query):
+        persist_directory = 'db'
+        embedding = OpenAIEmbeddings()
+        vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
+        docs = vectordb.similarity_search(query,k=2,search_type="similarity")
+        return docs
+
+    def get_context_combined(self,docs):
+        context = ""
+        page_number = set()
+        for ele in docs:
+            json_context = json.loads((ele.page_content.replace("\'","\"")))
+            # print(json_context['title'])
+            page_number.add(json_context['page'])
+            # chunk = json.loads(ele.replace("\'","\""))
+            final_ans = json_context['title'] + "::\n"
+            for key, value in json_context['content'].items():
+                f,s = key.split(" ")
+                if s == "extra":
+                    final_ans += value + "\n"
+                elif s == "G":
+                    final_ans += value + "\n"
+                else:
+                    pass
+            context += final_ans + "\n\n"
+        return context,page_number
+
     def chat_with_pdf_single_query(self, query):
         reply = ""
         qa_chain_result = self.qa_chain({"question": query, 'chat_history': []}, return_only_outputs=False)
@@ -200,47 +227,53 @@ class PDFUtils:
             page_set.add(source.metadata['page']+1) # GPT given pages are always currunt page - 1
         return reply+str(list(page_set))
     
-    def chat_with_pdf_q(self,db, query,AUA,query_context):
+    def chat_with_pdf_q(self,query,AUA,query_context):
         print(query)
         if "Socio-Demographic Risk Factors (maternal age)....................." in query:
             final_ans = ans_for_age
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
         else :
-            prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.
+            prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point.Do not copy Recommendation from <Sample Output>. 
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
                 1.do not infer or generate your own answers. Answer questions based solely on provided context. 
                 2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
                 3.If the key analysis suggests that the condition is considered normal, commonly encountered,common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
 
             [Sample Question]
-                I would like comprehensive guidelines for the AC value 8% along with CPT reports.\n"
+                I would like comprehensive guidelines for the AC value 8%"
             [Sample Output] 
-                Key Analysis: AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or
+                Key Analysis:   // will contain only 1-2 line of analysis 
+                    • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or
                     actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal
                     Circumference ≤10th percentile.
-                Recommendation:
+
+                Recommendation: // will contain comprehensive guidelines with CPT reports.
                     • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
                     • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815)
                     can be performed once or twice weekly
                     • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed
                     weekly
-                    • Starting at diagnosis, if ≥16 weeks gestation, follow up ultrasound (CPT® 76816) can be
-                    performed every 2 to 4 weeks if complete anatomy ultrasound previously performed
+                    • Starting at diagnosis, iAmniotic Fluid : Polyhydramnios
 
             [Context]
 
             <context>
             """
 
-            results = db.get_context(que=query_context)
-            context,page = db.get_context_combined(results)
+            results = self.get_context(que=query_context)
+            context,page = self.get_context_combined(results)
 
             history = [{"role": "system", "content": prompt_template.replace("<context>",context)},{"role": "user", "content": f"{query}" }]
-            final_ans = get_completion(history)
+            try:
+                final_ans = get_completion(history)
+            except Exception as e :
+                final_ans = str(e) + "\n\n Appologies! curruntly we are getting issue from OpenAI.\nplease try again after some time."
             print(f"page number is {page}")
             final_ans += "\nPage : "+str(page)
-
+            print("below is the rough answer.......")
+            print(final_ans)
+            print(".................................................\n")
             contain_cpt_reports = contains_cpt_code(final_ans)
             print(f"contain cpt reports : {contain_cpt_reports}")
             if not contain_cpt_reports:
