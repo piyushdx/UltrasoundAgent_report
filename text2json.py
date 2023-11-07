@@ -166,7 +166,7 @@ Lt. Overy Vol. avg value in ml
         comment = result.group(1).strip()
     else:
         comment = "Not Found"
-    cleaned_string = comment.replace("\n"," ").replace("\x0c"," ").replace("\"","").replace("\'","").replace(","," ")
+    cleaned_string = comment.replace("\n"," ").replace("\x0c"," ").replace("\"","").replace("\'","")
     # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
     print(report_text)

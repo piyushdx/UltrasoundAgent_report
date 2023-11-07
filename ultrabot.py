@@ -167,7 +167,7 @@ def remove_elements_by_indices(indices, data):
 def remove_similar(abnormalities):
     old_list = [f"{key} {value}" for key, value in abnormalities.items()]
     try:
-        output = get_completion([{"role": "system", "content": """Remove abnormalities from the provided list that mean the same, if any (remove the latter one). Output only the final list and nothing else."""}, {
+        output = get_completion([{"role": "system", "content": """Remove abnormalities from the provided list that mean the same and denote the same abnormality, if any (remove the latter element). Output only the final list and nothing else."""}, {
                                          "role": "user", "content": "Abnormality List: "+str(old_list)}])
         new_list = extract_content_in_braces(output)
         indices = find_indices_of_difference(old_list, new_list)
@@ -225,6 +225,8 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
             # elif "myoma" in str.lower(key):
             #     print("did myoma search")
             #     query = ""
+            elif value == "yes":
+                query = "I would like comprehensive guidelines for " + str(key) +".if there is any.\n"
             else:
                 query = "I would like comprehensive guidelines for " + str(key) + " "+str(value) + ".if there is any.\n"
             
@@ -915,21 +917,23 @@ class UltraBot():
         self.chat_history += [{"role": "user", "content": str(query)}]
         messages = self.chat_history  # + [{"role": "user", "content": query}]
 
-        start = time.time()
-        try:
-            response = ask_function_calling(
-                messages, self.function_descriptions)
-        except Exception as e:
-            print("1Function calling Error : ", e)
-            response = "Apologies! You have exceeded the maximum token limit of 4097. Please clear the chat and try again.\n"
-            self.chat_history.append(
-                {"role": "assistant", "content": response})
-            return jsonify({"response": response})
-        end = time.time()
-        print("The time of execution for ask_function_calling :",(end-start)," second")
+        # start = time.time()
+        # try:
+        #     response = ask_function_calling(
+        #         messages, self.function_descriptions)
+        # except Exception as e:
+        #     print("1Function calling Error : ", e)
+        #     response = "Apologies! You have exceeded the maximum token limit of 4097. Please clear the chat and try again.\n"
+        #     self.chat_history.append(
+        #         {"role": "assistant", "content": response})
+        #     return jsonify({"response": response})
+        # end = time.time()
+        # print("The time of execution for ask_function_calling :",(end-start)," second")
         # while response["choices"][0]["finish_reason"] == "function_call":
-        if response["choices"][0]["finish_reason"] == "function_call":
-            if response["choices"][0]["message"]["function_call"]["name"] == "parse_report":
+        # if response["choices"][0]["finish_reason"] == "function_call":
+        #     if response["choices"][0]["message"]["function_call"]["name"] == "parse_report":
+        if True: # chnge in final stage
+            if True: # change in final stage
                 function_response = parse_report(query)
                 if isinstance(function_response, list):
                     final_response = function_response

@@ -234,15 +234,20 @@ class PDFUtils:
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
         else :
-            prompt_template = """ Please adhere closely to the provided <Sample Output> and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>. 
+            prompt_template = """ Your role is to provide Key Analysis (One Liner) and Recommendations (including CPT Reports) for a specific abnormality ONLY based on the Context provided to you. Please adhere closely to the format of the [Sample Output] and ensure that your response should be concise with Structured bullet point. Do not copy Recommendation from <Sample Output>.
             [STRICT RULES TO FOLLOW WHILE GIVING ANSWER]
                 1.Do not infer or generate your own answers. Answer questions based solely on provided context. 
                 2.If you cannot locate the answer within the given <Context>, simply state, "The answer is not found in the provided context."
                 3.If the key analysis suggests that the condition is considered normal, commonly encountered, common finding or benign, your response should strictly say and only say following in Recommendation... Recommendation: "No Recommendation Needed Cause Findind is Normal"
 
-            [Sample Question]
-                I would like comprehensive guidelines for the AC value 8%"
-            [Sample Output] 
+            [Sample Question 1]
+                I would like comprehensive guidelines for the AC value 8% if there is any.
+
+                Context: 
+                The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
+                Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed - Starting at 23 weeks, a modified BPP (CPT®76815) can be performed once or twice weekly, or Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly, and Starting at 23 weeks Umbilical artery (UA) Doppler (CPT ® 76820) can be performed weekly. If FGR is diagnosed in the current ultrasound, BPP (CPT ® 76818 or CPT® 76819) can be performed if ≥26 weeks, and/or UA Doppler (CPT ® 76820) if ≥23 weeks.
+
+            [Sample Output 1] 
                 Key Analysis:   // will contain only 1 liner analysis based on the [Context]
                     • AC < 10%, The ACOG definition of Fetal Growth Restriction (FGR): Estimated or actual weight of the fetus ≤10th percentile for gestational age, and/or Abdominal Circumference ≤10th percentile.
 
@@ -250,8 +255,46 @@ class PDFUtils:
                     • Detailed Fetal Anatomic Scan (CPT® 76811) at diagnosis if not already performed
                     • Starting at 26 weeks, BPP (CPT® 76818 or CPT® 76819) or a modified BPP (CPT® 76815) can be performed once or twice weekly
                     • Starting at 23 weeks Umbilical artery (UA) Doppler (CPT® 76820) can be performed weekly
-                    • Starting at diagnosis, iAmniotic Fluid : Polyhydramnios
 
+
+            [Sample Question 2] 
+                I would like comprehensive guidelines for Echogenic intracardiac focus (EIF) seen in the left ventricle .if there is any.
+
+                Context:
+                    Fetal Echocardiography - Indications for Fetal Conditions::
+                    Initial Fetal echocardiography (CPT® 76825) and/or Doppler echocardiography (CPT® 76827) with or without Doppler color flow velocity mapping (CPT® 93325) can be performed if ≥16 weeks:
+                    Known or suspected abnormal fetal cardiac evaluation on fetal anatomic scan:Known or suspected abnormality must be documented as hard copy or acknowledged verbally by the provider of known or suspected fetal cardiac evaluation.
+                    • Suboptimal cardiac evaluation alone is not an indication for a fetal echogram. If the 4-chamber view is adequate and there is no other suspicion of a cardiac abnormality, a fetal echocardiogram is not considered medically necessary. A follow-up ultrasound (CPT® 76815 or CPT® 76816) is indicated for suboptimal visualization. If the follow-up ultrasound fails to show a 4-chamber view or there is suspicion of a cardiac abnormality, fetal echocardiogram is indicated.
+                    Fetal cardiac arrhythmia; persistent fetal tachycardia or bradycardia.Major fetal extra-cardiac anomaly (excluding soft markers for aneuploidy: for example shortened long bones, pyelectasis, echogenic bowel, hypoplastic nasal bone, cardiac echogenic foci, and choroid plexus cyst).
+                    Congenital heart disease (CHD) in a 1st-degree relative of the fetus (i.e. CHD in the mother, father, or sibling of the fetus).
+                    Known fetal chromosomal abnormalities (fetal aneuploidy) or ultrasound findings of a suspected chromosomal abnormality (excluding soft markers as only ultrasound findings):
+                    
+            [Sample Output 2] 
+                Key Analysis:   // will contain only 1 liner analysis based on the [Context]
+                    • Echogenic intracardiac focus (EIF) is a bright spot seen in the left ventricle of the fetal heart during an ultrasound.
+                    • EIF is a common finding and is considered a soft marker for chromosomal abnormalities, particularly Down syndrome.
+                    • EIF alone is not considered a significant finding and does not typically warrant further testing or intervention.
+
+                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+                    No Recommendation Needed Cause Finding is Normal
+
+
+            [Sample Question 3] 
+                I would like comprehensive guidelines for Anterior placenta grade 2, partial previa .if there is any.
+
+                Context:
+                    Previa (Placenta Previa and Vasa Previa)::
+                    Second and Third Trimesters:For known placenta previa (placental edge covers the internal cervical os) or low lying placenta (placental edge <2 cm from internal os):One routine follow-up ultrasound can be performed in the 3rd trimester (CPT® 76815 or CPT® 76816 and/or CPT® 76817).If placenta previa or low lying placenta is still present, one follow-up ultrasound (CPT® 76815 or CPT® 76816 and/or CPT® 76817) can be performed in 3-4 weeks.If persistent placenta previa (placental edge covers the internal cervical os), BPP (CPT® 76818/CPT® 76819 or modified BPP (CPT® 76815) weekly, starting at 32 weeks.Follow-up ultrasound can be performed at any time if bleeding occurs BPP (CPT® 76818 or CPT® 76819) or CPT® 76815 or CPT® 76816 if a complete ultrasound was done previously and/or CPT® 76817).Background and Supporting Information:For pregnancies beyond 16 weeks, if the placental edge is ≥2 cm away from the internal os, the placental location should be reported as normal.If the placental edge is <2 cm from the internal os but not covering the internal os, it should be labeled as low lying.If the placental edge covers the internal cervical os, the placenta should be labeled as a placenta previa.There is no evidence to guide the optimal time of subsequent imaging in pregnancies thought to have placenta previa. In stable patients it is reasonable to perform a follow-up ultrasonogram at approximately 32 weeks of gestation and an additional study at 36 weeks of gestation (if the previa persists) to determine the optimal route and timing of delivery. There is no clear benefit from more frequent ultrasonograms (eg, every 4 weeks) in stable cases.
+                    Vasa Previa:Vasa previa occurs when fetal blood vessels that are unprotected by the umbilical cord or placenta run through the amniotic membranes and cross over the internal cervical os.If a Vasa Previa is found on initial imaging:
+                    Detailed anatomic ultrasound at ≥16 weeks:The fetal anatomy survey (CPT® 76805/CPT® 76811) is optimally performed at 18 to 22 weeks of gestation, though it can be conducted as early as 14 weeks gestation, per ACOG guidelines.
+                      
+            [Sample Output 3] 
+                Key Analysis:   // will contain only 1 liner analysis based on the [Context]
+                    The answer is not found in the provided context.
+                Recommendation: // will contain comprehensive guidelines with CPT reports from the [Context].
+                    The answer is not found in the provided context.
+
+                                        
             [Context]
 
             <context>
@@ -282,77 +325,77 @@ class PDFUtils:
             if len(final_ans.split("Recommendation:")[1].strip())<110:
                 if "The answer is not found in the provided context." in final_ans or "No Recommendation Needed Cause Finding is Normal" in final_ans:
                     final_ans = " "
-                    AUA = None
+                    # AUA = None
         except Exception as e:
             pass
 
-        text_list = find_and_extract_abnormalities(str.lower(final_ans))
-        changes = find_changes_in_first_word(text_list)
+        # text_list = find_and_extract_abnormalities(str.lower(final_ans))
+        # changes = find_changes_in_first_word(text_list)
         # print("\nBelow are the list of change:")
         # print(changes)
         
-        for change in changes:
-            prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
-            final_ans = get_completion(prompt_known_suspected)
+        # for change in changes:
+        #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
+        #     final_ans = get_completion(prompt_known_suspected)
 
 # "You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."
-        AUA = None
-        if AUA is not None:
+        # AUA = None
+        # if AUA is not None:
 
-            pattern = r'Recommendation:(.*)'
+        #     pattern = r'Recommendation:(.*)'
 
-            # Find the match
-            match = re.search(pattern, final_ans, re.DOTALL)
+        #     # Find the match
+        #     match = re.search(pattern, final_ans, re.DOTALL)
 
-            # Extract and print the data after "Recommendation:"
-            if match:
-                recommendation_data = match.group(1).strip()
+        #     # Extract and print the data after "Recommendation:"
+        #     if match:
+        #         recommendation_data = match.group(1).strip()
 
-            pattern = r'<\d+ weeks'
+        #     pattern = r'<\d+ weeks'
             
-            print("below is recommendation data....")
-            print(recommendation_data)
+        #     print("below is recommendation data....")
+        #     print(recommendation_data)
 
-            # Find all matches in the text
-            matches = re.findall(pattern, recommendation_data)
+        #     # Find all matches in the text
+        #     matches = re.findall(pattern, recommendation_data)
 
-            # Print the matches
+        #     # Print the matches
 
-            if any(matches):
-                months = []
-                for match in matches:
-                    months.append(int(match.split(" ")[0][1:]))
-            months.sort()
-            print(months)
-            # print(months[-1])
-
-
-            # prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},
-            #         {"role":"user", "content": f"""The fetal age is {AUA} weeks. The ultrasound report is as follows:""" + "\n" + final_ans}]
-
-            # final_ans = get_completion(prompt_filter_fetus_age)
-
-            filter_by_AUA_prompt = f"""
-            show all the remaining information after eliminate recommendations intended to do CPT report <{str(months[-1])} weeks.
-            """
-            prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},{"role":"user", "content": f"""The ultrasound report is as follows:""" + "\n" + final_ans}]
-            new_recommendations = get_completion(prompt_filter_fetus_age)    
-            print(new_recommendations)
+        #     if any(matches):
+        #         months = []
+        #         for match in matches:
+        #             months.append(int(match.split(" ")[0][1:]))
+        #     months.sort()
+        #     print(months)
+        #     # print(months[-1])
 
 
-            final_ans = re.sub(pattern, "Recommendation:\n"+new_recommendations, final_ans, flags=re.DOTALL) # to replace recommendation with new
+        #     # prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},
+        #     #         {"role":"user", "content": f"""The fetal age is {AUA} weeks. The ultrasound report is as follows:""" + "\n" + final_ans}]
 
-            print("below is final answer")
-            print(final_ans)
-            print("-------------------")
-            # text_list = find_and_extract_abnormalities(str.lower(final_ans))
-            # changes = find_changes_in_first_word(text_list)
-            # # print("\nBelow are the list of change:")
-            # # print(changes)
+        #     # final_ans = get_completion(prompt_filter_fetus_age)
+
+        #     filter_by_AUA_prompt = f"""
+        #     show all the remaining information after eliminate recommendations intended to do CPT report <{str(months[-1])} weeks.
+        #     """
+        #     prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},{"role":"user", "content": f"""The ultrasound report is as follows:""" + "\n" + final_ans}]
+        #     new_recommendations = get_completion(prompt_filter_fetus_age)    
+        #     print(new_recommendations)
+
+
+        #     final_ans = re.sub(pattern, "Recommendation:\n"+new_recommendations, final_ans, flags=re.DOTALL) # to replace recommendation with new
+
+        #     print("below is final answer")
+        #     print(final_ans)
+        #     print("-------------------")
+        #     # text_list = find_and_extract_abnormalities(str.lower(final_ans))
+        #     # changes = find_changes_in_first_word(text_list)
+        #     # # print("\nBelow are the list of change:")
+        #     # # print(changes)
             
-            # for change in changes:
-            #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
-            #     final_ans = get_completion(prompt_known_suspected)
+        #     # for change in changes:
+        #     #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
+        #     #     final_ans = get_completion(prompt_known_suspected)
             
 
 
