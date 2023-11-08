@@ -7,7 +7,6 @@ from langchain.vectorstores import Chroma
 from langchain.document_loaders import PyPDFDirectoryLoader
 from dotenv import load_dotenv
 load_dotenv()
-from langchain.prompts import PromptTemplate
 import openai
 import re
 import json
@@ -139,57 +138,13 @@ def contains_cpt_code(text):
 
 
 class PDFUtils:
-    def __init__(self, pdf_folder_path, persist_directory):
-        self.pdf_folder_path = pdf_folder_path
+    def __init__(self, persist_directory):
         self.persist_directory = persist_directory
         self.embedding = OpenAIEmbeddings()
-        self.vectordb = None
-        self.retriever = None
-        self.qa_chain = None
-
-    def create_vector_db_from_pdfs(self):
-        loader = PyPDFDirectoryLoader(self.pdf_folder_path)
-        documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=2000, chunk_overlap=200)
-        texts = text_splitter.split_documents(documents)
-
-        embedding = OpenAIEmbeddings()
-        self.vectordb = Chroma.from_documents(
-            documents=texts, embedding=embedding, persist_directory=self.persist_directory)
-        self.vectordb.persist()
-
-        print("db is created.")
-
-    def initialize_qa_chain(self):
-        self.embedding = OpenAIEmbeddings()
-        self.vectordb = Chroma(
-            persist_directory=self.persist_directory, embedding_function=self.embedding)
-        self.retriever = self.vectordb.as_retriever(search_kwargs={"k": 2})
-        self.qa_chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(
-            temperature=0.2), retriever=self.retriever, return_source_documents=True)
-
-    def process_llm_response(self, llm_response):
-        print("Bot  : " + llm_response['answer'])
-        print('\nSources:')
-        for source in llm_response["source_documents"]:
-            print("     " + source.metadata['source'] +
-                  " page: " + str(source.metadata['page']))
-        print('\n')
-
-    def chat_with_pdf(self):
-        chat_history = []
-        print("Bot  : How can I help you?")
-        while True:
-            query = input('User : ')
-            result = self.qa_chain(
-                {"question": query, 'chat_history': chat_history}, return_only_outputs=False)
-            chat_history += [(query, result["answer"])]
-            self.process_llm_response(result)
 
     def get_context(self,query):
-        persist_directory = './db'
-        embedding = OpenAIEmbeddings()
+        persist_directory = self.persist_directory
+        embedding = self.embedding
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
         docs = vectordb.similarity_search(query,k=2,search_type="similarity")
         return docs
@@ -430,6 +385,7 @@ class PDFUtils:
 
             <context>
             """
+            
             results = self.get_context(query_context)
             print("below is results.................s")
             print(results)
@@ -465,78 +421,6 @@ class PDFUtils:
                     # AUA = None
         except Exception as e:
             pass
-
-        # text_list = find_and_extract_abnormalities(str.lower(final_ans))
-        # changes = find_changes_in_first_word(text_list)
-        # print("\nBelow are the list of change:")
-        # print(changes)
-        
-        # for change in changes:
-        #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
-        #     final_ans = get_completion(prompt_known_suspected)
-
-# "You are an expert in filtering Ultrasound reports. You get the ultrasound report draft and you create the final version. Your role is to remove unwanted recommendations Based on fetus age in weeks. The rule of thumb is to only include recommendations that are applicable as of now or in future. You should remove all the recommendations which should have been done in the past according to the current fetal age. The fetal age will be given to you. Take a deep breath and work your magic to filter the ultrasound reports."
-        # AUA = None
-        # if AUA is not None:
-
-        #     pattern = r'Recommendation:(.*)'
-
-        #     # Find the match
-        #     match = re.search(pattern, final_ans, re.DOTALL)
-
-        #     # Extract and print the data after "Recommendation:"
-        #     if match:
-        #         recommendation_data = match.group(1).strip()
-
-        #     pattern = r'<\d+ weeks'
-            
-        #     print("below is recommendation data....")
-        #     print(recommendation_data)
-
-        #     # Find all matches in the text
-        #     matches = re.findall(pattern, recommendation_data)
-
-        #     # Print the matches
-
-        #     if any(matches):
-        #         months = []
-        #         for match in matches:
-        #             months.append(int(match.split(" ")[0][1:]))
-        #     months.sort()
-        #     print(months)
-        #     # print(months[-1])
-
-
-        #     # prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},
-        #     #         {"role":"user", "content": f"""The fetal age is {AUA} weeks. The ultrasound report is as follows:""" + "\n" + final_ans}]
-
-        #     # final_ans = get_completion(prompt_filter_fetus_age)
-
-        #     filter_by_AUA_prompt = f"""
-        #     show all the remaining information after eliminate recommendations intended to do CPT report <{str(months[-1])} weeks.
-        #     """
-        #     prompt_filter_fetus_age = [{"role": "system", "content":filter_by_AUA_prompt},{"role":"user", "content": f"""The ultrasound report is as follows:""" + "\n" + final_ans}]
-        #     new_recommendations = get_completion(prompt_filter_fetus_age)    
-        #     print(new_recommendations)
-
-
-        #     final_ans = re.sub(pattern, "Recommendation:\n"+new_recommendations, final_ans, flags=re.DOTALL) # to replace recommendation with new
-
-        #     print("below is final answer")
-        #     print(final_ans)
-        #     print("-------------------")
-        #     # text_list = find_and_extract_abnormalities(str.lower(final_ans))
-        #     # changes = find_changes_in_first_word(text_list)
-        #     # # print("\nBelow are the list of change:")
-        #     # # print(changes)
-            
-        #     # for change in changes:
-        #     #     prompt_known_suspected = [{"role": "system", "content": f"""In the given report remove all points related to suspected {change} and keep points related to known {change} and everything else."""},{"role":"user", "content": """The ultrasound report is as follows:""" + "\n" + final_ans}]
-        #     #     final_ans = get_completion(prompt_known_suspected)
-            
-
-
-
         print("\nBelow is the final answer.......................>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
         print(final_ans)
         print("\n\n")
@@ -556,3 +440,6 @@ class PDFUtils:
 
 # # Call the initialize_qa_chain method to initialize the QA chain
 # pdf_utils.create_vector_db_from_pdfs()
+
+
+# pdf_utils = PDFUtils()

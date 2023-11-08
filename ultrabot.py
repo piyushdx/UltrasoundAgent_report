@@ -39,14 +39,13 @@ If you are unsure of the answer you can get details related to specific reports 
 [limitation]
 If the question is not relevant to ultrasound report, refrain from providing an answer."""
 
-pdf_folder_path = "./text"
 persist_directory = "./db"
 
 # Create an instance of PDFUtils class
-pdf_utils = PDFUtils(pdf_folder_path, persist_directory)
+pdf_utils = PDFUtils(persist_directory)
 
 # Call the initialize_qa_chain method to initialize the QA chain
-pdf_utils.initialize_qa_chain()
+# pdf_utils.initialize_qa_chain()
 
 # app = Flask(__name__)
 
@@ -201,7 +200,8 @@ def get_reports(abnormalities,negative_finding_keys,AUA):
     print(abnormalities)
 
     start = time.time()
-    abnormalities = remove_similar(abnormalities)
+    if len(abnormalities.keys()) > 1:
+        abnormalities = remove_similar(abnormalities)
     end = time.time()
     print("The time of execution for remove_similar which are below :",(end-start)," second")
     print(abnormalities)
@@ -331,20 +331,20 @@ function_descriptions = [
 #     print("below is the final answer............")
 #     print(final_answer)
 
-def get_guidelines(Question_string):
-    # que_prompt = """ related to obstetrical Replace abbreviations with full forms, except cpt/CPT """
-    # Question_string = get_completion([{"role": "system", "content": que_prompt},{"role": "user", "content": Question_string}])
-    print(Question_string)
-    try:
-        Question_string = get_completion([{"role": "system", "content": """Your task is to replace all obstetrical abbreviations in the given text with their full forms in (), except for "CPT(Current Procedural Terminology)". Please make sure to provide the expanded versions of the abbreviations wherever possible."""}, {
-                                         "role": "user", "content": str(Question_string)}])
-    except Exception as e:
-        print("Error: "+str(e))
-        return "Not found please try again."
-    print("Question : ", Question_string)
-    result = pdf_utils.chat_with_pdf_single_query(Question_string)
-    # result = get_answer_from_pdf(Question_string)
-    return str(result)
+# def get_guidelines(Question_string):
+#     # que_prompt = """ related to obstetrical Replace abbreviations with full forms, except cpt/CPT """
+#     # Question_string = get_completion([{"role": "system", "content": que_prompt},{"role": "user", "content": Question_string}])
+#     print(Question_string)
+#     try:
+#         Question_string = get_completion([{"role": "system", "content": """Your task is to replace all obstetrical abbreviations in the given text with their full forms in (), except for "CPT(Current Procedural Terminology)". Please make sure to provide the expanded versions of the abbreviations wherever possible."""}, {
+#                                          "role": "user", "content": str(Question_string)}])
+#     except Exception as e:
+#         print("Error: "+str(e))
+#         return "Not found please try again."
+#     print("Question : ", Question_string)
+#     result = pdf_utils.chat_with_pdf_single_query(Question_string)
+#     # result = get_answer_from_pdf(Question_string)
+#     return str(result)
 
 def get_abno_biometry(Report_string):
     # history = [{"role": "system", "content": "You have comprehensive knowledge regarding ultrasound reports. If any of the measurements provided (AC, BPD, FL, HC) in the report and if they are below the 10th percentile, consider them as abnormal.check for each parameter and think step by step..."}]
@@ -688,7 +688,7 @@ def function_call(ai_response):
     print(function_name)
     if function_name == "get_guidelines":
         Question_string = eval(arguments).get("Question_string")
-        return get_guidelines(Question_string)
+        return "get guidelines function is commented"   #get_guidelines(Question_string)
     elif function_name == "parse_report":
         Report_string = eval(arguments).get("Question_string")
         return parse_report(Report_string)

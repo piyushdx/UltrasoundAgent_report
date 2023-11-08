@@ -11,6 +11,7 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 import time
 ultrabot = UltraBot()
+from db_create import create_db
 
 @app.route('/UltraBot_clear_cache')
 @cross_origin(supports_credentials=True)
@@ -909,7 +910,9 @@ def upload_file():
         return jsonify({"message": "No file uploaded."}), 400
 
 if __name__ == '__main__':
-    IP = ip_config[environment]
-    response_port = config['BotApplication']['Backend']  # response API
-    app.run(host='0.0.0.0', port=response_port)
-
+  IP = ip_config[environment]
+  folder_name = './db'
+  if not os.path.exists(folder_name):
+    create_db(folder_name)
+  response_port = config['BotApplication']['Backend']  # response API
+  app.run(host='0.0.0.0', port=response_port)
