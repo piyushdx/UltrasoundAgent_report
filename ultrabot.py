@@ -59,6 +59,14 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     )
     return response.choices[0].message["content"]
 
+def get_completion_to_get_abnormality(prompt, model="gpt-3.5-turbo"):
+    # messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=prompt,
+        temperature=0.2  # this is the degree of randomness of the model's output
+    )
+    return response.choices[0].message["content"]
 
 def ask_function_calling(messages, function_descriptions):
     response = openai.ChatCompletion.create(
@@ -594,6 +602,13 @@ def get_negative_findings(reportString):
             return jsonify({"response": response3})
         print(response3)
         abnormal_keys = get_abnormal_keys_comment(json.loads(json_parser(response3)))
+        
+        # to remove SLIUP
+        for key in abnormal_keys:
+            lkey = key.lower()
+            if "sliup" in lkey or "single live intrauterine pregnancy" in lkey:
+                abnormal_keys.remove(key)
+        
         print(abnormal_keys)
         return abnormal_keys
     except Exception as E:
@@ -603,6 +618,7 @@ def get_AUA(Report_string):
     try:
         AUA_data = Report_string["AUA"]
         AUA = int(AUA_data.split("w")[0])
+        print("AUA is the : ",AUA)
         if AUA < 50:
             pass
         else:
@@ -631,7 +647,7 @@ def parse_report(Report_string):
     start = time.time()
     try:
         # it will get me a json which contains possible abnormalities
-        abnormalities = get_completion(history)
+        abnormalities = get_completion_to_get_abnormality(history)
     except Exception as e:
         print("Function calling Error : ", e)
         abnormalities = "Oops! An issue with the OpenAI API. Can you please try again in a few minutes after clearing the chat."

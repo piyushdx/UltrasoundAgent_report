@@ -149,9 +149,9 @@ class PDFUtils:
         docs = vectordb.similarity_search(query,k=2,search_type="similarity")
         return docs
 
-    def get_context_combined(self,docs):
+    def get_context_combined(self,docs,AUA):
         context = ""
-        page_number = set()
+        page_number = set() 
         for ele in docs:
             json_context = json.loads((ele.page_content.replace("'","\"")))
             # print(json_context['title'])
@@ -165,7 +165,15 @@ class PDFUtils:
                 elif s == "G":
                     final_ans += value + "\n"
                 else:
-                    pass
+                    if AUA != None:
+                        given_age = int(f)
+                        if s == "L" and given_age >= AUA:
+                            final_ans += value + "\n"
+                        else:
+                            continue
+                    else:
+                        continue
+
             context += final_ans + "\n\n"
         return context,page_number
 
@@ -390,7 +398,7 @@ class PDFUtils:
             print("below is results.................s")
             print(results)
             print("..............................")
-            context,page = self.get_context_combined(results)
+            context,page = self.get_context_combined(results,AUA)
             print("here is the context..........................................................................................................")
             print(context)
             print("..........................................................................................................")
