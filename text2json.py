@@ -170,9 +170,9 @@ Lt. Overy Vol. avg value in ml
     # consider all the data till the word KS RDMS OR AM RDMS foundas a comment Bad escaped character [, '\n', , ]
     # post_prompt_json = "Create a json of above text. Only add parameters which hat respective values in the above file. "
     print(report_text)
-    history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
     # history = [{"role": "user", "content": report_text + post_prompt_json}] # when report text is static
     try:
+        history = [{"role": "user", "content": str(report_text,'UTF-8') + post_prompt_json}] # when report_text is dynamic
         jsonReport = get_completion(history)
     except Exception as e:
         return(f"{e}\nplease try after sometime. issue @OpenAI side.")
