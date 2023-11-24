@@ -7,11 +7,11 @@ API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94ca
 # Base URL for PDF.co Web API requests
 BASE_URL = "https://api.pdf.co/v1"
 
-def convert2text(args = None):
+def convert2text(args = None,SourceFile = "ChatBotUI/static/pdf/uploaded.pdf"):
     API_KEY = "neil@linkob.ai_49a20aad7514a9d1a910a340014243529a827406200b6f0f3a94cacc75b48bb677184536"
 
     # Source PDF file
-    SourceFile = "ChatBotUI/static/pdf/uploaded.pdf"
+    
     # Destination CSV file name
     DestinationFile = "SKM_C65823071313500    2.txt"
 

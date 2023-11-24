@@ -64,7 +64,7 @@ def get_completion_to_get_abnormality(prompt, model="gpt-3.5-turbo"):
     response = openai.ChatCompletion.create(
         model=model,
         messages=prompt,
-        temperature=0.2  # this is the degree of randomness of the model's output
+        temperature=0.4  # this is the degree of randomness of the model's output
     )
     return response.choices[0].message["content"]
 
@@ -995,7 +995,8 @@ class UltraBot():
         final_response = process_final_list(final_response)
         end_time = time.time()
         time_taken = "The time of execution :" + str((end_time-start_time)+extra_time)+" second"
-        final_response.append(time_taken) 
+        final_response.append(time_taken)
+        # return final_response 
         return jsonify({"response": final_response})
 
     def get_response1(self, data):
