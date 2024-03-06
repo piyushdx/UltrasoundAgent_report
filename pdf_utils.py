@@ -127,15 +127,14 @@ Ultrasound recommendations same formate as input tailored to the fetus's develop
 
 
 def contains_cpt_code(text):
-    # Define a regular expression pattern to match "CPT® XXXXX" where XXXXX is any digit
-    pattern = r'CPT® \d{5}'
+    # Define a regular expression pattern to match "CPT® XXXXX" or "CPT®XXXXX" where XXXXX is any digit
+    pattern = r'CPT®\s?\d{5}'
     
     # Use the re.search function to find the pattern in the text
     match = re.search(pattern, text)
     
     # If a match is found, return True; otherwise, return False
     return bool(match)
-
 
 class PDFUtils:
     def __init__(self, persist_directory):
@@ -146,7 +145,9 @@ class PDFUtils:
         persist_directory = self.persist_directory
         embedding = self.embedding
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
+        print("vectordb chroma:",vectordb)
         docs = vectordb.similarity_search(query,k=2,search_type="similarity")
+        print("docs....",docs)
         return docs
 
     def get_context_combined(self,docs,AUA):
@@ -192,7 +193,7 @@ class PDFUtils:
     
     def chat_with_pdf_q(self,query,AUA,query_context):
         print(query)
-        if "Socio-Demographic Risk Factors (maternal age)....................." in query:
+        if "Socio-Demographic Risk Factors (maternal age)" in query:
             final_ans = ans_for_age
         elif "myoma" in str.lower(query):
             final_ans = ans_for_myoma
@@ -437,13 +438,15 @@ class PDFUtils:
 
 # Use When you want to create a db
 # pdf_folder_path = "ChatBotUI/static/pdf"
-# persist_directory = "./db"
 
 # # Create an instance of PDFUtils class
-# pdf_utils = PDFUtils(pdf_folder_path, persist_directory)
 # pdf_utils.initialize_qa_chain()
-# query = "I would like comprehensive guidelines for the " + "placenta previa"  + " along with CPT reports.\n"
 # result = pdf_utils.chat_with_pdf_q(query)
+
+# persist_directory = "./db"
+# pdf_utils = PDFUtils(persist_directory)
+# query = "I would like comprehensive guidelines for the " + "placenta previa"  + " along with CPT reports.\n"
+# result = pdf_utils.get_context(query)
 # print(result)
 
 # # Call the initialize_qa_chain method to initialize the QA chain

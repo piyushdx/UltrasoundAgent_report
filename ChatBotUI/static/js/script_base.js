@@ -121,6 +121,10 @@ document.getElementById("Tab2").style.display = "none";
 function convertPdf() {
   const form = document.getElementById("upload-form");
   form.addEventListener("submit", function (event) {
+    appendLoader(BOT_NAME, BOT_IMG, "left", "<div id='loading-icon' class='loader'><span></span><span></span><span></span></div>")
+    const loader = document.getElementById('loading-icon');
+    loader.style.display = 'block';
+  
     event.preventDefault(); // Prevent default form submission
 
     const formData = new FormData(form);

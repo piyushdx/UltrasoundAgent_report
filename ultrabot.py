@@ -586,7 +586,7 @@ def get_negative_findings(reportString):
         step2 = """
         create JSON of obstetric complications
         [compulsory JSON output formate]
-                obstetric_complications = {1:"",2:""} // //list of abnormalities Ex. 1 : "<obstetric_complications> name",2 : "<obstetric_complications> name",...
+                { "obstetric_complications": { "1": "complication1_value", "2": "complication2_value" } } // //list of abnormalities Ex. "1" : "<obstetric_complications> name","2" : "<obstetric_complications> name",...
         [thought_chain]
             populate each <obstetric_complications> separately if report has any obstetric complications and return only JSON.
         """

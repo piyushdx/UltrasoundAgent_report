@@ -666,24 +666,51 @@
 
 # print(most_similar_ids)
 
-from create_pdf_list import ele1, ele2, ele3, ele4, ele5, ele6, ele7, ele8, ele9, ele10, ele11, ele12, ele13, ele14, ele15, ele16, ele17, ele18, ele19, ele20, ele21, ele22, ele23, ele24, ele25, ele26, ele27, ele28, ele29, ele30, ele31, ele32, ele33, ele34, ele35, ele36, ele37, ele38, ele39, ele40, ele41, ele42, ele43, ele44, ele45, ele46, ele47, ele48, ele49, ele50, ele51, ele52, ele53, ele54, ele55, ele56, ele57, ele58, ele59, ele60, ele61, ele62, ele63, ele64, ele65, ele66, ele67, ele68, ele69, ele70, ele71, ele72, ele73, ele74, ele75, ele76, ele77, ele78, ele79, ele80, ele81, ele82, ele83, ele84
-import chromadb
-from chromadb.utils import embedding_functions
+# from create_pdf_list import ele1, ele2, ele3, ele4, ele5, ele6, ele7, ele8, ele9, ele10, ele11, ele12, ele13, ele14, ele15, ele16, ele17, ele18, ele19, ele20, ele21, ele22, ele23, ele24, ele25, ele26, ele27, ele28, ele29, ele30, ele31, ele32, ele33, ele34, ele35, ele36, ele37, ele38, ele39, ele40, ele41, ele42, ele43, ele44, ele45, ele46, ele47, ele48, ele49, ele50, ele51, ele52, ele53, ele54, ele55, ele56, ele57, ele58, ele59, ele60, ele61, ele62, ele63, ele64, ele65, ele66, ele67, ele68, ele69, ele70, ele71, ele72, ele73, ele74, ele75, ele76, ele77, ele78, ele79, ele80, ele81, ele82, ele83, ele84
+# import chromadb
+# from chromadb.utils import embedding_functions
 
-openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-                api_key="YOUR_API_KEY",
-                model_name="text-embedding-ada-002"
-            )
-client = chromadb.PersistentClient(path="./db_chroma")
-# collection = client.create_collection(name="my_collection", embedding_function=openai_ef)
-# collection = client.get_collection(name="my_collection", embedding_function=openai_ef)
+# openai_ef = embedding_functions.OpenAIEmbeddingFunction(
+#                 api_key="YOUR_API_KEY",
+#                 model_name="text-embedding-ada-002"
+#             )
+# client = chromadb.PersistentClient(path="./db_chroma")
+# # collection = client.create_collection(name="my_collection", embedding_function=openai_ef)
+# # collection = client.get_collection(name="my_collection", embedding_function=openai_ef)
 
-# collection = client.get_collection(name="test") # Get a collection object from an existing collection, by name. Will raise an exception if it's not found.
-collection = client.get_or_create_collection(name="test") # Get a collection object from an existing collection, by name. If it doesn't exist, create it.
-# client.delete_collection(name="my_collection") # Delete a collection and all associated embeddings, documents, and metadata. ⚠️ This is destructive and not reversible
+# # collection = client.get_collection(name="test") # Get a collection object from an existing collection, by name. Will raise an exception if it's not found.
+# collection = client.get_or_create_collection(name="test") # Get a collection object from an existing collection, by name. If it doesn't exist, create it.
+# # client.delete_collection(name="my_collection") # Delete a collection and all associated embeddings, documents, and metadata. ⚠️ This is destructive and not reversible
 
-collection.add(
-            documents=[str(ele1), str(ele2), str(ele3), str(ele4), str(ele5), str(ele6), str(ele7), str(ele8), str(ele9), str(ele10), str(ele11), str(ele12), str(ele13), str(ele14), str(ele15), str(ele16), str(ele17), str(ele18), str(ele19), str(ele20), str(ele21), str(ele22), str(ele23), str(ele24), str(ele25), str(ele26), str(ele27), str(ele28), str(ele29), str(ele30), str(ele31), str(ele32), str(ele33), str(ele34), str(ele35), str(ele36), str(ele37), str(ele38), str(ele39), str(ele40), str(ele41), str(ele42), str(ele43), str(ele44), str(ele45), str(ele46), str(ele47), str(ele48), str(ele49), str(ele50), str(ele51), str(ele52), str(ele53), str(ele54), str(ele55), str(ele56), str(ele57), str(ele58), str(ele59), str(ele60), str(ele61), str(ele62), str(ele63), str(ele64), str(ele65), str(ele66), str(ele67), str(ele68), str(ele69), str(ele70), str(ele71), str(ele72), str(ele73), str(ele74), str(ele75), str(ele76), str(ele77), str(ele78), str(ele79), str(ele80), str(ele81), str(ele82), str(ele83), str(ele84)], # we handle tokenization, embedding, and indexing automatically. You can skip that and add your own embeddings as well
-            metadatas=[{"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}], # filter on these!
-            ids=["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11", "q12", "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20", "q21", "q22", "q23", "q24", "q25", "q26", "q27", "q28", "q29", "q30", "q31", "q32", "q33", "q34", "q35", "q36", "q37", "q38", "q39", "q40", "q41", "q42", "q43", "q44", "q45", "q46", "q47", "q48", "q49", "q50", "q51", "q52", "q53", "q54", "q55", "q56", "q57", "q58", "q59", "q60", "q61", "q62", "q63", "q64", "q65", "q66", "q67", "q68", "q69", "q70", "q71", "q72", "q73", "q74", "q75", "q76", "q77", "q78", "q79", "q80", "q81", "q82", "q83", "q84"], # unique for each doc
-         )
+# collection.add(
+#             documents=[str(ele1), str(ele2), str(ele3), str(ele4), str(ele5), str(ele6), str(ele7), str(ele8), str(ele9), str(ele10), str(ele11), str(ele12), str(ele13), str(ele14), str(ele15), str(ele16), str(ele17), str(ele18), str(ele19), str(ele20), str(ele21), str(ele22), str(ele23), str(ele24), str(ele25), str(ele26), str(ele27), str(ele28), str(ele29), str(ele30), str(ele31), str(ele32), str(ele33), str(ele34), str(ele35), str(ele36), str(ele37), str(ele38), str(ele39), str(ele40), str(ele41), str(ele42), str(ele43), str(ele44), str(ele45), str(ele46), str(ele47), str(ele48), str(ele49), str(ele50), str(ele51), str(ele52), str(ele53), str(ele54), str(ele55), str(ele56), str(ele57), str(ele58), str(ele59), str(ele60), str(ele61), str(ele62), str(ele63), str(ele64), str(ele65), str(ele66), str(ele67), str(ele68), str(ele69), str(ele70), str(ele71), str(ele72), str(ele73), str(ele74), str(ele75), str(ele76), str(ele77), str(ele78), str(ele79), str(ele80), str(ele81), str(ele82), str(ele83), str(ele84)], # we handle tokenization, embedding, and indexing automatically. You can skip that and add your own embeddings as well
+#             metadatas=[{"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}, {"source": "Admin"}], # filter on these!
+#             ids=["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11", "q12", "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20", "q21", "q22", "q23", "q24", "q25", "q26", "q27", "q28", "q29", "q30", "q31", "q32", "q33", "q34", "q35", "q36", "q37", "q38", "q39", "q40", "q41", "q42", "q43", "q44", "q45", "q46", "q47", "q48", "q49", "q50", "q51", "q52", "q53", "q54", "q55", "q56", "q57", "q58", "q59", "q60", "q61", "q62", "q63", "q64", "q65", "q66", "q67", "q68", "q69", "q70", "q71", "q72", "q73", "q74", "q75", "q76", "q77", "q78", "q79", "q80", "q81", "q82", "q83", "q84"], # unique for each doc
+#          )
+
+import json
+def json_parser_negative_findings(string_data):
+    '''
+    Use:
+        used to extract only json from the text.
+
+    Parameter:
+        string_data : String
+
+    Output:
+        json_string : String
+    '''
+    print(string_data)
+    start_index = string_data.find("{")
+    end_index = string_data.rfind("}") + 1
+
+    # Extract the JSON portion from the string
+    json_string = json.loads(string_data[start_index:end_index])
+    print(json_string)
+    json_string = json_string["obstetric_complications"]
+    # Parse the JSON string into a Python dictionary
+    # data = json.loads(json_string)
+    return json_string
+
+a = json_parser('{ "obstetric_complications": { "1": "complication1_value", "2": "complication2_value" } }')
+print(a)
