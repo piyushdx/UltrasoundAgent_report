@@ -146,7 +146,7 @@ class PDFUtils:
         embedding = self.embedding
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
         print("vectordb chroma:",vectordb)
-        docs = vectordb.similarity_search(query,k=2,search_type="similarity")
+        docs = vectordb.similarity_search(query,k=2)#,search_type="similarity"
         print("docs....",docs)
         return docs
 

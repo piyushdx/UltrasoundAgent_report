@@ -523,11 +523,14 @@ def get_not_seen_mvp_edc(reportString):
     ageFlag = False
 
     q_list = []
+    print(reportString)
     for k, v in reportString.items():
-        if str.lower(v) == "not seen":
+        if str.lower(str(v)) == "not seen":
             final_ans += str(k)+"\n"
         if str(k) == "Q1 avg value in cm" or str(k) == "Q2 avg value in cm" or str(k) == "Q3 avg value in cm" or str(k) == "Q4 avg value in cm":
-            value = float(v.split(' ')[0])
+            if isinstance(v, str):
+                value = v.split(' ')[0]
+            value = float(value)
             if value > 4.0:
                 q_list.append(float(v.split(' ')[0]))
         if str(k) == "EstabDD":

@@ -1,82 +1,64 @@
-                                                      ULTRASOUND REPORT
+                                                  ULTRASOUND REPORT
 
-                                     AZ WOMEN'S SPECIALISTS
+                                           Ultrasound Report
+ GEDme  02 GD Exam. Date
+        Gender        Female              BirthDate      10-27-1994        Age             28yr 8m
+           Institute           AZ WOMEN'S SPECI ...  Diag. Physician SHAH                Ref. Physician       HETAL SHAH,...
+         Sonographer    KS.RDMS
+         Description       GROWTH
+          Al
+    [OB]
+              LMP 12-24-2022            EstabDD 09-30-2023           EDD(LMP) 09-30-2023
+         GA(LMP) 27wéd                  AUA 29w0d             EDD(AUA) 09-22-2023
+              EFW 3ib 0oz (13499)      EFW Aut... Hadlock2(BPD,...     GA(EFW) 29w2d
+        Pctl.(EFW) 71.72                Pctl. Crit... EstabDD
+         Fetal Biometry    Avg.             2       3
+                     1 1 —               aR GA Pi  it il  Pet,  1 it
+      BPD          6.98   6.98             cm     28w0d+15d  Hadl...  43.79  Hadl...
+       HC            26.62  26.62             cm      29w0d+t14d  Hadl...  56.08  Hadl...
+      AC           24.90  24.90            cm     29w1d+15d  Hadi...  79.36  Hadl...
+       FL              5.62   5.62               cm      29w4d+15d  Hadl...  81.95  Hadl...
+         General                                  Avg.       1         2         3
+        Fetal HR                            |   148      148                         bpm
+        AFI                           Last       1         2        3                          Pctl.
+       Q1                       4.77     4.77                     cm     Avg.
+      Q2                      3.41     3.41                    cm     Avg.
+      Q3                     6.08    6.08                    cm     Avg.
+      Q4                     2.72    2.72                   cm     Avg.
+        AFI                          16.98    16.98                        cm               68.38
+         Ratio           Value       |}        | 0 Normal Range  1
+        L/AC         22.57     %     (20.0~24.0%, >21w)
+       FL/BPD       80.58     %     (71.0~87.0%, >23w)
+       FL/HC         21.11      %    (17.87~21.47%, 27w...
+       HC/AC        1.07            ( 1.05~1.22, 27w6d)
+          Fetal  Description                                                       Value
+       Gender                                              Female
+         Fetal Position                                                   Breech
+        Placenta Location                                          Posterior
+        Placenta Grade                                               2
+        Amniotic Fluid                                                Normal
 
-           Name        GED-                         Exam. Date       07-19-2023
-             Gender         Female              BirthDate                      Age              20yr Om
-                Institute           AZ WOMEN'S SPECI...  Ref. Physician   DR.HETAL SHAH    Sonographer        AM RDMS
-              Description       FU ANATOMY
-        [OB]
-                  LMP(EDD) 01-30-2023                         EDD 11-06-2023                     GA(EDD) 24w2d
-                    AUA 24w3d                    EDD(AUA) 11-05-2023                     EFW 1Ib110z (771g)
-               EFW Author Hadlock4(BPD,HC,A...       Pctl.(EFW) 76.87                    Pctl. Criteria EstabDD
-              Fetal Biometry         Avg.       1        2        3                      GA                    Pctl.
-            BPD               5.42    5.42                  cm        22w3dt12d    Hadlock   2.59   Hadlock
-         HC            22.46   22.46             cm      24w3dt14d   Hadlock  38.27  Hadlock
-           AC                20.95   20.95                 cm        25w3dt15d   Hadlock   78.13   Hadlock
-              FL                    4.58     4.58                     cm   Last    25w1dt15d    Hadlock   65.75   Hadlock
-
-              General                                      Avg.         1          2          3
-              Fetal HR                                         148        148                              bpm
-               AFI                                    Avq.          1           2           3                                 Pctl.
-             Q1                                 2.89       2.89                             cm
-            Q2                              3.52       3.52                           cm
-            Q3                              1.61       1.61                          cm
-            Q4                             3.53     © 3.53                          cm
-               AFI                                    11.55       11.55                                cm                    14.67
-            Ratio             Value                    Normal Range
-             FLIAC             21.84       %          (20.0~24.0%, >21w)
-             FL/BPD            84.45       %         (71.0~87.0%, >23w)
-             FL/HC             20.38        %        (17.69~21.74%, 24w2d)
-            HC/AC             1.07                  (1.05~1.21, 24w2d)
-               Fetal Description                                                             Value
-            Gender                                                         Female
-                Fetal Position                                                                  Breech
-              Placenta Location                                                         Fundal
-              Placenta Grade                                                           2
-               Placenta Previa                                                              No
-               Amniotic Fluid                                                              Normal
-
-               Fetal Heart                                                                  Value
-            4 Chamber                                                        Seen
-              Lt Outflow Tract                                                           Seen
-               Rt. Outflow Tract                                                              Seen
-             Cardiac Rhythm                                                       Regular
-
-             Fetal Abdomen                                                      Value
-             Abdominal Wall                                                     Not seen
-             Spine                                                                Not seen
-            Stomach                                                         Seen
-              Bladder                                                                Seen
-               Lt. Kidney                                                                    Seen
-             Rt Kidney                                                           Not seen
-
-              Maternal Others                                  Avg.         1           2          3
-              Cervix L                                           2.57        2.59        2.61        2.51         cm
-
-           Comment
+      Comment
 
 
 
 
-                                                                                                                       07-19-2023 02:28 pm
 
-                                                      ULTRASOUND REPORT
+                                                                                                                 07-07-2023 09:50 am
 
-                                     AZ WOMEN'S SPECIALISTS
+                                                  ULTRASOUND REPORT
 
-             F/U ANATOMY CARDIAC/SPINE/ACI AND KIDNEYS
-            FETAL GROWTH
+                                            Ultrasound Report
 
-              SLIUP @ 24W3D EDD 11/05/23 BY ULTRASOUND, SIZE C/W DATES, OVERALL 77% (771G 1LB 1102). BPD=2%.
-             BREECH. FHR=148BPM. AFI=11.6CM. GOOD FETAL MOVEMENT SEEN. POST FUNDAL PL. CARDIAC VIEWS
-             SUBOPTIMAL. RVOT APPEARS WNL. UNABLE TO OBTAIN OPTIMAL ACI AND SPINE VIEWS DUE TO FETAL
-              POSITION. FETAL LT KIDNEY RENAL PELVIS =07MM INDICTAING MILD PYELECTASIS.FETAL RT KIDNEY NOT SEEN.
-             CX APPEARS SHORT AND CLOSED ON TODAY'S SCAN. CX=2.5CM.
+      GROWTH
 
-             TA & TV SCAN PERFORMED
+         Single breech female fetus with positive fetal movement.
+         FHR=154bpm with normal cardiac rhythm.
+        EFW=3#00z / 72nd%
+        AFI=17cm
+          Posterior placenta grade 2, previa seen.
 
-            AM RDMS
+       KS.RDMS
 
 
 
@@ -97,15 +79,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-                                                                                                                       07-19-2023 02:28 pm
+                                                                                                                 07-07-2023 09:50 am
 
 
